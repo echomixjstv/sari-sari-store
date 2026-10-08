@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SARI-SARI STORE - Wholesale Marketplace</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(135deg,#fff7ed,#fef3c7,#ecfdf5);
+    min-height:100vh;
+    color:#222;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.header{
+    width:100%;
+    padding:22px 30px;
+    background:#ffffff;
+    box-shadow:0 3px 15px rgba(0,0,0,.08);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.brand-logo{
+    width:54px;
+    height:54px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#f97316,#ef4444);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:27px;
+    font-weight:900;
+}
+
+.brand h1{
+    font-size:24px;
+    color:#111827;
+}
+
+.brand p{
+    font-size:12px;
+    color:#6b7280;
+    margin-top:3px;
+}
+
+.container{
+    width:min(1100px,94%);
+    margin:35px auto 60px;
+}
+
+.hero{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.hero h2{
+    font-size:36px;
+    color:#111827;
+    margin-bottom:10px;
+}
+
+.hero p{
+    color:#6b7280;
+    font-size:16px;
+}
+
+.roles{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:28px;
+}
+
+.role-card{
+    border:2px solid #e5e7eb;
+    border-radius:20px;
+    padding:25px 15px;
+    background:#fff;
+    text-align:center;
+    transition:.2s;
+    box-shadow:0 5px 18px rgba(0,0,0,.05);
+}
+
+.role-card:hover{
+    transform:translateY(-3px);
+}
+
+.role-card.selected{
+    border-color:#f97316;
+    box-shadow:0 0 0 4px rgba(249,115,22,.12);
+}
+
+.role-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.role-card h3{
+    margin-bottom:6px;
+}
+
+.role-card p{
+    color:#6b7280;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.role-card button{
+    width:100%;
+    border:0;
+    border-radius:10px;
+    padding:10px;
+    background:#f3f4f6;
+    font-weight:700;
+}
+
+.role-card.selected button{
+    background:#f97316;
+    color:#fff;
+}
+
+.login-panel{
+    max-width:520px;
+    margin:0 auto 40px;
+    background:#fff;
+    padding:28px;
+    border-radius:22px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.login-panel h2{
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.selected-role{
+    text-align:center;
+    color:#f97316;
+    font-weight:700;
+    margin-bottom:22px;
+}
+
+.field{
+    margin-bottom:15px;
+}
+
+.field label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:7px;
+    color:#374151;
+}
+
+.field input,
+.field select{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    outline:none;
+    background:#fff;
+}
+
+.field input:focus,
+.field select:focus{
+    border-color:#f97316;
+    box-shadow:0 0 0 3px rgba(249,115,22,.1);
+}
+
+.password-wrap{
+    position:relative;
+}
+
+.password-wrap input{
+    padding-right:55px;
+}
+
+.password-toggle{
+    position:absolute;
+    right:8px;
+    top:50%;
+    transform:translateY(-50%);
+    border:0;
+    background:transparent;
+    padding:8px;
+}
+
+.login-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:20px;
+}
+
+.primary-btn,
+.secondary-btn,
+.danger-btn{
+    border:0;
+    border-radius:10px;
+    padding:13px;
+    font-weight:800;
+}
+
+.primary-btn{
+    background:#f97316;
+    color:#fff;
+}
+
+.secondary-btn{
+    background:#111827;
+    color:#fff;
+}
+
+.danger-btn{
+    background:#dc2626;
+    color:#fff;
+}
+
+.link-button{
+    display:block;
+    margin:17px auto 0;
+    border:0;
+    background:none;
+    color:#f97316;
+    font-weight:700;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.feature{
+    background:#fff;
+    padding:22px;
+    border-radius:18px;
+    box-shadow:0 5px 18px rgba(0,0,0,.05);
+}
+
+.feature h3{
+    margin-bottom:7px;
+}
+
+.feature p{
+    color:#6b7280;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.message{
+    display:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:13px;
+    margin-top:12px;
+    line-height:1.4;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.message.success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.message.info{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:min(560px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:#fff;
+    border-radius:20px;
+    padding:28px;
+    position:relative;
+}
+
+.modal-box h2{
+    margin-bottom:8px;
+}
+
+.modal-subtitle{
+    color:#6b7280;
+    font-size:13px;
+    margin-bottom:20px;
+    line-height:1.5;
+}
+
+.close-btn{
+    position:absolute;
+    top:12px;
+    right:14px;
+    width:36px;
+    height:36px;
+    border:0;
+    border-radius:50%;
+    background:#f3f4f6;
+    font-size:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.form-grid .full{
+    grid-column:1/-1;
+}
+
+.application-note{
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    padding:14px;
+    border-radius:12px;
+    margin-bottom:18px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.process{
+    margin:15px 0;
+    padding-left:20px;
+    color:#4b5563;
+    font-size:13px;
+    line-height:1.8;
+}
+
+.application-success{
+    display:none;
+    text-align:center;
+    padding:30px 10px;
+}
+
+.application-success.show{
+    display:block;
+}
+
+.success-icon{
+    font-size:55px;
+    margin-bottom:12px;
+}
+
+.loading{
+    position:fixed;
+    inset:0;
+    background:rgba(17,24,39,.7);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+}
+
+.loading.show{
+    display:flex;
+}
+
+.loading-box{
+    background:#fff;
+    border-radius:18px;
+    padding:25px 35px;
+    text-align:center;
+    min-width:220px;
+}
+
+.spinner{
+    width:40px;
+    height:40px;
+    border:4px solid #e5e7eb;
+    border-top-color:#f97316;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 15px;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg)}
+}
+
+.store-application-old{
+    display:none;
+}
+
+@media(max-width:800px){
+    .roles{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .features{
+        grid-template-columns:1fr;
+    }
+
+    .hero h2{
+        font-size:28px;
+    }
+}
+
+@media(max-width:520px){
+    .header{
+        padding:16px;
+    }
+
+    .brand h1{
+        font-size:19px;
+    }
+
+    .brand-logo{
+        width:45px;
+        height:45px;
+        font-size:22px;
+    }
+
+    .container{
+        margin-top:25px;
+    }
+
+    .roles{
+        gap:10px;
+    }
+
+    .role-card{
+        padding:18px 10px;
+    }
+
+    .login-actions{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid .full{
+        grid-column:auto;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+    <div class="brand">
+        <div class="brand-logo">🛒</div>
+        <div>
+            <h1>SARI-SARI STORE</h1>
+            <p>Wholesale Marketplace</p>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+```
+<section class="hero">
+    <h2>Welcome to Sari-Sari Store</h2>
+    <p>Choose your account type to continue.</p>
+</section>
+
+<section class="roles">
+
+    <div class="role-card" id="roleSeller">
+        <div class="role-icon">🏪</div>
+        <h3>Seller</h3>
+        <p>Manage your store and orders.</p>
+        <button onclick="selectRole('seller')">SELECT SELLER</button>
+    </div>
+
+    <div class="role-card" id="roleRetailer">
+        <div class="role-icon">🛍️</div>
+        <h3>Retailer</h3>
+        <p>Buy products from sellers.</p>
+        <button onclick="selectRole('retailer')">SELECT RETAILER</button>
+    </div>
+
+    <div class="role-card" id="rolePacker">
+        <div class="role-icon">📦</div>
+        <h3>Packer</h3>
+        <p>Prepare accepted customer orders.</p>
+        <button onclick="selectRole('packer')">SELECT PACKER</button>
+    </div>
+
+    <div class="role-card" id="roleDelivery">
+        <div class="role-icon">🚚</div>
+        <h3>Delivery</h3>
+        <p>Deliver packed customer orders.</p>
+        <button onclick="selectRole('delivery')">SELECT DELIVERY</button>
+    </div>
+
+</section>
+
+<section class="login-panel">
+
+    <h2>Account Login</h2>
+
+    <div class="selected-role" id="selectedRoleBox">
+        Select your account type above
+    </div>
+
+    <div class="field">
+        <label>Username</label>
+        <input
+            type="text"
+            id="loginUsername"
+            autocomplete="username"
+            placeholder="Enter username"
+        >
+    </div>
+
+    <div class="field">
+        <label>Password</label>
+
+        <div class="password-wrap">
+            <input
+                type="password"
+                id="loginPassword"
+                autocomplete="current-password"
+                placeholder="Enter password"
+            >
+
+            <button
+                class="password-toggle"
+                type="button"
+                onclick="togglePassword('loginPassword',this)"
+            >👁</button>
+        </div>
+    </div>
+
+    <div id="loginMessage" class="message"></div>
+
+    <div class="login-actions">
+
+        <button
+            class="primary-btn"
+            onclick="login()"
+        >
+            LOGIN
+        </button>
+
+        <button
+            class="secondary-btn"
+            onclick="openRegister()"
+        >
+            CREATE ACCOUNT
+        </button>
+
+    </div>
+
+    <button
+        class="link-button"
+        onclick="openSellerApplication()"
+    >
+        Become a Seller
+    </button>
+
+</section>
+
+<section class="features">
+
+    <div class="feature">
+        <h3>🏪 Seller Marketplace</h3>
+        <p>
+            Sellers can manage products, customer orders,
+            packers and delivery personnel.
+        </p>
+    </div>
+
+    <div class="feature">
+        <h3>📦 Order Processing</h3>
+        <p>
+            Accepted orders move through packing and
+            delivery stages.
+        </p>
+    </div>
+
+    <div class="feature">
+        <h3>🔐 Secure Accounts</h3>
+        <p>
+            Accounts use password hashing and Firebase
+            database records.
+        </p>
+    </div>
+
+</section>
+```
+
+</main>
+
+<!-- REGISTER MODAL -->
+
+<div class="modal" id="registerModal">
+
+```
+<div class="modal-box">
+
+    <button
+        class="close-btn"
+        onclick="closeModal('registerModal')"
+    >×</button>
+
+    <h2>Create Account</h2>
+
+    <p class="modal-subtitle">
+        Create your Sari-Sari Store account.
+    </p>
+
+    <div class="field">
+        <label>Account Type</label>
+
+        <select id="registerRole">
+            <option value="retailer">Retailer</option>
+            <option value="packer">Packer</option>
+            <option value="delivery">Delivery</option>
+        </select>
+    </div>
+
+    <div class="form-grid">
+
+        <div class="field full">
+            <label>Full Name</label>
+            <input
+                id="registerName"
+                type="text"
+                placeholder="Full name"
+            >
+        </div>
+
+        <div class="field">
+            <label>Mobile Number</label>
+            <input
+                id="registerMobile"
+                type="tel"
+                placeholder="Mobile number"
+            >
+        </div>
+
+        <div
+            class="field"
+            id="registerStoreNameField"
+        >
+            <label>Store Name</label>
+            <input
+                id="registerStoreName"
+                type="text"
+                placeholder="Store name"
+            >
+        </div>
+
+        <div
+            class="field full"
+            id="registerStoreAddressField"
+        >
+            <label>Store Address</label>
+            <input
+                id="registerStoreAddress"
+                type="text"
+                placeholder="Store address"
+            >
+        </div>
+
+        <div class="field">
+            <label>Username</label>
+            <input
+                id="registerUsername"
+                type="text"
+                placeholder="Username"
+            >
+        </div>
+
+        <div class="field">
+            <label>Password</label>
+            <div class="password-wrap">
+                <input
+                    id="registerPassword"
+                    type="password"
+                    placeholder="Password"
+                >
+                <button
+                    class="password-toggle"
+                    type="button"
+                    onclick="togglePassword('registerPassword',this)"
+                >👁</button>
+            </div>
+        </div>
+
+        <div class="field full">
+            <label>Confirm Password</label>
+            <div class="password-wrap">
+                <input
+                    id="registerConfirmPassword"
+                    type="password"
+                    placeholder="Confirm password"
+                >
+                <button
+                    class="password-toggle"
+                    type="button"
+                    onclick="togglePassword('registerConfirmPassword',this)"
+                >👁</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="registerMessage" class="message"></div>
+
+    <button
+        class="primary-btn"
+        style="width:100%;margin-top:15px"
+        onclick="registerAccount()"
+    >
+        CREATE ACCOUNT
+    </button>
+
+</div>
+```
+
+</div>
+
+<!-- SELLER APPLICATION MODAL -->
+
+<div class="modal" id="sellerApplicationModal">
+
+```
+<div class="modal-box">
+
+    <button
+        class="close-btn"
+        onclick="closeModal('sellerApplicationModal')"
+    >×</button>
+
+    <div id="sellerFormContent">
+
+        <h2>Seller Application</h2>
+
+        <p class="modal-subtitle">
+            Apply to become a Sari-Sari Store Seller.
+        </p>
+
+        <div class="application-note">
+            Seller registration requires Admin approval.
+            The seller service fee is <b>₱1,500 one-time lifetime</b>.
+            There is no monthly subscription.
+        </div>
+
+        <ol class="process">
+            <li>Submit your seller information.</li>
+            <li>Admin reviews your application.</li>
+            <li>Once approved, a Store Number will be assigned.</li>
+            <li>You can then login and manage your store.</li>
+        </ol>
+
+        <div class="form-grid">
+
+            <div class="field full">
+                <label>Store Name</label>
+                <input
+                    id="sellerStoreName"
+                    type="text"
+                    placeholder="Store name"
+                >
+            </div>
+
+            <div class="field full">
+                <label>Full Name</label>
+                <input
+                    id="sellerName"
+                    type="text"
+                    placeholder="Full name"
+                >
+            </div>
+
+            <div class="field full">
+                <label>Store Address</label>
+                <input
+                    id="sellerAddress"
+                    type="text"
+                    placeholder="Store address"
+                >
+            </div>
+
+            <div class="field">
+                <label>Mobile Number</label>
+                <input
+                    id="sellerMobile"
+                    type="tel"
+                    placeholder="Mobile number"
+                >
+            </div>
+
+            <div class="field">
+                <label>Username</label>
+                <input
+                    id="sellerUsername"
+                    type="text"
+                    placeholder="Username"
+                >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+
+                <div class="password-wrap">
+                    <input
+                        id="sellerPassword"
+                        type="password"
+                        placeholder="Password"
+                    >
+
+                    <button
+                        class="password-toggle"
+                        type="button"
+                        onclick="togglePassword('sellerPassword',this)"
+                    >👁</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Confirm Password</label>
+
+                <div class="password-wrap">
+                    <input
+                        id="sellerConfirmPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                    >
+
+                    <button
+                        class="password-toggle"
+                        type="button"
+                        onclick="togglePassword('sellerConfirmPassword',this)"
+                    >👁</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="sellerMessage" class="message"></div>
+
+        <button
+            class="primary-btn"
+            style="width:100%;margin-top:15px"
+            onclick="submitSellerApplication()"
+        >
+            SUBMIT SELLER APPLICATION
+        </button>
+
+    </div>
+
+    <div
+        id="applicationSuccess"
+        class="application-success"
+    >
+        <div class="success-icon">✅</div>
+
+        <h2>Application Submitted!</h2>
+
+        <p style="margin-top:10px;color:#6b7280;line-height:1.6">
+            Your seller application has been submitted successfully
+            and is currently waiting for Admin approval.
+        </p>
+
+        <button
+            class="primary-btn"
+            style="margin-top:20px;width:100%"
+            onclick="closeModal('sellerApplicationModal')"
+        >
+            CLOSE
+        </button>
+    </div>
+
+</div>
+```
+
+</div>
+
+<!--
+    The old Store Application modal is intentionally
+    no longer used by index.html.
+
+    Packer and Delivery users now login and go directly
+    to their own dashboards.
+
+    Their dashboard handles:
+    - Store Number entry
+    - Store owner lookup
+    - Application submission
+    - Pending / rejected / approved status
+-->
+
+<div
+    class="modal store-application-old"
+    id="storeApplicationModal"
+>
+    <div class="modal-box">
+        <h2>Apply to Store Owner</h2>
+    </div>
+</div>
+
+<!-- LOADING -->
+
+<div class="loading" id="loading">
+
+```
+<div class="loading-box">
+
+    <div class="spinner"></div>
+
+    <div id="loadingText">
+        Please wait...
+    </div>
+
+</div>
+```
+
+</div>
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    push
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+
+/* FIREBASE */
+
+const firebaseConfig = {
+    apiKey:"AIzaSyCU09cUR4NMydnRuU0DuJCUvQfZbTMuQSM",
+    authDomain:"saristore-950d3.firebaseapp.com",
+    databaseURL:"https://saristore-950d3-default-rtdb.firebaseio.com/",
+    projectId:"saristore-950d3",
+    storageBucket:"saristore-950d3.firebasestorage.app",
+    messagingSenderId:"232515496765",
+    appId:"1:232515496765:web:0862d4b5e932bfc21cf354",
+    measurementId:"G-N1VDQT033E"
+};
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* GLOBALS */
+
+let selectedRole = "";
+
+
+/* EXPOSE FUNCTIONS */
+
+window.selectRole = selectRole;
+window.login = login;
+window.openRegister = openRegister;
+window.openSellerApplication = openSellerApplication;
+window.closeModal = closeModal;
+window.togglePassword = togglePassword;
+window.registerAccount = registerAccount;
+window.submitSellerApplication = submitSellerApplication;
+window.updateRegistrationFields = updateRegistrationFields;
+
+
+/* ROLE */
+
+function selectRole(role){
+
+    selectedRole = role;
+
+    document
+        .querySelectorAll(".role-card")
+        .forEach(card =>
+            card.classList.remove("selected")
+        );
+
+    const card =
+        document.getElementById(
+            "role" +
+            role.charAt(0).toUpperCase() +
+            role.slice(1)
+        );
+
+    if(card){
+        card.classList.add("selected");
+    }
+
+    const names = {
+        seller:"Seller",
+        retailer:"Retailer",
+        packer:"Packer",
+        delivery:"Delivery"
+    };
+
+    document.getElementById(
+        "selectedRoleBox"
+    ).textContent =
+        "Selected: " +
+        (names[role] || role);
+}
+
+
+/* REGISTER */
+
+function openRegister(){
+
+    clearMessage("registerMessage");
+
+    const role =
+        selectedRole === "seller"
+            ? "retailer"
+            : (
+                selectedRole ||
+                "retailer"
+            );
+
+    document.getElementById(
+        "registerRole"
+    ).value = role;
+
+    updateRegistrationFields();
+
+    document.getElementById(
+        "registerModal"
+    ).classList.add("show");
+}
+
+
+/* SELLER */
+
+function openSellerApplication(){
+
+    clearMessage("sellerMessage");
+
+    document.getElementById(
+        "sellerFormContent"
+    ).style.display = "block";
+
+    document.getElementById(
+        "applicationSuccess"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "sellerApplicationModal"
+    ).classList.add("show");
+}
+
+
+/* CLOSE */
+
+function closeModal(id){
+
+    const modal =
+        document.getElementById(id);
+
+    if(modal){
+        modal.classList.remove("show");
+    }
+
+}
+
+
+/* REGISTRATION FIELDS */
+
+function updateRegistrationFields(){
+
+    const role =
+        document.getElementById(
+            "registerRole"
+        ).value;
+
+    const storeNameField =
+        document.getElementById(
+            "registerStoreNameField"
+        );
+
+    const storeAddressField =
+        document.getElementById(
+            "registerStoreAddressField"
+        );
+
+    const isRetailer =
+        role === "retailer";
+
+    storeNameField.style.display =
+        isRetailer ? "block" : "none";
+
+    storeAddressField.style.display =
+        isRetailer ? "block" : "none";
+}
+
+
+/* PASSWORD */
+
+function togglePassword(id,button){
+
+    const input =
+        document.getElementById(id);
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+        button.textContent = "🙈";
+
+    }else{
+
+        input.type = "password";
+
+        button.textContent = "👁";
+
+    }
+}
+
+
+/* HASH */
+
+async function hashPassword(password){
+
+    const data =
+        new TextEncoder().encode(password);
+
+    const hash =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    return Array
+        .from(new Uint8Array(hash))
+        .map(
+            b =>
+                b.toString(16).padStart(2,"0")
+        )
+        .join("");
+}
+
+
+/* NORMALIZE */
+
+function normalizeUsername(username){
+
+    return String(username || "")
+        .trim()
+        .toLowerCase();
+}
+
+
+function usernameKey(username){
+
+    return normalizeUsername(username)
+        .replace(/[.#$/[\]]/g,"_");
+}
+
+
+/* ID */
+
+function generateId(){
+
+    return "user_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2,9);
+}
+
+
+/* VALIDATION */
+
+function validUsername(username){
+
+    return /^[a-zA-Z0-9._-]{4,30}$/
+        .test(username);
+}
+
+
+function validPassword(password){
+
+    return String(password || "")
+        .length >= 6;
+}
+
+
+/* NOTIFICATION */
+
+async function createNotification(
+    uid,
+    title,
+    message,
+    type
+){
+
+    const notificationRef =
+        push(
+            ref(
+                db,
+                "notifications/" + uid
+            )
+        );
+
+    await set(
+        notificationRef,
+        {
+            title:title,
+            message:message,
+            type:type,
+            read:false,
+            createdAt:Date.now()
+        }
+    );
+}
+
+
+/* REGISTER ACCOUNT */
+
+async function registerAccount(){
+
+    clearMessage("registerMessage");
+
+    const role =
+        document.getElementById(
+            "registerRole"
+        ).value;
+
+    const name =
+        document.getElementById(
+            "registerName"
+        ).value.trim();
+
+    const mobile =
+        document.getElementById(
+            "registerMobile"
+        ).value.trim();
+
+    const storeName =
+        document.getElementById(
+            "registerStoreName"
+        ).value.trim();
+
+    const storeAddress =
+        document.getElementById(
+            "registerStoreAddress"
+        ).value.trim();
+
+    const username =
+        normalizeUsername(
+            document.getElementById(
+                "registerUsername"
+            ).value
+        );
+
+    const password =
+        document.getElementById(
+            "registerPassword"
+        ).value;
+
+    const confirmPassword =
+        document.getElementById(
+            "registerConfirmPassword"
+        ).value;
+
+
+    if(!name || !mobile){
+
+        showMessage(
+            "registerMessage",
+            "Please complete your name and mobile number.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(role === "retailer"){
+
+        if(!storeName || !storeAddress){
+
+            showMessage(
+                "registerMessage",
+                "Please complete your store name and store address.",
+                "error"
+            );
+
+            return;
+        }
+
+    }
+
+
+    if(!validUsername(username)){
+
+        showMessage(
+            "registerMessage",
+            "Username must be 4-30 characters and may contain letters, numbers, dot, dash or underscore.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!validPassword(password)){
+
+        showMessage(
+            "registerMessage",
+            "Password must contain at least 6 characters.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(password !== confirmPassword){
+
+        showMessage(
+            "registerMessage",
+            "Passwords do not match.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        showLoading(
+            "Creating account..."
+        );
+
+
+        const usernameRef =
+            ref(
+                db,
+                "usernames/" +
+                usernameKey(username)
+            );
+
+
+        const usernameSnapshot =
+            await get(usernameRef);
+
+
+        if(usernameSnapshot.exists()){
+
+            hideLoading();
+
+            showMessage(
+                "registerMessage",
+                "Username is already taken. Please choose another username.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const uid =
+            generateId();
+
+
+        const passwordHash =
+            await hashPassword(password);
+
+
+        const now =
+            Date.now();
+
+
+        const userData = {
+
+            uid:uid,
+
+            role:role,
+
+            name:name,
+
+            mobile:mobile,
+
+            username:username,
+
+            passwordHash:passwordHash,
+
+            status:
+                role === "retailer"
+                    ? "active"
+                    : "pending",
+
+            createdAt:now,
+
+            updatedAt:now
+
+        };
+
+
+        if(role === "retailer"){
+
+            userData.storeName =
+                storeName;
+
+            userData.storeAddress =
+                storeAddress;
+
+            userData.storeNumber =
+                "";
+
+        }
+
+
+        if(
+            role === "packer" ||
+            role === "delivery"
+        ){
+
+            /*
+                IMPORTANT
+
+                Packer / Delivery accounts
+                are allowed to login even while
+                pending.
+
+                They will apply to a Seller
+                from their own dashboard.
+            */
+
+            userData.assignedStoreNumber =
+                "";
+
+            userData.storeNumber =
+                "";
+
+            userData.requestedStoreNumber =
+                "";
+
+            userData.storeApplicationStatus =
+                "";
+
+        }
+
+
+        await set(
+
+            ref(
+                db,
+                "users/" + uid
+            ),
+
+            userData
+
+        );
+
+
+        await set(
+
+            usernameRef,
+
+            {
+                uid:uid,
+                role:role,
+                createdAt:now
+            }
+
+        );
+
+
+        await createNotification(
+
+            uid,
+
+            "Account Created",
+
+            (
+                role === "packer" ||
+                role === "delivery"
+            )
+                ? "Your account was created successfully. Login and apply to a Store Owner from your dashboard."
+                : "Your account was created successfully.",
+
+            "account_created"
+
+        );
+
+
+        hideLoading();
+
+
+        showMessage(
+            "registerMessage",
+            (
+                role === "packer" ||
+                role === "delivery"
+            )
+                ? "Account created successfully. You can now login and apply to a Store Owner from your dashboard."
+                : "Account created successfully. You can now login.",
+            "success"
+        );
+
+
+        document.getElementById(
+            "loginUsername"
+        ).value =
+            username;
+
+
+        document.getElementById(
+            "loginPassword"
+        ).value = "";
+
+
+        setTimeout(() => {
+
+            closeModal(
+                "registerModal"
+            );
+
+            selectRole(role);
+
+        },1200);
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "REGISTER ERROR:",
+            error
+        );
+
+        showMessage(
+            "registerMessage",
+            "Unable to create account: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* SELLER APPLICATION */
+
+async function submitSellerApplication(){
+
+    clearMessage("sellerMessage");
+
+    const storeName =
+        document.getElementById(
+            "sellerStoreName"
+        ).value.trim();
+
+    const name =
+        document.getElementById(
+            "sellerName"
+        ).value.trim();
+
+    const address =
+        document.getElementById(
+            "sellerAddress"
+        ).value.trim();
+
+    const mobile =
+        document.getElementById(
+            "sellerMobile"
+        ).value.trim();
+
+    const username =
+        normalizeUsername(
+            document.getElementById(
+                "sellerUsername"
+            ).value
+        );
+
+    const password =
+        document.getElementById(
+            "sellerPassword"
+        ).value;
+
+    const confirmPassword =
+        document.getElementById(
+            "sellerConfirmPassword"
+        ).value;
+
+
+    if(
+        !storeName ||
+        !name ||
+        !address ||
+        !mobile
+    ){
+
+        showMessage(
+            "sellerMessage",
+            "Please complete all required information.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!validUsername(username)){
+
+        showMessage(
+            "sellerMessage",
+            "Username must be 4-30 characters and may contain letters, numbers, dot, dash or underscore.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!validPassword(password)){
+
+        showMessage(
+            "sellerMessage",
+            "Password must contain at least 6 characters.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(password !== confirmPassword){
+
+        showMessage(
+            "sellerMessage",
+            "Passwords do not match.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        showLoading(
+            "Submitting application..."
+        );
+
+
+        const usernameRef =
+            ref(
+                db,
+                "usernames/" +
+                usernameKey(username)
+            );
+
+
+        const usernameSnapshot =
+            await get(usernameRef);
+
+
+        if(usernameSnapshot.exists()){
+
+            hideLoading();
+
+            showMessage(
+                "sellerMessage",
+                "Username is already taken. Please choose another username.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const uid =
+            generateId();
+
+
+        const applicationId =
+            "SELLER-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2,7);
+
+
+        const passwordHash =
+            await hashPassword(password);
+
+
+        const now =
+            Date.now();
+
+
+        const applicationData = {
+
+            applicationId:applicationId,
+
+            uid:uid,
+
+            storeName:storeName,
+
+            name:name,
+
+            storeAddress:address,
+
+            mobile:mobile,
+
+            username:username,
+
+            passwordHash:passwordHash,
+
+            status:"pending",
+
+            paymentStatus:"unpaid",
+
+            paymentVerified:false,
+
+            sellerApproved:false,
+
+            storeNumber:"",
+
+            createdAt:now,
+
+            updatedAt:now
+
+        };
+
+
+        const userData = {
+
+            uid:uid,
+
+            role:"seller",
+
+            name:name,
+
+            mobile:mobile,
+
+            username:username,
+
+            passwordHash:passwordHash,
+
+            storeName:storeName,
+
+            storeAddress:address,
+
+            storeNumber:"",
+
+            status:"pending",
+
+            sellerApproved:false,
+
+            paymentVerified:false,
+
+            paymentStatus:"unpaid",
+
+            applicationId:applicationId,
+
+            createdAt:now,
+
+            updatedAt:now
+
+        };
+
+
+        await set(
+
+            ref(
+                db,
+                "sellerApplications/" +
+                applicationId
+            ),
+
+            applicationData
+
+        );
+
+
+        await set(
+
+            ref(
+                db,
+                "users/" +
+                uid
+            ),
+
+            userData
+
+        );
+
+
+        await set(
+
+            usernameRef,
+
+            {
+                uid:uid,
+                role:"seller",
+                applicationId:applicationId,
+                createdAt:now
+            }
+
+        );
+
+
+        await createNotification(
+
+            uid,
+
+            "Seller Application Submitted",
+
+            "Your seller application has been submitted successfully and is currently pending Admin approval.",
+
+            "seller_application"
+
+        );
+
+
+        hideLoading();
+
+
+        document.getElementById(
+            "sellerFormContent"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "applicationSuccess"
+        ).classList.add("show");
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "SELLER APPLICATION ERROR:",
+            error
+        );
+
+        showMessage(
+            "sellerMessage",
+            "Unable to submit application: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* LOGIN */
+
+async function login(){
+
+    clearMessage("loginMessage");
+
+    if(!selectedRole){
+
+        showMessage(
+            "loginMessage",
+            "Please select your account type first.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const username =
+        normalizeUsername(
+            document.getElementById(
+                "loginUsername"
+            ).value
+        );
+
+    const password =
+        document.getElementById(
+            "loginPassword"
+        ).value;
+
+
+    if(!username || !password){
+
+        showMessage(
+            "loginMessage",
+            "Please enter your username and password.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        showLoading(
+            "Checking account..."
+        );
+
+
+        const key =
+            usernameKey(username);
+
+
+        const usernameSnapshot =
+            await get(
+                ref(
+                    db,
+                    "usernames/" + key
+                )
+            );
+
+
+        if(!usernameSnapshot.exists()){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "Username or password is incorrect.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const usernameData =
+            usernameSnapshot.val();
+
+
+        const uid =
+            usernameData.uid;
+
+
+        if(!uid){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "Username record has no UID. Please contact Admin.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const userSnapshot =
+            await get(
+                ref(
+                    db,
+                    "users/" + uid
+                )
+            );
+
+
+        if(!userSnapshot.exists()){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "User account record was not found.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const user =
+            userSnapshot.val();
+
+
+        /* ROLE */
+
+        if(
+            String(user.role || "").toLowerCase() !==
+            String(selectedRole || "").toLowerCase()
+        ){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "This account is registered as " +
+                user.role +
+                ". Please select the correct account type.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* PASSWORD */
+
+        const enteredPasswordHash =
+            await hashPassword(password);
+
+
+        if(!user.passwordHash){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "This account has no password hash stored in Firebase. Please contact Admin.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if(
+            enteredPasswordHash !==
+            user.passwordHash
+        ){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "Username or password is incorrect.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* BANNED */
+
+        if(
+            String(user.status || "").toLowerCase() ===
+            "banned"
+        ){
+
+            hideLoading();
+
+            showMessage(
+                "loginMessage",
+                "This account has been banned. Please contact Admin.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* SELLER */
+
+        if(user.role === "seller"){
+
+            const sellerApproved =
+                user.sellerApproved === true ||
+                user.sellerApproved === "true";
+
+
+            if(user.status !== "active"){
+
+                hideLoading();
+
+                if(!sellerApproved){
+
+                    showMessage(
+                        "loginMessage",
+                        "Your seller application is still waiting for Admin approval.",
+                        "error"
+                    );
+
+                }else{
+
+                    showMessage(
+                        "loginMessage",
+                        "Your seller account is not active yet. Please wait for Admin activation.",
+                        "error"
+                    );
+
+                }
+
+                return;
+            }
+
+
+            if(!sellerApproved){
+
+                hideLoading();
+
+                showMessage(
+                    "loginMessage",
+                    "Seller approval has not been completed by Admin.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if(
+                !user.storeNumber ||
+                String(user.storeNumber).trim() === ""
+            ){
+
+                hideLoading();
+
+                showMessage(
+                    "loginMessage",
+                    "Seller is approved but has no Store Number. Please contact Admin.",
+                    "error"
+                );
+
+                return;
+            }
+
+        }
+
+
+        /* RETAILER */
+
+        if(user.role === "retailer"){
+
+            if(user.status !== "active"){
+
+                hideLoading();
+
+                showMessage(
+                    "loginMessage",
+                    "Your account is not active.",
+                    "error"
+                );
+
+                return;
+            }
+
+        }
+
+
+        /*
+            PACKER / DELIVERY
+
+            IMPORTANT:
+            They can login even while pending.
+
+            They no longer open the Store Application
+            modal from index.html.
+
+            Their own dashboard handles the Store
+            Number application.
+        */
+
+        if(
+            user.role === "packer" ||
+            user.role === "delivery"
+        ){
+
+            const session =
+                createSession(user);
+
+
+            localStorage.setItem(
+                "sariStoreSession",
+                JSON.stringify(session)
+            );
+
+
+            hideLoading();
+
+
+            redirectUser(
+                user.role
+            );
+
+
+            return;
+        }
+
+
+        /* NORMAL SESSION */
+
+        const session =
+            createSession(user);
+
+
+        localStorage.setItem(
+            "sariStoreSession",
+            JSON.stringify(session)
+        );
+
+
+        hideLoading();
+
+
+        redirectUser(
+            user.role
+        );
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
+
+        showMessage(
+            "loginMessage",
+            "Login failed: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* CREATE SESSION */
+
+function createSession(user){
+
+    return {
+
+        uid:user.uid,
+
+        role:user.role,
+
+        username:user.username,
+
+        name:user.name,
+
+        mobile:user.mobile || "",
+
+        storeName:user.storeName || "",
+
+        storeAddress:user.storeAddress || "",
+
+        storeNumber:user.storeNumber || "",
+
+        assignedStoreNumber:
+            user.assignedStoreNumber || "",
+
+        requestedStoreNumber:
+            user.requestedStoreNumber || "",
+
+        storeApplicationStatus:
+            user.storeApplicationStatus || "",
+
+        sellerApproved:
+            user.sellerApproved === true ||
+            user.sellerApproved === "true",
+
+        paymentVerified:
+            user.paymentVerified === true ||
+            user.paymentVerified === "true",
+
+        paymentStatus:
+            user.paymentStatus || "",
+
+        loginAt:
+            Date.now()
+
+    };
+
+}
+
+
+/* REDIRECT */
+
+function redirectUser(role){
+
+    const pages = {
+
+        seller:"seller.html",
+
+        retailer:"retailer.html",
+
+        packer:"packer.html",
+
+        delivery:"delivery.html"
+
+    };
+
+
+    const page =
+        pages[role];
+
+
+    if(!page){
+
+        showMessage(
+            "loginMessage",
+            "Dashboard page for this account type was not found.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    window.location.href =
+        page;
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(
+    id,
+    text,
+    type
+){
+
+    const element =
+        document.getElementById(id);
+
+
+    if(!element){
+        return;
+    }
+
+
+    element.textContent =
+        text;
+
+
+    element.className =
+        "message show " +
+        type;
+
+}
+
+
+function clearMessage(id){
+
+    const element =
+        document.getElementById(id);
+
+
+    if(!element){
+        return;
+    }
+
+
+    element.textContent = "";
+
+    element.className =
+        "message";
+
+}
+
+
+/* LOADING */
+
+function showLoading(text){
+
+    document.getElementById(
+        "loadingText"
+    ).textContent =
+        text || "Please wait...";
+
+
+    document.getElementById(
+        "loading"
+    ).classList.add("show");
+
+}
+
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).classList.remove("show");
+
+}
+
+
+/* OUTSIDE MODAL */
+
+document
+    .querySelectorAll(".modal")
+    .forEach(
+        modal => {
+
+            modal.addEventListener(
+                "click",
+                function(e){
+
+                    if(
+                        e.target === modal &&
+                        modal.id !== "storeApplicationModal"
+                    ){
+
+                        modal.classList.remove(
+                            "show"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* ENTER LOGIN */
+
+document
+    .getElementById("loginPassword")
+    .addEventListener(
+        "keydown",
+        function(e){
+
+            if(e.key === "Enter"){
+
+                login();
+
+            }
+
+        }
+    );
+
+
+/* REGISTER ROLE CHANGE */
+
+document
+    .getElementById("registerRole")
+    .addEventListener(
+        "change",
+        updateRegistrationFields
+    );
+
+
+/*
+    RESTORE SAVED SESSION
+
+    Packer / Delivery are now restored
+    directly to their own dashboard,
+    regardless of whether they are still
+    waiting for Store Owner approval.
+*/
+
+async function restoreSession(){
+
+    const savedSession =
+        localStorage.getItem(
+            "sariStoreSession"
+        );
+
+
+    if(!savedSession){
+        return;
+    }
+
+
+    try{
+
+        const session =
+            JSON.parse(savedSession);
+
+
+        if(
+            !session ||
+            !session.uid ||
+            !session.role
+        ){
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            return;
+        }
+
+
+        const userSnapshot =
+            await get(
+                ref(
+                    db,
+                    "users/" +
+                    session.uid
+                )
+            );
+
+
+        if(!userSnapshot.exists()){
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            return;
+        }
+
+
+        const user =
+            userSnapshot.val();
+
+
+        if(user.status === "banned"){
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            return;
+        }
+
+
+        /*
+            PACKER / DELIVERY
+
+            Pending accounts are allowed.
+            Restore directly to dashboard.
+        */
+
+        if(
+            user.role === "packer" ||
+            user.role === "delivery"
+        ){
+
+            const freshSession =
+                createSession(user);
+
+
+            localStorage.setItem(
+                "sariStoreSession",
+                JSON.stringify(
+                    freshSession
+                )
+            );
+
+
+            showLoading(
+                "Restoring your session..."
+            );
+
+
+            setTimeout(() => {
+
+                redirectUser(
+                    user.role
+                );
+
+            },300);
+
+
+            return;
+        }
+
+
+        /* RETAILER */
+
+        if(user.role === "retailer"){
+
+            if(user.status !== "active"){
+
+                localStorage.removeItem(
+                    "sariStoreSession"
+                );
+
+                return;
+            }
+
+
+            const freshSession =
+                createSession(user);
+
+
+            localStorage.setItem(
+                "sariStoreSession",
+                JSON.stringify(
+                    freshSession
+                )
+            );
+
+
+            showLoading(
+                "Restoring your session..."
+            );
+
+
+            setTimeout(() => {
+
+                redirectUser(
+                    user.role
+                );
+
+            },300);
+
+
+            return;
+
+        }
+
+
+        /* SELLER */
+
+        if(user.role === "seller"){
+
+            const approved =
+                user.sellerApproved === true ||
+                user.sellerApproved === "true";
+
+
+            if(
+                user.status === "active" &&
+                approved &&
+                user.storeNumber
+            ){
+
+                const freshSession =
+                    createSession(user);
+
+
+                localStorage.setItem(
+                    "sariStoreSession",
+                    JSON.stringify(
+                        freshSession
+                    )
+                );
+
+
+                showLoading(
+                    "Restoring your session..."
+                );
+
+
+                setTimeout(() => {
+
+                    redirectUser(
+                        user.role
+                    );
+
+                },300);
+
+
+                return;
+            }
+
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "SESSION RESTORE ERROR:",
+            error
+        );
+
+
+        localStorage.removeItem(
+            "sariStoreSession"
+        );
+
+    }
+
+}
+
+
+/* DEFAULT */
+
+selectRole("retailer");
+
+updateRegistrationFields();
+
+restoreSession();
+
+</script>
+
+</body>
+</html>

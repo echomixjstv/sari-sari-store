@@ -1,0 +1,2736 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Delivery - SARI-SARI STORE</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f6f8;
+    color:#222;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+button,
+input{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.header{
+    background:#111827;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 3px 12px rgba(0,0,0,.15);
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:#22c55e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    font-weight:bold;
+}
+
+.header-title{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.header-subtitle{
+    font-size:12px;
+    opacity:.7;
+    margin-top:3px;
+}
+
+.logout-btn{
+    border:0;
+    background:#ef4444;
+    color:white;
+    padding:10px 15px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.logout-btn:hover{
+    background:#dc2626;
+}
+
+.container{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
+
+.welcome{
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+}
+
+.welcome h2{
+    margin:0 0 6px;
+    font-size:24px;
+}
+
+.welcome p{
+    margin:0;
+    color:#6b7280;
+}
+
+.store-card{
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    border-radius:14px;
+    padding:18px;
+    margin-top:15px;
+}
+
+.store-card h3{
+    margin:0 0 10px;
+    color:#166534;
+}
+
+.store-number{
+    font-size:27px;
+    font-weight:bold;
+    letter-spacing:2px;
+    color:#15803d;
+}
+
+.store-info{
+    margin-top:8px;
+    color:#4b5563;
+    line-height:1.6;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+}
+
+.card{
+    background:white;
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+}
+
+.card h3{
+    margin:0 0 15px;
+}
+
+.application-card{
+    max-width:650px;
+    margin:40px auto;
+}
+
+.application-icon{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#dcfce7;
+    color:#16a34a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    margin:0 auto 15px;
+}
+
+.application-card h2{
+    text-align:center;
+    margin:0 0 8px;
+}
+
+.application-card p{
+    text-align:center;
+    color:#6b7280;
+    line-height:1.5;
+}
+
+.form-group{
+    margin-top:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+    color:#374151;
+}
+
+.form-group input{
+    width:100%;
+    padding:13px;
+    border:1px solid #d1d5db;
+    border-radius:9px;
+    outline:none;
+    font-size:16px;
+}
+
+.form-group input:focus{
+    border-color:#22c55e;
+    box-shadow:0 0 0 3px rgba(34,197,94,.12);
+}
+
+.primary-btn{
+    width:100%;
+    border:0;
+    background:#16a34a;
+    color:white;
+    padding:13px;
+    border-radius:9px;
+    font-size:16px;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+.primary-btn:hover{
+    background:#15803d;
+}
+
+.primary-btn:disabled{
+    background:#9ca3af;
+    cursor:not-allowed;
+}
+
+.secondary-btn{
+    border:0;
+    background:#e5e7eb;
+    color:#374151;
+    padding:10px 15px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.status-box{
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:20px;
+}
+
+.status-pending{
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#9a3412;
+}
+
+.status-rejected{
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#991b1b;
+}
+
+.status-approved{
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    color:#166534;
+}
+
+.status-box h3{
+    margin:0 0 7px;
+}
+
+.status-box p{
+    margin:4px 0;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.section-title h2{
+    margin:0;
+}
+
+.count-badge{
+    min-width:30px;
+    padding:5px 9px;
+    border-radius:20px;
+    background:#dcfce7;
+    color:#166534;
+    font-weight:bold;
+    text-align:center;
+}
+
+.orders{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.order-card{
+    background:white;
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 3px 12px rgba(0,0,0,.07);
+    border-left:5px solid #22c55e;
+}
+
+.order-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.order-number{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.order-date{
+    color:#6b7280;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.status{
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.status-packed{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.status-delivery{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-delivered{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status-pending{
+    background:#f3f4f6;
+    color:#374151;
+}
+
+.customer-box{
+    background:#f9fafb;
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:12px;
+}
+
+.customer-box strong{
+    display:block;
+    margin-bottom:4px;
+}
+
+.customer-box div{
+    color:#4b5563;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.items{
+    border-top:1px solid #e5e7eb;
+    padding-top:12px;
+}
+
+.item-row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:7px 0;
+    font-size:14px;
+}
+
+.item-name{
+    flex:1;
+}
+
+.item-price{
+    font-weight:bold;
+}
+
+.order-bottom{
+    border-top:1px solid #e5e7eb;
+    margin-top:12px;
+    padding-top:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.total{
+    font-size:18px;
+    font-weight:bold;
+    color:#15803d;
+}
+
+.delivery-btn{
+    border:0;
+    background:#16a34a;
+    color:white;
+    padding:11px 15px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+.delivery-btn:hover{
+    background:#15803d;
+}
+
+.delivery-btn.orange{
+    background:#f59e0b;
+}
+
+.delivery-btn.orange:hover{
+    background:#d97706;
+}
+
+.empty{
+    background:white;
+    border-radius:14px;
+    padding:35px 20px;
+    text-align:center;
+    color:#6b7280;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.empty-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.loading{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+
+.loading.show{
+    display:flex;
+}
+
+.loading-box{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
+    min-width:220px;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:4px solid #e5e7eb;
+    border-top-color:#16a34a;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 12px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    transform:translateX(-50%) translateY(20px);
+    background:#111827;
+    color:white;
+    padding:13px 18px;
+    border-radius:9px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:2000;
+    max-width:90%;
+    text-align:center;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+.hidden{
+    display:none !important;
+}
+
+@media(max-width:700px){
+
+    .header{
+        padding:12px 14px;
+    }
+
+    .header-title{
+        font-size:17px;
+    }
+
+    .container{
+        padding:12px;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .order-top{
+        flex-direction:column;
+    }
+
+    .order-bottom{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .delivery-btn{
+        width:100%;
+    }
+
+    .total{
+        text-align:center;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div class="logo">
+            🚚
+        </div>
+
+        <div>
+            <div class="header-title">
+                SARI-SARI STORE
+            </div>
+
+            <div class="header-subtitle">
+                Delivery Dashboard
+            </div>
+        </div>
+
+    </div>
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        Logout
+    </button>
+
+</header>
+
+
+<main class="container">
+
+    <div
+        id="welcomeCard"
+        class="welcome">
+
+        <h2 id="welcomeName">
+            Delivery
+        </h2>
+
+        <p>
+            Manage your delivery orders here.
+        </p>
+
+        <div
+            id="storeCard"
+            class="store-card hidden">
+
+            <h3>
+                Assigned Store
+            </h3>
+
+            <div
+                id="storeNumberDisplay"
+                class="store-number">
+                --------
+            </div>
+
+            <div
+                id="storeInfo"
+                class="store-info">
+                Loading store information...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- APPLICATION AREA -->
+
+    <section
+        id="applicationArea"
+        class="application-card">
+
+        <div
+            id="applicationContent">
+        </div>
+
+    </section>
+
+
+    <!-- DASHBOARD -->
+
+    <section
+        id="dashboardArea"
+        class="hidden">
+
+        <div class="grid">
+
+            <div class="card">
+
+                <div class="section-title">
+
+                    <h2>
+                        Ready for Delivery
+                    </h2>
+
+                    <span
+                        id="packedCount"
+                        class="count-badge">
+                        0
+                    </span>
+
+                </div>
+
+                <div
+                    id="packedOrders"
+                    class="orders">
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="section-title">
+
+                    <h2>
+                        My Deliveries
+                    </h2>
+
+                    <span
+                        id="deliveryCount"
+                        class="count-badge">
+                        0
+                    </span>
+
+                </div>
+
+                <div
+                    id="myDeliveries"
+                    class="orders">
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div
+    id="loading"
+    class="loading">
+
+    <div class="loading-box">
+
+        <div class="spinner"></div>
+
+        <div>
+            Please wait...
+        </div>
+
+    </div>
+
+</div>
+
+
+<div
+    id="toast"
+    class="toast">
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    update,
+    push
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+
+/* =========================================
+   FIREBASE
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCU09cUR4NMydnRuU0DuJCUvQfZbTMuQSM",
+
+    authDomain:
+        "saristore-950d3.firebaseapp.com",
+
+    databaseURL:
+        "https://saristore-950d3-default-rtdb.firebaseio.com/",
+
+    projectId:
+        "saristore-950d3",
+
+    storageBucket:
+        "saristore-950d3.firebasestorage.app",
+
+    messagingSenderId:
+        "232515496765",
+
+    appId:
+        "1:232515496765:web:0862d4b5e932bfc21cf354",
+
+    measurementId:
+        "G-N1VDQT033E"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* =========================================
+   SESSION
+========================================= */
+
+let session = null;
+let currentUser = null;
+let currentStore = null;
+
+let allOrders = [];
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const applicationArea =
+    document.getElementById("applicationArea");
+
+const applicationContent =
+    document.getElementById("applicationContent");
+
+const dashboardArea =
+    document.getElementById("dashboardArea");
+
+const storeCard =
+    document.getElementById("storeCard");
+
+const storeNumberDisplay =
+    document.getElementById("storeNumberDisplay");
+
+const storeInfo =
+    document.getElementById("storeInfo");
+
+const welcomeName =
+    document.getElementById("welcomeName");
+
+const packedOrders =
+    document.getElementById("packedOrders");
+
+const myDeliveries =
+    document.getElementById("myDeliveries");
+
+const packedCount =
+    document.getElementById("packedCount");
+
+const deliveryCount =
+    document.getElementById("deliveryCount");
+
+
+/* =========================================
+   SESSION CHECK
+========================================= */
+
+function getSession(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(
+                "sariStoreSession"
+            );
+
+        if(!saved){
+            return null;
+        }
+
+        return JSON.parse(saved);
+
+    }catch(error){
+
+        console.error(error);
+
+        return null;
+    }
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+window.logout = function(){
+
+    localStorage.removeItem(
+        "sariStoreSession"
+    );
+
+    window.location.href =
+        "index.html";
+};
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+let toastTimer;
+
+function toast(message){
+
+    const element =
+        document.getElementById("toast");
+
+    element.textContent =
+        message;
+
+    element.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+        setTimeout(()=>{
+
+            element.classList.remove("show");
+
+        },3000);
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+function showLoading(){
+
+    document
+        .getElementById("loading")
+        .classList.add("show");
+}
+
+function hideLoading(){
+
+    document
+        .getElementById("loading")
+        .classList.remove("show");
+}
+
+
+/* =========================================
+   INIT
+========================================= */
+
+async function init(){
+
+    session =
+        getSession();
+
+    if(!session){
+
+        window.location.href =
+            "index.html";
+
+        return;
+    }
+
+    if(session.role !== "delivery"){
+
+        window.location.href =
+            "index.html";
+
+        return;
+    }
+
+    try{
+
+        const snapshot =
+            await get(
+                ref(
+                    db,
+                    "users/" +
+                    session.uid
+                )
+            );
+
+        if(!snapshot.exists()){
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+        currentUser =
+            {
+                uid:session.uid,
+                ...snapshot.val()
+            };
+
+
+        if(
+            currentUser.banned === true ||
+            currentUser.status === "banned"
+        ){
+
+            alert(
+                "Your account has been banned."
+            );
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+
+        welcomeName.textContent =
+            "Hello, " +
+            (
+                currentUser.name ||
+                session.name ||
+                "Delivery"
+            );
+
+
+        await refreshPage();
+
+    }catch(error){
+
+        console.error(error);
+
+        toast(
+            "Unable to load your account."
+        );
+    }
+}
+
+
+/* =========================================
+   REFRESH PAGE
+========================================= */
+
+async function refreshPage(){
+
+    const assignedStoreNumber =
+        String(
+            currentUser.assignedStoreNumber ||
+            currentUser.storeNumber ||
+            ""
+        ).trim();
+
+
+    /*
+        ACTIVE + ASSIGNED
+    */
+
+    if(
+        currentUser.status === "active" &&
+        assignedStoreNumber
+    ){
+
+        applicationArea
+            .classList.add("hidden");
+
+        dashboardArea
+            .classList.remove("hidden");
+
+        storeCard
+            .classList.remove("hidden");
+
+        storeNumberDisplay.textContent =
+            assignedStoreNumber;
+
+        await loadStore(
+            assignedStoreNumber
+        );
+
+        await loadOrders();
+
+        return;
+    }
+
+
+    /*
+        PENDING STORE APPLICATION
+    */
+
+    if(
+        currentUser.requestedStoreNumber &&
+        currentUser.storeApplicationStatus === "pending"
+    ){
+
+        dashboardArea
+            .classList.add("hidden");
+
+        applicationArea
+            .classList.remove("hidden");
+
+        storeCard
+            .classList.add("hidden");
+
+        showPendingApplication();
+
+        return;
+    }
+
+
+    /*
+        REJECTED APPLICATION
+    */
+
+    if(
+        currentUser.storeApplicationStatus === "rejected"
+    ){
+
+        dashboardArea
+            .classList.add("hidden");
+
+        applicationArea
+            .classList.remove("hidden");
+
+        storeCard
+            .classList.add("hidden");
+
+        showRejectedApplication();
+
+        return;
+    }
+
+
+    /*
+        NO STORE
+    */
+
+    dashboardArea
+        .classList.add("hidden");
+
+    applicationArea
+        .classList.remove("hidden");
+
+    storeCard
+        .classList.add("hidden");
+
+    showApplicationForm();
+}
+
+
+/* =========================================
+   LOAD STORE
+========================================= */
+
+async function loadStore(storeNumber){
+
+    try{
+
+        const usersSnapshot =
+            await get(
+                ref(db,"users")
+            );
+
+        if(!usersSnapshot.exists()){
+
+            storeInfo.textContent =
+                "Store information unavailable.";
+
+            return;
+        }
+
+        const users =
+            usersSnapshot.val();
+
+        let seller = null;
+
+        Object.keys(users).some(uid=>{
+
+            const user =
+                users[uid];
+
+            const sellerStore =
+                String(
+                    user.storeNumber ||
+                    ""
+                );
+
+            if(
+                user.role === "seller" &&
+                sellerStore === String(storeNumber)
+            ){
+
+                seller =
+                    {
+                        uid,
+                        ...user
+                    };
+
+                return true;
+            }
+
+            return false;
+        });
+
+
+        currentStore =
+            seller;
+
+
+        if(!seller){
+
+            storeInfo.textContent =
+                "Store Number: " +
+                storeNumber;
+
+            return;
+        }
+
+
+        storeInfo.innerHTML =
+            "<strong>" +
+            escapeHtml(
+                seller.storeName ||
+                "Store"
+            ) +
+            "</strong><br>" +
+
+            escapeHtml(
+                seller.name ||
+                ""
+            ) +
+
+            (
+                seller.address
+                    ? "<br>" +
+                      escapeHtml(
+                          seller.address
+                      )
+                    : ""
+            );
+
+    }catch(error){
+
+        console.error(error);
+
+        storeInfo.textContent =
+            "Unable to load store information.";
+    }
+}
+
+
+/* =========================================
+   APPLICATION FORM
+========================================= */
+
+function showApplicationForm(){
+
+    applicationContent.innerHTML = `
+
+        <div class="application-icon">
+            🚚
+        </div>
+
+        <h2>
+            Apply as Delivery Staff
+        </h2>
+
+        <p>
+            Enter the 7-digit Store Number
+            of the seller you want to work for.
+        </p>
+
+        <div class="form-group">
+
+            <label>
+                Seller Store Number
+            </label>
+
+            <input
+                id="storeNumberInput"
+                type="text"
+                inputmode="numeric"
+                maxlength="7"
+                placeholder="Example: 1000001"
+            >
+
+        </div>
+
+        <button
+            class="primary-btn"
+            onclick="applyToStore()">
+
+            Apply to Store
+
+        </button>
+
+    `;
+}
+
+
+/* =========================================
+   APPLY TO STORE
+========================================= */
+
+window.applyToStore =
+async function(){
+
+    const input =
+        document.getElementById(
+            "storeNumberInput"
+        );
+
+    if(!input){
+        return;
+    }
+
+    const storeNumber =
+        input.value
+            .replace(/\D/g,"")
+            .trim();
+
+
+    if(!storeNumber){
+
+        toast(
+            "Please enter the Store Number."
+        );
+
+        return;
+    }
+
+
+    if(!/^\d{7}$/.test(storeNumber)){
+
+        toast(
+            "Store Number must be 7 digits."
+        );
+
+        return;
+    }
+
+
+    showLoading();
+
+
+    try{
+
+        const usersSnapshot =
+            await get(
+                ref(db,"users")
+            );
+
+
+        if(!usersSnapshot.exists()){
+
+            hideLoading();
+
+            toast(
+                "Store not found."
+            );
+
+            return;
+        }
+
+
+        const users =
+            usersSnapshot.val();
+
+        let seller = null;
+
+
+        Object.keys(users).some(uid=>{
+
+            const user =
+                users[uid];
+
+            const sellerStore =
+                String(
+                    user.storeNumber ||
+                    ""
+                );
+
+            if(
+                user.role === "seller" &&
+                sellerStore === storeNumber &&
+                user.status === "active" &&
+                user.sellerApproved === true
+            ){
+
+                seller =
+                    {
+                        uid,
+                        ...user
+                    };
+
+                return true;
+            }
+
+            return false;
+        });
+
+
+        if(!seller){
+
+            hideLoading();
+
+            toast(
+                "No active seller found for this Store Number."
+            );
+
+            return;
+        }
+
+
+        const now =
+            Date.now();
+
+
+        await update(
+            ref(
+                db,
+                "users/" +
+                currentUser.uid
+            ),
+            {
+
+                requestedStoreNumber:
+                    storeNumber,
+
+                storeApplicationStatus:
+                    "pending",
+
+                storeApplicationAt:
+                    now,
+
+                storeApplicationSellerUid:
+                    seller.uid,
+
+                storeApplicationSellerName:
+                    seller.name || "",
+
+                updatedAt:
+                    now
+            }
+        );
+
+
+        /*
+            NOTIFY SELLER
+        */
+
+        const notificationRef =
+            push(
+                ref(
+                    db,
+                    "notifications/" +
+                    seller.uid
+                )
+            );
+
+
+        await set(
+            notificationRef,
+            {
+
+                title:
+                    "New Delivery Application",
+
+                message:
+                    `${currentUser.name || "A delivery staff"} wants to join your store as delivery staff. Store Number: ${storeNumber}`,
+
+                type:
+                    "store_application",
+
+                applicantUid:
+                    currentUser.uid,
+
+                applicantRole:
+                    "delivery",
+
+                storeNumber:
+                    storeNumber,
+
+                read:
+                    false,
+
+                createdAt:
+                    now
+            }
+        );
+
+
+        currentUser.requestedStoreNumber =
+            storeNumber;
+
+        currentUser.storeApplicationStatus =
+            "pending";
+
+
+        hideLoading();
+
+        showPendingApplication();
+
+        toast(
+            "Application sent successfully!"
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        hideLoading();
+
+        toast(
+            "Unable to submit application."
+        );
+    }
+};
+
+
+/* =========================================
+   PENDING APPLICATION
+========================================= */
+
+function showPendingApplication(){
+
+    applicationContent.innerHTML = `
+
+        <div class="status-box status-pending">
+
+            <h3>
+                APPLICATION PENDING
+            </h3>
+
+            <p>
+                Your application is waiting for
+                the seller's approval.
+            </p>
+
+            <p>
+                Store Number:
+                <strong>
+                    ${escapeHtml(
+                        String(
+                            currentUser.requestedStoreNumber ||
+                            ""
+                        )
+                    )}
+                </strong>
+            </p>
+
+        </div>
+
+        <div class="application-card"
+             style="margin:0;padding:0;box-shadow:none;background:transparent;">
+
+            <p>
+                You will be able to access delivery
+                orders after the seller approves
+                your application.
+            </p>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================
+   REJECTED APPLICATION
+========================================= */
+
+function showRejectedApplication(){
+
+    applicationContent.innerHTML = `
+
+        <div class="status-box status-rejected">
+
+            <h3>
+                APPLICATION REJECTED
+            </h3>
+
+            <p>
+                Your previous store application
+                was rejected.
+            </p>
+
+            <p>
+                You may apply to another store
+                using a different Store Number.
+            </p>
+
+        </div>
+
+        <button
+            class="primary-btn"
+            onclick="resetApplication()">
+
+            Apply to Another Store
+
+        </button>
+
+    `;
+}
+
+
+/* =========================================
+   RESET APPLICATION
+========================================= */
+
+window.resetApplication =
+async function(){
+
+    try{
+
+        showLoading();
+
+        await update(
+            ref(
+                db,
+                "users/" +
+                currentUser.uid
+            ),
+            {
+
+                requestedStoreNumber:"",
+                storeApplicationStatus:"",
+                storeApplicationAt:"",
+                storeApplicationSellerUid:"",
+                storeApplicationSellerName:"",
+                updatedAt:Date.now()
+
+            }
+        );
+
+
+        currentUser.requestedStoreNumber =
+            "";
+
+        currentUser.storeApplicationStatus =
+            "";
+
+
+        hideLoading();
+
+        showApplicationForm();
+
+    }catch(error){
+
+        console.error(error);
+
+        hideLoading();
+
+        toast(
+            "Unable to reset application."
+        );
+    }
+};
+
+
+/* =========================================
+   LOAD ORDERS
+========================================= */
+
+async function loadOrders(){
+
+    if(!currentUser){
+        return;
+    }
+
+
+    const storeNumber =
+        String(
+            currentUser.assignedStoreNumber ||
+            currentUser.storeNumber ||
+            ""
+        );
+
+
+    if(!storeNumber){
+        return;
+    }
+
+
+    try{
+
+        const snapshot =
+            await get(
+                ref(db,"orders")
+            );
+
+
+        allOrders = [];
+
+
+        if(snapshot.exists()){
+
+            const orders =
+                snapshot.val();
+
+
+            Object.keys(orders).forEach(key=>{
+
+                const order =
+                    {
+                        orderId:key,
+                        ...orders[key]
+                    };
+
+
+                const orderStoreNumber =
+                    String(
+                        order.storeNumber ||
+                        order.sellerStoreNumber ||
+                        order.assignedStoreNumber ||
+                        ""
+                    );
+
+
+                if(
+                    orderStoreNumber ===
+                    storeNumber
+                ){
+
+                    allOrders.push(order);
+                }
+
+            });
+
+        }
+
+
+        allOrders.sort(
+            (a,b)=>
+                Number(
+                    b.createdAt || 0
+                ) -
+                Number(
+                    a.createdAt || 0
+                )
+        );
+
+
+        renderOrders();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        packedOrders.innerHTML =
+            `
+            <div class="empty">
+                Unable to load orders.
+            </div>
+            `;
+
+        myDeliveries.innerHTML =
+            `
+            <div class="empty">
+                Unable to load deliveries.
+            </div>
+            `;
+    }
+}
+
+
+/* =========================================
+   RENDER ORDERS
+========================================= */
+
+function renderOrders(){
+
+    const ready =
+        allOrders.filter(
+            order =>
+                String(order.status || "")
+                    .toLowerCase() ===
+                "packed"
+        );
+
+
+    const myDelivery =
+        allOrders.filter(
+            order => {
+
+                const status =
+                    String(
+                        order.status || ""
+                    ).toLowerCase();
+
+                return (
+                    status ===
+                    "out_for_delivery"
+                    &&
+                    (
+                        order.deliveryBy ===
+                            currentUser.uid
+                        ||
+                        order.deliveryUid ===
+                            currentUser.uid
+                        ||
+                        order.deliveryStaffUid ===
+                            currentUser.uid
+                    )
+                );
+            }
+        );
+
+
+    const delivered =
+        allOrders.filter(
+            order => {
+
+                const status =
+                    String(
+                        order.status || ""
+                    ).toLowerCase();
+
+                return (
+                    status === "delivered" &&
+                    (
+                        order.deliveryBy ===
+                            currentUser.uid
+                        ||
+                        order.deliveryUid ===
+                            currentUser.uid
+                        ||
+                        order.deliveryStaffUid ===
+                            currentUser.uid
+                    )
+                );
+            }
+        );
+
+
+    const myAll =
+        [
+            ...myDelivery,
+            ...delivered
+        ].sort(
+            (a,b)=>
+                Number(
+                    b.updatedAt ||
+                    b.createdAt ||
+                    0
+                ) -
+                Number(
+                    a.updatedAt ||
+                    a.createdAt ||
+                    0
+                )
+        );
+
+
+    packedCount.textContent =
+        ready.length;
+
+    deliveryCount.textContent =
+        myAll.length;
+
+
+    renderPackedOrders(
+        ready
+    );
+
+    renderMyDeliveries(
+        myAll
+    );
+}
+
+
+/* =========================================
+   PACKED ORDERS
+========================================= */
+
+function renderPackedOrders(orders){
+
+    if(orders.length === 0){
+
+        packedOrders.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                <div>
+                    No packed orders are waiting
+                    for delivery.
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    packedOrders.innerHTML =
+        orders.map(
+            order =>
+                createOrderCard(
+                    order,
+                    "packed"
+                )
+        ).join("");
+}
+
+
+/* =========================================
+   MY DELIVERIES
+========================================= */
+
+function renderMyDeliveries(orders){
+
+    if(orders.length === 0){
+
+        myDeliveries.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🚚
+                </div>
+
+                <div>
+                    No delivery assigned yet.
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    myDeliveries.innerHTML =
+        orders.map(
+            order =>
+                createOrderCard(
+                    order,
+                    String(
+                        order.status || ""
+                    ).toLowerCase()
+                )
+        ).join("");
+}
+
+
+/* =========================================
+   ORDER CARD
+========================================= */
+
+function createOrderCard(
+    order,
+    viewStatus
+){
+
+    const status =
+        String(
+            order.status || ""
+        ).toLowerCase();
+
+
+    let statusClass =
+        "status-pending";
+
+    let statusText =
+        status;
+
+
+    if(status === "packed"){
+
+        statusClass =
+            "status-packed";
+
+        statusText =
+            "PACKED";
+
+    }else if(
+        status === "out_for_delivery"
+    ){
+
+        statusClass =
+            "status-delivery";
+
+        statusText =
+            "OUT FOR DELIVERY";
+
+    }else if(
+        status === "delivered"
+    ){
+
+        statusClass =
+            "status-delivered";
+
+        statusText =
+            "DELIVERED";
+    }
+
+
+    const orderNumber =
+        order.orderNumber ||
+        order.orderId ||
+        "ORDER";
+
+
+    const customerName =
+        order.retailerName ||
+        order.customerName ||
+        "Customer";
+
+
+    const mobile =
+        order.customerMobile ||
+        order.retailerMobile ||
+        order.mobile ||
+        "";
+
+
+    const address =
+        order.deliveryAddress ||
+        order.address ||
+        "No delivery address";
+
+
+    const items =
+        Array.isArray(order.items)
+            ? order.items
+            : [];
+
+
+    const itemsHtml =
+        items.length
+            ? items.map(
+                item => `
+
+                    <div class="item-row">
+
+                        <div class="item-name">
+
+                            ${escapeHtml(
+                                item.name ||
+                                "Product"
+                            )}
+
+                            ×
+                            ${Number(
+                                item.quantity || 1
+                            )}
+
+                        </div>
+
+                        <div class="item-price">
+
+                            ₱${formatMoney(
+                                Number(
+                                    item.subtotal ||
+                                    (
+                                        Number(
+                                            item.price || 0
+                                        ) *
+                                        Number(
+                                            item.quantity || 1
+                                        )
+                                    )
+                                )
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `
+            ).join("")
+            :
+            `
+                <div class="item-row">
+                    No item details available.
+                </div>
+            `;
+
+
+    let buttonHtml = "";
+
+
+    if(status === "packed"){
+
+        buttonHtml = `
+
+            <button
+                class="delivery-btn"
+                onclick="acceptDelivery('${escapeAttr(order.orderId)}')">
+
+                Accept for Delivery
+
+            </button>
+
+        `;
+
+    }else if(
+        status === "out_for_delivery" &&
+        (
+            order.deliveryBy === currentUser.uid ||
+            order.deliveryUid === currentUser.uid ||
+            order.deliveryStaffUid === currentUser.uid
+        )
+    ){
+
+        buttonHtml = `
+
+            <button
+                class="delivery-btn orange"
+                onclick="markDelivered('${escapeAttr(order.orderId)}')">
+
+                Mark Delivered
+
+            </button>
+
+        `;
+
+    }else if(status === "delivered"){
+
+        buttonHtml = `
+
+            <span
+                class="status status-delivered">
+
+                DELIVERED
+
+            </span>
+
+        `;
+    }
+
+
+    return `
+
+        <div class="order-card">
+
+            <div class="order-top">
+
+                <div>
+
+                    <div class="order-number">
+
+                        ${escapeHtml(
+                            orderNumber
+                        )}
+
+                    </div>
+
+                    <div class="order-date">
+
+                        ${formatDate(
+                            order.createdAt
+                        )}
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="status ${statusClass}">
+
+                    ${statusText}
+
+                </div>
+
+            </div>
+
+
+            <div class="customer-box">
+
+                <strong>
+                    ${escapeHtml(
+                        customerName
+                    )}
+                </strong>
+
+                <div>
+                    📍
+                    ${escapeHtml(
+                        address
+                    )}
+                </div>
+
+                ${
+                    mobile
+                        ? `
+                        <div>
+                            📱
+                            ${escapeHtml(
+                                mobile
+                            )}
+                        </div>
+                        `
+                        : ""
+                }
+
+            </div>
+
+
+            <div class="items">
+
+                ${itemsHtml}
+
+            </div>
+
+
+            <div class="order-bottom">
+
+                <div class="total">
+
+                    Total:
+                    ₱${formatMoney(
+                        Number(
+                            order.totalAmount ||
+                            order.total ||
+                            0
+                        )
+                    )}
+
+                </div>
+
+                <div>
+                    ${buttonHtml}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================
+   ACCEPT DELIVERY
+========================================= */
+
+window.acceptDelivery =
+async function(orderId){
+
+    const order =
+        allOrders.find(
+            item =>
+                String(
+                    item.orderId
+                ) ===
+                String(orderId)
+        );
+
+
+    if(!order){
+
+        toast(
+            "Order not found."
+        );
+
+        return;
+    }
+
+
+    if(
+        String(
+            order.status || ""
+        ).toLowerCase() !==
+        "packed"
+    ){
+
+        toast(
+            "This order is no longer available."
+        );
+
+        return;
+    }
+
+
+    showLoading();
+
+
+    try{
+
+        const now =
+            Date.now();
+
+
+        await update(
+            ref(
+                db,
+                "orders/" +
+                orderId
+            ),
+            {
+
+                status:
+                    "out_for_delivery",
+
+                deliveryBy:
+                    currentUser.uid,
+
+                deliveryUid:
+                    currentUser.uid,
+
+                deliveryStaffUid:
+                    currentUser.uid,
+
+                deliveryByName:
+                    currentUser.name || "",
+
+                deliveryStartedAt:
+                    now,
+
+                updatedAt:
+                    now
+            }
+        );
+
+
+        /*
+            NOTIFY RETAILER
+        */
+
+        const retailerUid =
+            order.retailerUid ||
+            order.customerUid;
+
+
+        if(retailerUid){
+
+            const notificationRef =
+                push(
+                    ref(
+                        db,
+                        "notifications/" +
+                        retailerUid
+                    )
+                );
+
+
+            await set(
+                notificationRef,
+                {
+
+                    title:
+                        "Order Out for Delivery",
+
+                    message:
+                        `Your order ${order.orderNumber || order.orderId} is now out for delivery.`,
+
+                    type:
+                        "order_out_for_delivery",
+
+                    orderId:
+                        orderId,
+
+                    orderNumber:
+                        order.orderNumber || "",
+
+                    deliveryUid:
+                        currentUser.uid,
+
+                    deliveryName:
+                        currentUser.name || "",
+
+                    read:
+                        false,
+
+                    createdAt:
+                        now
+                }
+            );
+        }
+
+
+        /*
+            NOTIFY SELLER
+        */
+
+        if(order.sellerUid){
+
+            const sellerNotificationRef =
+                push(
+                    ref(
+                        db,
+                        "notifications/" +
+                        order.sellerUid
+                    )
+                );
+
+
+            await set(
+                sellerNotificationRef,
+                {
+
+                    title:
+                        "Order Out for Delivery",
+
+                    message:
+                        `Order ${order.orderNumber || order.orderId} was accepted for delivery by ${currentUser.name || "delivery staff"}.`,
+
+                    type:
+                        "order_out_for_delivery",
+
+                    orderId:
+                        orderId,
+
+                    orderNumber:
+                        order.orderNumber || "",
+
+                    deliveryUid:
+                        currentUser.uid,
+
+                    deliveryName:
+                        currentUser.name || "",
+
+                    read:
+                        false,
+
+                    createdAt:
+                        now
+                }
+            );
+        }
+
+
+        hideLoading();
+
+        toast(
+            "Order accepted for delivery."
+        );
+
+        await loadOrders();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        hideLoading();
+
+        toast(
+            "Unable to accept this order."
+        );
+    }
+};
+
+
+/* =========================================
+   MARK DELIVERED
+========================================= */
+
+window.markDelivered =
+async function(orderId){
+
+    const order =
+        allOrders.find(
+            item =>
+                String(
+                    item.orderId
+                ) ===
+                String(orderId)
+        );
+
+
+    if(!order){
+
+        toast(
+            "Order not found."
+        );
+
+        return;
+    }
+
+
+    const status =
+        String(
+            order.status || ""
+        ).toLowerCase();
+
+
+    if(status !== "out_for_delivery"){
+
+        toast(
+            "This order is not currently out for delivery."
+        );
+
+        return;
+    }
+
+
+    const isMine =
+        order.deliveryBy ===
+            currentUser.uid
+        ||
+        order.deliveryUid ===
+            currentUser.uid
+        ||
+        order.deliveryStaffUid ===
+            currentUser.uid;
+
+
+    if(!isMine){
+
+        toast(
+            "This delivery is assigned to another delivery staff."
+        );
+
+        return;
+    }
+
+
+    showLoading();
+
+
+    try{
+
+        const now =
+            Date.now();
+
+
+        await update(
+            ref(
+                db,
+                "orders/" +
+                orderId
+            ),
+            {
+
+                status:
+                    "delivered",
+
+                deliveredBy:
+                    currentUser.uid,
+
+                deliveredByName:
+                    currentUser.name || "",
+
+                deliveredAt:
+                    now,
+
+                updatedAt:
+                    now
+            }
+        );
+
+
+        /*
+            NOTIFY RETAILER
+        */
+
+        const retailerUid =
+            order.retailerUid ||
+            order.customerUid;
+
+
+        if(retailerUid){
+
+            const notificationRef =
+                push(
+                    ref(
+                        db,
+                        "notifications/" +
+                        retailerUid
+                    )
+                );
+
+
+            await set(
+                notificationRef,
+                {
+
+                    title:
+                        "Order Delivered",
+
+                    message:
+                        `Your order ${order.orderNumber || order.orderId} has been delivered.`,
+
+                    type:
+                        "order_delivered",
+
+                    orderId:
+                        orderId,
+
+                    orderNumber:
+                        order.orderNumber || "",
+
+                    deliveryUid:
+                        currentUser.uid,
+
+                    deliveryName:
+                        currentUser.name || "",
+
+                    read:
+                        false,
+
+                    createdAt:
+                        now
+                }
+            );
+        }
+
+
+        /*
+            NOTIFY SELLER
+        */
+
+        if(order.sellerUid){
+
+            const sellerNotificationRef =
+                push(
+                    ref(
+                        db,
+                        "notifications/" +
+                        order.sellerUid
+                    )
+                );
+
+
+            await set(
+                sellerNotificationRef,
+                {
+
+                    title:
+                        "Order Delivered",
+
+                    message:
+                        `Order ${order.orderNumber || order.orderId} has been delivered by ${currentUser.name || "delivery staff"}.`,
+
+                    type:
+                        "order_delivered",
+
+                    orderId:
+                        orderId,
+
+                    orderNumber:
+                        order.orderNumber || "",
+
+                    deliveryUid:
+                        currentUser.uid,
+
+                    deliveryName:
+                        currentUser.name || "",
+
+                    read:
+                        false,
+
+                    createdAt:
+                        now
+                }
+            );
+        }
+
+
+        hideLoading();
+
+        toast(
+            "Order marked as delivered."
+        );
+
+        await loadOrders();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        hideLoading();
+
+        toast(
+            "Unable to update delivery."
+        );
+    }
+};
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function escapeHtml(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+function escapeAttr(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
+}
+
+
+function formatMoney(value){
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "en-PH",
+        {
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }
+    );
+}
+
+
+function formatDate(timestamp){
+
+    if(!timestamp){
+        return "";
+    }
+
+    try{
+
+        return new Date(
+            Number(timestamp)
+        ).toLocaleString(
+            "en-PH",
+            {
+                dateStyle:"medium",
+                timeStyle:"short"
+            }
+        );
+
+    }catch(error){
+
+        return "";
+    }
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+init();
+
+</script>
+
+</body>
+</html>
+

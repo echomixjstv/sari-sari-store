@@ -1,0 +1,5991 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>SARI-SARI STORE - Seller Dashboard</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#f7f7f9;
+    color:#333;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    min-height:100vh;
+    display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:245px;
+    min-height:100vh;
+    background:linear-gradient(180deg,#c2185b,#8e1745);
+    color:#fff;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar-brand{
+    padding:20px 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.sidebar-brand img{
+    width:45px;
+    height:45px;
+    object-fit:cover;
+    border-radius:10px;
+    background:#fff;
+    padding:3px;
+}
+
+.sidebar-brand h2{
+    font-size:18px;
+}
+
+.sidebar-brand p{
+    font-size:10px;
+    opacity:.8;
+    margin-top:3px;
+}
+
+.store-badge{
+    margin:15px;
+    padding:13px;
+    background:rgba(255,255,255,.12);
+    border-radius:12px;
+}
+
+.store-badge small{
+    display:block;
+    font-size:10px;
+    opacity:.8;
+}
+
+.store-badge strong{
+    display:block;
+    margin-top:4px;
+    font-size:18px;
+    letter-spacing:1px;
+}
+
+.nav{
+    padding:10px;
+    flex:1;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#fff;
+    text-align:left;
+    padding:13px 14px;
+    border-radius:10px;
+    margin-bottom:5px;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:rgba(255,255,255,.17);
+}
+
+.sidebar-bottom{
+    padding:12px;
+    border-top:1px solid rgba(255,255,255,.15);
+}
+
+.logout-btn{
+    width:100%;
+    border:0;
+    padding:12px;
+    border-radius:10px;
+    background:#fff;
+    color:#a31750;
+    font-weight:bold;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:245px;
+    width:calc(100% - 245px);
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:#fff;
+    border-bottom:1px solid #eee;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.topbar h1{
+    font-size:22px;
+    color:#9c174c;
+}
+
+.top-user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+}
+
+.user-circle{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#e91e63;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.content{
+    padding:25px;
+}
+
+/* SECTIONS */
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+/* CARDS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:#fff;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 4px 16px rgba(0,0,0,.06);
+}
+
+.stat-icon{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    font-size:25px;
+    font-weight:bold;
+    color:#a31750;
+}
+
+.stat-label{
+    color:#777;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.sales-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:25px;
+}
+
+.sales-card{
+    background:#fff;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 4px 16px rgba(0,0,0,.06);
+    border-left:5px solid #e91e63;
+}
+
+.sales-card.today{
+    border-left-color:#198754;
+}
+
+.sales-card.weekly{
+    border-left-color:#0d6efd;
+}
+
+.sales-card.monthly{
+    border-left-color:#9c174c;
+}
+
+.sales-card-title{
+    font-size:12px;
+    color:#777;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.sales-card-value{
+    font-size:26px;
+    font-weight:bold;
+    color:#9c174c;
+}
+
+.sales-card small{
+    display:block;
+    color:#999;
+    margin-top:5px;
+    font-size:10px;
+}
+
+.card{
+    background:#fff;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 4px 16px rgba(0,0,0,.06);
+    margin-bottom:20px;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.card-header h2{
+    color:#9c174c;
+    font-size:18px;
+}
+
+.card-header p{
+    color:#777;
+    font-size:12px;
+    margin-top:4px;
+}
+
+/* BUTTONS */
+
+.btn{
+    border:0;
+    border-radius:9px;
+    padding:10px 14px;
+    font-weight:bold;
+    font-size:12px;
+}
+
+.btn-primary{
+    background:#e91e63;
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:#c2185b;
+}
+
+.btn-success{
+    background:#198754;
+    color:#fff;
+}
+
+.btn-danger{
+    background:#dc3545;
+    color:#fff;
+}
+
+.btn-warning{
+    background:#ffc107;
+    color:#333;
+}
+
+.btn-secondary{
+    background:#eee;
+    color:#555;
+}
+
+.btn-info{
+    background:#0d6efd;
+    color:#fff;
+}
+
+/* TABLE */
+
+.table-wrap{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:750px;
+}
+
+th{
+    text-align:left;
+    background:#fff5f8;
+    color:#9c174c;
+    font-size:11px;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+    font-size:12px;
+}
+
+.actions{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.status-pending{
+    background:#fff3cd;
+    color:#795b00;
+}
+
+.status-active,
+.status-accepted,
+.status-packed,
+.status-delivered{
+    background:#dff5e5;
+    color:#17652b;
+}
+
+.status-rejected,
+.status-cancelled{
+    background:#ffe3e3;
+    color:#9b0000;
+}
+
+.status-packing{
+    background:#e2efff;
+    color:#18568d;
+}
+
+.status-delivery{
+    background:#e8e1ff;
+    color:#553b9a;
+}
+
+.status-completed{
+    background:#d9f2ff;
+    color:#075985;
+}
+
+/* SEARCH */
+
+.toolbar{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+.toolbar input,
+.toolbar select{
+    padding:10px 12px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    outline:none;
+    background:#fff;
+}
+
+.toolbar input{
+    flex:1;
+    min-width:200px;
+}
+
+/* PRODUCT GRID */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.product-card{
+    border:1px solid #eee;
+    border-radius:13px;
+    overflow:hidden;
+    background:#fff;
+}
+
+.product-image{
+    width:100%;
+    height:140px;
+    background:#f5f5f5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#aaa;
+    font-size:35px;
+}
+
+.product-info{
+    padding:13px;
+}
+
+.product-info h3{
+    font-size:14px;
+    color:#8e1745;
+    margin-bottom:6px;
+}
+
+.product-price{
+    color:#e91e63;
+    font-weight:bold;
+    font-size:16px;
+}
+
+.product-stock{
+    color:#777;
+    font-size:11px;
+    margin-top:5px;
+}
+
+.product-actions{
+    display:flex;
+    gap:6px;
+    margin-top:10px;
+}
+
+.product-actions button{
+    flex:1;
+}
+
+/* FORMS */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    color:#555;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:11px 12px;
+    outline:none;
+    background:#fff;
+}
+
+.form-group textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:#e91e63;
+    box-shadow:0 0 0 3px rgba(233,30,99,.08);
+}
+
+/* PROFILE */
+
+.profile-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.info-item{
+    background:#fafafa;
+    border-radius:10px;
+    padding:14px;
+}
+
+.info-item small{
+    display:block;
+    color:#888;
+    font-size:10px;
+    margin-bottom:5px;
+}
+
+.info-item strong{
+    color:#444;
+    font-size:13px;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:15px;
+    z-index:5000;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:650px;
+    max-height:92vh;
+    overflow-y:auto;
+    background:#fff;
+    border-radius:18px;
+}
+
+.modal-header{
+    padding:18px 20px;
+    background:linear-gradient(135deg,#c2185b,#e91e63);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    font-size:18px;
+}
+
+.close{
+    border:0;
+    background:rgba(255,255,255,.15);
+    color:#fff;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    font-size:20px;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    flex:1;
+}
+
+/* ORDER DETAILS */
+
+.order-items{
+    margin-top:15px;
+    border-top:1px solid #eee;
+}
+
+.order-item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
+    font-size:12px;
+}
+
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:15px;
+    font-size:16px;
+    font-weight:bold;
+    color:#a31750;
+}
+
+.order-info-box{
+    background:#fafafa;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.order-info-box div{
+    margin-bottom:6px;
+    font-size:12px;
+}
+
+.order-info-box div:last-child{
+    margin-bottom:0;
+}
+
+/* EMPTY */
+
+.empty{
+    text-align:center;
+    padding:40px 20px;
+    color:#999;
+}
+
+.empty-icon{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#333;
+    color:#fff;
+    padding:13px 18px;
+    border-radius:10px;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    display:none;
+    z-index:10000;
+    font-size:12px;
+}
+
+.toast.show{
+    display:block;
+}
+
+/* LOADING */
+
+.loading{
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,.75);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.loading.show{
+    display:flex;
+}
+
+.loading-box{
+    background:#fff;
+    padding:25px 35px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    text-align:center;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:4px solid #eee;
+    border-top-color:#e91e63;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:auto auto 12px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* MOBILE */
+
+.mobile-nav{
+    display:none;
+}
+
+@media(max-width:1000px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .sales-summary{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:750px){
+
+    .sidebar{
+        width:210px;
+    }
+
+    .main{
+        margin-left:210px;
+        width:calc(100% - 210px);
+    }
+
+    .form-grid,
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding-bottom:70px;
+    }
+
+    .topbar{
+        height:62px;
+        padding:0 15px;
+    }
+
+    .topbar h1{
+        font-size:18px;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .stat{
+        padding:15px;
+    }
+
+    .stat-value{
+        font-size:20px;
+    }
+
+    .sales-summary{
+        grid-template-columns:1fr;
+        gap:10px;
+    }
+
+    .sales-card{
+        padding:16px;
+    }
+
+    .sales-card-value{
+        font-size:22px;
+    }
+
+    .product-grid{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .product-image{
+        height:110px;
+    }
+
+    .mobile-nav{
+        position:fixed;
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        left:0;
+        right:0;
+        bottom:0;
+        height:62px;
+        background:#fff;
+        border-top:1px solid #ddd;
+        z-index:2000;
+    }
+
+    .mobile-nav button{
+        border:0;
+        background:#fff;
+        color:#777;
+        font-size:10px;
+    }
+
+    .mobile-nav button.active{
+        color:#e91e63;
+        font-weight:bold;
+    }
+
+}
+
+/* PRINT */
+
+@media print{
+
+    body{
+        background:#fff;
+    }
+
+    body *{
+        visibility:hidden;
+    }
+
+    #printArea,
+    #printArea *{
+        visibility:visible;
+    }
+
+    #printArea{
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        padding:20px;
+        background:#fff;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+
+<div class="sidebar-brand">
+
+    <img
+        src="images/logo.png"
+        onerror="this.style.display='none'">
+
+    <div>
+        <h2>SARI-SARI STORE</h2>
+        <p>SELLER PANEL</p>
+    </div>
+
+</div>
+
+<div class="store-badge">
+
+    <small>STORE NUMBER</small>
+
+    <strong id="sidebarStoreNumber">
+        --------
+    </strong>
+
+</div>
+
+<nav class="nav">
+
+    <button
+        id="navDashboard"
+        class="active"
+        onclick="showSection('dashboard')">
+        🏠 Dashboard
+    </button>
+
+    <button
+        id="navProducts"
+        onclick="showSection('products')">
+        📦 My Products
+    </button>
+
+    <button
+        id="navOrders"
+        onclick="showSection('orders')">
+        🛒 Orders
+    </button>
+
+    <button
+        id="navWorkers"
+        onclick="showSection('workers')">
+        👥 Packer & Delivery
+    </button>
+
+    <button
+        id="navNotifications"
+        onclick="showSection('notifications')">
+        🔔 Notifications
+    </button>
+
+    <button
+        id="navAccount"
+        onclick="showSection('account')">
+        👤 My Account
+    </button>
+
+</nav>
+
+<div class="sidebar-bottom">
+
+    <button
+        class="logout-btn"
+        onclick="logout()">
+        LOGOUT
+    </button>
+
+</div>
+
+
+</aside>
+
+<!-- MAIN -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+    <h1 id="pageTitle">
+        Seller Dashboard
+    </h1>
+
+    <div class="top-user">
+
+        <span id="topUserName">
+            Seller
+        </span>
+
+        <div
+            class="user-circle"
+            id="userCircle">
+            S
+        </div>
+
+    </div>
+
+</header>
+
+<div class="content">
+
+    <!-- DASHBOARD -->
+
+    <section
+        id="sectionDashboard"
+        class="section active">
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-icon">🛒</div>
+                <div
+                    class="stat-value"
+                    id="statOrders">
+                    0
+                </div>
+                <div class="stat-label">
+                    New Orders
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">📦</div>
+                <div
+                    class="stat-value"
+                    id="statProducts">
+                    0
+                </div>
+                <div class="stat-label">
+                    Products
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">👥</div>
+                <div
+                    class="stat-value"
+                    id="statWorkers">
+                    0
+                </div>
+                <div class="stat-label">
+                    Workers
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">💰</div>
+                <div
+                    class="stat-value"
+                    id="statSales">
+                    ₱0.00
+                </div>
+                <div class="stat-label">
+                    Total Delivered Sales
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SALES SUMMARY -->
+
+        <div class="sales-summary">
+
+            <div class="sales-card today">
+
+                <div class="sales-card-title">
+                    TODAY SALES
+                </div>
+
+                <div
+                    class="sales-card-value"
+                    id="todaySales">
+                    ₱0.00
+                </div>
+
+                <small id="todaySalesLabel">
+                    Delivered orders today
+                </small>
+
+            </div>
+
+            <div class="sales-card weekly">
+
+                <div class="sales-card-title">
+                    WEEKLY SALES
+                </div>
+
+                <div
+                    class="sales-card-value"
+                    id="weeklySales">
+                    ₱0.00
+                </div>
+
+                <small>
+                    Delivered orders this week
+                </small>
+
+            </div>
+
+            <div class="sales-card monthly">
+
+                <div class="sales-card-title">
+                    MONTHLY SALES
+                </div>
+
+                <div
+                    class="sales-card-value"
+                    id="monthlySales">
+                    ₱0.00
+                </div>
+
+                <small>
+                    Delivered orders this month
+                </small>
+
+            </div>
+
+        </div>
+
+        <!-- MONTHLY REPORT -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Sales Report</h2>
+                    <p>
+                        Print your monthly delivered-sales report.
+                    </p>
+                </div>
+
+                <div class="actions">
+
+                    <input
+                        type="month"
+                        id="reportMonth"
+                        style="
+                            padding:9px;
+                            border:1px solid #ddd;
+                            border-radius:8px;
+                        ">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="printMonthlyReport()">
+                        🖨 PRINT MONTHLY REPORT
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="profile-grid">
+
+                <div class="info-item">
+                    <small>SELECTED MONTH SALES</small>
+                    <strong id="reportMonthSales">
+                        ₱0.00
+                    </strong>
+                </div>
+
+                <div class="info-item">
+                    <small>DELIVERED ORDERS</small>
+                    <strong id="reportMonthOrders">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Recent Orders</h2>
+                    <p>
+                        Orders received by your store
+                    </p>
+                </div>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="showSection('orders')">
+                    VIEW ALL
+                </button>
+
+            </div>
+
+            <div
+                id="dashboardOrders">
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Store Information</h2>
+                    <p>
+                        Your seller account
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-grid">
+
+                <div class="info-item">
+                    <small>STORE NAME</small>
+                    <strong id="dashStoreName">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>STORE NUMBER</small>
+                    <strong id="dashStoreNumber">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>OWNER</small>
+                    <strong id="dashOwner">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>MOBILE</small>
+                    <strong id="dashMobile">-</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PRODUCTS -->
+
+    <section
+        id="sectionProducts"
+        class="section">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>My Products</h2>
+                    <p>
+                        Manage products available to retailers.
+                    </p>
+                </div>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openProductModal()">
+                    + ADD PRODUCT
+                </button>
+
+            </div>
+
+            <div class="toolbar">
+
+                <input
+                    type="text"
+                    id="productSearch"
+                    placeholder="Search products..."
+                    oninput="renderProducts()">
+
+            </div>
+
+            <div
+                id="productGrid"
+                class="product-grid">
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ORDERS -->
+
+    <section
+        id="sectionOrders"
+        class="section">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Store Orders</h2>
+                    <p>
+                        Manage retailer orders for your store.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="toolbar">
+
+                <input
+                    type="text"
+                    id="orderSearch"
+                    placeholder="Search order, customer..."
+                    oninput="renderOrders()">
+
+                <select
+                    id="orderFilter"
+                    onchange="renderOrders()">
+
+                    <option value="all">
+                        All Orders
+                    </option>
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="accepted">
+                        Accepted
+                    </option>
+
+                    <option value="packing">
+                        Packing
+                    </option>
+
+                    <option value="packed">
+                        Packed
+                    </option>
+
+                    <option value="delivery">
+                        Delivery
+                    </option>
+
+                    <option value="delivered">
+                        Delivered
+                    </option>
+
+                    <option value="completed">
+                        Completed
+                    </option>
+
+                    <option value="rejected">
+                        Rejected
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ORDER</th>
+                            <th>CUSTOMER</th>
+                            <th>ITEMS</th>
+                            <th>TOTAL</th>
+                            <th>STATUS</th>
+                            <th>DATE</th>
+                            <th>ACTION</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="ordersTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div
+                id="ordersEmpty"
+                class="empty"
+                style="display:none;">
+
+                <div class="empty-icon">
+                    🛒
+                </div>
+
+                No orders found.
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- WORKERS -->
+
+    <section
+        id="sectionWorkers"
+        class="section">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Packer Applications</h2>
+                    <p>
+                        Approve workers who will pack orders for your store.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>NAME</th>
+                            <th>MOBILE</th>
+                            <th>USERNAME</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="packerTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div
+                id="packerEmpty"
+                class="empty"
+                style="display:none;">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                No packer applications.
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Delivery Applications</h2>
+                    <p>
+                        Approve delivery partners for your store.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>NAME</th>
+                            <th>MOBILE</th>
+                            <th>USERNAME</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="deliveryTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div
+                id="deliveryEmpty"
+                class="empty"
+                style="display:none;">
+
+                <div class="empty-icon">
+                    🚚
+                </div>
+
+                No delivery applications.
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- NOTIFICATIONS -->
+
+    <section
+        id="sectionNotifications"
+        class="section">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Notifications</h2>
+                    <p>
+                        Updates for your seller account.
+                    </p>
+                </div>
+
+            </div>
+
+            <div id="notificationsList">
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ACCOUNT -->
+
+    <section
+        id="sectionAccount"
+        class="section">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>My Account</h2>
+                    <p>
+                        Seller account information.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-grid">
+
+                <div class="info-item">
+                    <small>NAME</small>
+                    <strong id="accountName">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>USERNAME</small>
+                    <strong id="accountUsername">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>MOBILE</small>
+                    <strong id="accountMobile">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>STORE NAME</small>
+                    <strong id="accountStoreName">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>STORE NUMBER</small>
+                    <strong id="accountStoreNumber">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>STORE ADDRESS</small>
+                    <strong id="accountAddress">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>ACCOUNT STATUS</small>
+                    <strong id="accountStatus">-</strong>
+                </div>
+
+                <div class="info-item">
+                    <small>SELLER APPROVAL</small>
+                    <strong id="accountApproval">-</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+</main>
+
+</div>
+
+<!-- MOBILE NAV -->
+
+<nav class="mobile-nav">
+
+
+<button
+    id="mobileDashboard"
+    class="active"
+    onclick="showSection('dashboard')">
+    🏠<br>
+    Dashboard
+</button>
+
+<button
+    id="mobileProducts"
+    onclick="showSection('products')">
+    📦<br>
+    Products
+</button>
+
+<button
+    id="mobileOrders"
+    onclick="showSection('orders')">
+    🛒<br>
+    Orders
+</button>
+
+<button
+    id="mobileAccount"
+    onclick="showSection('account')">
+    👤<br>
+    Account
+</button>
+
+
+</nav>
+
+<!-- PRODUCT MODAL -->
+
+<div
+    class="modal"
+    id="productModal">
+
+
+<div class="modal-box">
+
+    <div class="modal-header">
+
+        <h2 id="productModalTitle">
+            Add Product
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeModal('productModal')">
+            ×
+        </button>
+
+    </div>
+
+    <div class="modal-body">
+
+        <input
+            type="hidden"
+            id="productId">
+
+        <div class="form-group">
+
+            <label>
+                Product Name
+            </label>
+
+            <input
+                type="text"
+                id="productName"
+                placeholder="Example: Lucky Me Pancit Canton">
+
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Price
+                </label>
+
+                <input
+                    type="number"
+                    id="productPrice"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Stock
+                </label>
+
+                <input
+                    type="number"
+                    id="productStock"
+                    min="0"
+                    step="1"
+                    placeholder="0">
+
+            </div>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Unit
+            </label>
+
+            <select id="productUnit">
+
+                <option value="piece">
+                    Piece
+                </option>
+
+                <option value="pack">
+                    Pack
+                </option>
+
+                <option value="box">
+                    Box
+                </option>
+
+                <option value="case">
+                    Case
+                </option>
+
+                <option value="dozen">
+                    Dozen
+                </option>
+
+                <option value="kg">
+                    Kilogram
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="productDescription"
+                placeholder="Product description"></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                Product Image URL
+            </label>
+
+            <input
+                type="text"
+                id="productImage"
+                placeholder="Optional image URL">
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeModal('productModal')">
+                CANCEL
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="saveProduct()">
+                SAVE PRODUCT
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- ORDER MODAL -->
+
+<div
+    class="modal"
+    id="orderModal">
+
+
+<div class="modal-box">
+
+    <div class="modal-header">
+
+        <h2>
+            Order Details
+        </h2>
+
+        <button
+            class="close"
+            onclick="closeModal('orderModal')">
+            ×
+        </button>
+
+    </div>
+
+    <div
+        class="modal-body"
+        id="orderDetails">
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- PRINT AREA -->
+
+<div
+    id="printArea"
+    style="display:none;">
+</div>
+
+<!-- LOADING -->
+
+<div
+    class="loading"
+    id="loading">
+
+
+<div class="loading-box">
+
+    <div class="spinner"></div>
+
+    <div id="loadingText">
+        Please wait...
+    </div>
+
+</div>
+
+
+</div>
+
+<div
+    class="toast"
+    id="toast">
+</div>
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    update,
+    remove
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCU09cUR4NMydnRuU0DuJCUvQfZbTMuQSM",
+
+    authDomain:
+        "saristore-950d3.firebaseapp.com",
+
+    databaseURL:
+        "https://saristore-950d3-default-rtdb.firebaseio.com/",
+
+    projectId:
+        "saristore-950d3",
+
+    storageBucket:
+        "saristore-950d3.firebasestorage.app",
+
+    messagingSenderId:
+        "232515496765",
+
+    appId:
+        "1:232515496765:web:0862d4b5e932bfc21cf354",
+
+    measurementId:
+        "G-N1VDQT033E"
+
+};
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* GLOBAL DATA */
+
+let session = null;
+let seller = null;
+
+let products = {};
+let orders = {};
+let users = {};
+let notifications = {};
+
+let currentOrderId = "";
+
+
+/* EXPOSE FUNCTIONS */
+
+window.showSection = showSection;
+window.logout = logout;
+
+window.openProductModal = openProductModal;
+window.closeModal = closeModal;
+window.saveProduct = saveProduct;
+window.editProduct = editProduct;
+window.deleteProduct = deleteProduct;
+
+window.viewOrder = viewOrder;
+window.acceptOrder = acceptOrder;
+window.rejectOrder = rejectOrder;
+
+window.approveWorker = approveWorker;
+window.rejectWorker = rejectWorker;
+
+window.renderProducts = renderProducts;
+window.renderOrders = renderOrders;
+
+window.printReceipt = printReceipt;
+window.printMonthlyReport = printMonthlyReport;
+window.updateMonthlyReportPreview = updateMonthlyReportPreview;
+
+
+/* START */
+
+init();
+
+
+async function init(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(
+                "sariStoreSession"
+            );
+
+        if(!saved){
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+        session =
+            JSON.parse(saved);
+
+        if(
+            !session ||
+            !session.uid ||
+            session.role !== "seller"
+        ){
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+        showLoading(
+            "Loading seller account..."
+        );
+
+        const sellerSnapshot =
+            await get(
+                ref(
+                    db,
+                    "users/" +
+                    session.uid
+                )
+            );
+
+        if(!sellerSnapshot.exists()){
+
+            throw new Error(
+                "Seller account not found."
+            );
+
+        }
+
+        seller =
+            sellerSnapshot.val();
+
+        if(
+            seller.role !== "seller"
+        ){
+
+            throw new Error(
+                "Invalid seller account."
+            );
+
+        }
+
+        if(
+            seller.status !== "active"
+        ){
+
+            throw new Error(
+                "Your seller account is not active."
+            );
+
+        }
+
+        const approved =
+            seller.sellerApproved === true ||
+            seller.sellerApproved === "true";
+
+        if(!approved){
+
+            throw new Error(
+                "Your seller account has not been approved."
+            );
+
+        }
+
+        if(
+            !seller.storeNumber ||
+            String(seller.storeNumber).trim() === ""
+        ){
+
+            throw new Error(
+                "Your Store Number is missing."
+            );
+
+        }
+
+        session = {
+
+            ...session,
+
+            uid:seller.uid,
+
+            role:"seller",
+
+            username:seller.username || "",
+
+            name:seller.name || "",
+
+            mobile:seller.mobile || "",
+
+            storeName:seller.storeName || "",
+
+            storeAddress:seller.storeAddress || "",
+
+            storeNumber:
+                seller.storeNumber || "",
+
+            sellerApproved:true
+
+        };
+
+        localStorage.setItem(
+            "sariStoreSession",
+            JSON.stringify(session)
+        );
+
+        renderSellerInfo();
+
+        const monthInput =
+            document.getElementById(
+                "reportMonth"
+            );
+
+        if(monthInput){
+
+            const now =
+                new Date();
+
+            monthInput.value =
+                now.getFullYear() +
+                "-" +
+                String(
+                    now.getMonth() + 1
+                ).padStart(2,"0");
+
+            monthInput.addEventListener(
+                "change",
+                updateMonthlyReportPreview
+            );
+
+        }
+
+        await loadAll();
+
+        hideLoading();
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Unable to load seller dashboard."
+        );
+
+        localStorage.removeItem(
+            "sariStoreSession"
+        );
+
+        window.location.href =
+            "index.html";
+
+    }
+
+}
+
+
+/* LOAD DATA */
+
+async function loadAll(){
+
+    await Promise.all([
+
+        loadProducts(),
+        loadOrders(),
+        loadUsers(),
+        loadNotifications()
+
+    ]);
+
+    renderDashboard();
+
+    renderProducts();
+
+    renderOrders();
+
+    renderWorkers();
+
+    renderNotifications();
+
+    updateMonthlyReportPreview();
+
+}
+
+
+/* SELLER INFO */
+
+function renderSellerInfo(){
+
+    const storeNumber =
+        String(
+            seller.storeNumber || ""
+        );
+
+    document.getElementById(
+        "sidebarStoreNumber"
+    ).textContent =
+        storeNumber;
+
+    document.getElementById(
+        "topUserName"
+    ).textContent =
+        seller.name || "Seller";
+
+    document.getElementById(
+        "userCircle"
+    ).textContent =
+        getInitials(
+            seller.name
+        );
+
+    document.getElementById(
+        "dashStoreName"
+    ).textContent =
+        seller.storeName || "-";
+
+    document.getElementById(
+        "dashStoreNumber"
+    ).textContent =
+        storeNumber || "-";
+
+    document.getElementById(
+        "dashOwner"
+    ).textContent =
+        seller.name || "-";
+
+    document.getElementById(
+        "dashMobile"
+    ).textContent =
+        seller.mobile || "-";
+
+    document.getElementById(
+        "accountName"
+    ).textContent =
+        seller.name || "-";
+
+    document.getElementById(
+        "accountUsername"
+    ).textContent =
+        seller.username || "-";
+
+    document.getElementById(
+        "accountMobile"
+    ).textContent =
+        seller.mobile || "-";
+
+    document.getElementById(
+        "accountStoreName"
+    ).textContent =
+        seller.storeName || "-";
+
+    document.getElementById(
+        "accountStoreNumber"
+    ).textContent =
+        storeNumber || "-";
+
+    document.getElementById(
+        "accountAddress"
+    ).textContent =
+        seller.storeAddress || "-";
+
+    document.getElementById(
+        "accountStatus"
+    ).textContent =
+        String(
+            seller.status || ""
+        ).toUpperCase();
+
+    document.getElementById(
+        "accountApproval"
+    ).textContent =
+        "APPROVED";
+
+}
+
+
+/* PRODUCTS */
+
+async function loadProducts(){
+
+    const snapshot =
+        await get(
+            ref(db,"products")
+        );
+
+    products =
+        snapshot.exists()
+            ? snapshot.val()
+            : {};
+
+}
+
+
+function sellerProduct(product){
+
+    if(!product){
+        return false;
+    }
+
+    const productStore =
+        String(
+            product.storeNumber ||
+            product.sellerStoreNumber ||
+            product.store ||
+            ""
+        );
+
+    return (
+        productStore ===
+        String(seller.storeNumber)
+    );
+
+}
+
+
+function renderProducts(){
+
+    const grid =
+        document.getElementById(
+            "productGrid"
+        );
+
+    const search =
+        String(
+            document.getElementById(
+                "productSearch"
+            ).value || ""
+        ).toLowerCase();
+
+    const list =
+        Object.entries(products)
+        .filter(
+            ([id,p]) =>
+                sellerProduct(p) &&
+                (
+                    String(
+                        p.name ||
+                        p.productName ||
+                        ""
+                    ).toLowerCase()
+                    .includes(search)
+                )
+        );
+
+    document.getElementById(
+        "statProducts"
+    ).textContent =
+        list.length;
+
+    if(!list.length){
+
+        grid.innerHTML = `
+
+            <div
+                class="empty"
+                style="grid-column:1/-1;">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                No products found.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    grid.innerHTML =
+        list.map(
+            ([id,p]) => {
+
+                const name =
+                    p.name ||
+                    p.productName ||
+                    "Unnamed Product";
+
+                const price =
+                    Number(
+                        p.price || 0
+                    );
+
+                const stock =
+                    Number(
+                        p.stock || 0
+                    );
+
+                const unit =
+                    p.unit || "piece";
+
+                const image =
+                    p.image ||
+                    p.imageUrl ||
+                    "";
+
+                return `
+
+                    <div class="product-card">
+
+                        <div class="product-image">
+
+                            ${
+                                image
+                                ?
+                                `<img
+                                    src="${escapeHTML(image)}"
+                                    style="width:100%;height:100%;object-fit:cover;"
+                                    onerror="this.style.display='none'">`
+                                :
+                                "📦"
+                            }
+
+                        </div>
+
+                        <div class="product-info">
+
+                            <h3>
+                                ${escapeHTML(name)}
+                            </h3>
+
+                            <div class="product-price">
+                                ₱${money(price)}
+                            </div>
+
+                            <div class="product-stock">
+                                Stock:
+                                ${stock}
+                                ${escapeHTML(unit)}
+                            </div>
+
+                            <div class="product-actions">
+
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="editProduct('${id}')">
+                                    EDIT
+                                </button>
+
+                                <button
+                                    class="btn btn-danger"
+                                    onclick="deleteProduct('${id}')">
+                                    DELETE
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+function openProductModal(id=""){
+
+    document.getElementById(
+        "productId"
+    ).value = id;
+
+    document.getElementById(
+        "productModalTitle"
+    ).textContent =
+        id
+            ? "Edit Product"
+            : "Add Product";
+
+    if(id){
+
+        const p =
+            products[id];
+
+        if(!p){
+            return;
+        }
+
+        document.getElementById(
+            "productName"
+        ).value =
+            p.name ||
+            p.productName ||
+            "";
+
+        document.getElementById(
+            "productPrice"
+        ).value =
+            p.price || 0;
+
+        document.getElementById(
+            "productStock"
+        ).value =
+            p.stock || 0;
+
+        document.getElementById(
+            "productUnit"
+        ).value =
+            p.unit || "piece";
+
+        document.getElementById(
+            "productDescription"
+        ).value =
+            p.description || "";
+
+        document.getElementById(
+            "productImage"
+        ).value =
+            p.image ||
+            p.imageUrl ||
+            "";
+
+    }else{
+
+        document.getElementById(
+            "productName"
+        ).value = "";
+
+        document.getElementById(
+            "productPrice"
+        ).value = "";
+
+        document.getElementById(
+            "productStock"
+        ).value = "";
+
+        document.getElementById(
+            "productUnit"
+        ).value = "piece";
+
+        document.getElementById(
+            "productDescription"
+        ).value = "";
+
+        document.getElementById(
+            "productImage"
+        ).value = "";
+
+    }
+
+    document.getElementById(
+        "productModal"
+    ).classList.add("show");
+
+}
+
+
+function editProduct(id){
+
+    openProductModal(id);
+
+}
+
+
+async function saveProduct(){
+
+    const id =
+        document.getElementById(
+            "productId"
+        ).value;
+
+    const name =
+        document.getElementById(
+            "productName"
+        ).value.trim();
+
+    const price =
+        Number(
+            document.getElementById(
+                "productPrice"
+            ).value
+        );
+
+    const stock =
+        Number(
+            document.getElementById(
+                "productStock"
+            ).value
+        );
+
+    const unit =
+        document.getElementById(
+            "productUnit"
+        ).value;
+
+    const description =
+        document.getElementById(
+            "productDescription"
+        ).value.trim();
+
+    const image =
+        document.getElementById(
+            "productImage"
+        ).value.trim();
+
+    if(!name){
+
+        toast(
+            "Please enter product name."
+        );
+
+        return;
+
+    }
+
+    if(
+        !Number.isFinite(price) ||
+        price < 0
+    ){
+
+        toast(
+            "Please enter a valid price."
+        );
+
+        return;
+
+    }
+
+    if(
+        !Number.isFinite(stock) ||
+        stock < 0
+    ){
+
+        toast(
+            "Please enter a valid stock."
+        );
+
+        return;
+
+    }
+
+    try{
+
+        showLoading(
+            "Saving product..."
+        );
+
+        const productId =
+            id ||
+            (
+                "product_" +
+                Date.now() +
+                "_" +
+                Math.random()
+                    .toString(36)
+                    .substring(2,8)
+            );
+
+        const data = {
+
+            id:productId,
+
+            name:name,
+
+            productName:name,
+
+            price:price,
+
+            stock:stock,
+
+            unit:unit,
+
+            description:description,
+
+            image:image,
+
+            storeNumber:
+                String(
+                    seller.storeNumber
+                ),
+
+            sellerStoreNumber:
+                String(
+                    seller.storeNumber
+                ),
+
+            sellerUid:
+                seller.uid,
+
+            sellerName:
+                seller.name || "",
+
+            storeName:
+                seller.storeName || "",
+
+            status:"active",
+
+            updatedAt:Date.now()
+
+        };
+
+        if(!id){
+
+            data.createdAt =
+                Date.now();
+
+        }
+
+        await set(
+
+            ref(
+                db,
+                "products/" +
+                productId
+            ),
+
+            data
+
+        );
+
+        products[productId] =
+            data;
+
+        closeModal(
+            "productModal"
+        );
+
+        renderProducts();
+
+        toast(
+            id
+                ? "Product updated."
+                : "Product added."
+        );
+
+        hideLoading();
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        toast(
+            "Unable to save product: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+async function deleteProduct(id){
+
+    if(!confirm(
+        "Delete this product?"
+    )){
+
+        return;
+
+    }
+
+    try{
+
+        showLoading(
+            "Deleting product..."
+        );
+
+        await remove(
+            ref(
+                db,
+                "products/" +
+                id
+            )
+        );
+
+        delete products[id];
+
+        renderProducts();
+
+        hideLoading();
+
+        toast(
+            "Product deleted."
+        );
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        toast(
+            "Unable to delete product."
+        );
+
+    }
+
+}
+
+
+/* ORDERS */
+
+async function loadOrders(){
+
+    const snapshot =
+        await get(
+            ref(db,"orders")
+        );
+
+    orders =
+        snapshot.exists()
+            ? snapshot.val()
+            : {};
+
+}
+
+
+function orderBelongsToSeller(order){
+
+    if(!order){
+        return false;
+    }
+
+    const store =
+        String(
+            order.storeNumber ||
+            order.sellerStoreNumber ||
+            order.assignedStoreNumber ||
+            ""
+        );
+
+    return (
+        store ===
+        String(
+            seller.storeNumber
+        )
+    );
+
+}
+
+
+function getOrderItems(order){
+
+    const source =
+        order.items ||
+        order.products ||
+        order.orderItems ||
+        [];
+
+    if(Array.isArray(source)){
+
+        return source;
+
+    }
+
+    if(
+        source &&
+        typeof source === "object"
+    ){
+
+        return Object.values(source);
+
+    }
+
+    return [];
+
+}
+
+
+function orderTotal(order){
+
+    if(
+        order.total !== undefined
+    ){
+
+        return Number(
+            order.total || 0
+        );
+
+    }
+
+    if(
+        order.totalAmount !== undefined
+    ){
+
+        return Number(
+            order.totalAmount || 0
+        );
+
+    }
+
+    if(
+        order.grandTotal !== undefined
+    ){
+
+        return Number(
+            order.grandTotal || 0
+        );
+
+    }
+
+    return getOrderItems(order)
+        .reduce(
+            (sum,item) => {
+
+                const price =
+                    Number(
+                        item.price ||
+                        item.unitPrice ||
+                        0
+                    );
+
+                const qty =
+                    Number(
+                        item.quantity ||
+                        item.qty ||
+                        1
+                    );
+
+                return sum +
+                    price * qty;
+
+            },
+            0
+        );
+
+}
+
+
+/*
+    IMPORTANT:
+    Sales are counted only when the order is
+    DELIVERED or COMPLETED.
+*/
+
+function isDeliveredOrder(order){
+
+    const status =
+        String(
+            order?.status || ""
+        ).toLowerCase();
+
+    return (
+        status === "delivered" ||
+        status === "completed"
+    );
+
+}
+
+
+function getSalesTimestamp(order){
+
+    return Number(
+        order.deliveredAt ||
+        order.completedAt ||
+        order.updatedAt ||
+        order.createdAt ||
+        0
+    );
+
+}
+
+
+function getSellerOrders(){
+
+    return Object.entries(orders)
+        .filter(
+            ([id,order]) =>
+                orderBelongsToSeller(order)
+        );
+
+}
+
+
+function getDeliveredOrders(){
+
+    return getSellerOrders()
+        .filter(
+            ([id,order]) =>
+                isDeliveredOrder(order)
+        );
+
+}
+
+
+function startOfToday(){
+
+    const d =
+        new Date();
+
+    d.setHours(
+        0,0,0,0
+    );
+
+    return d.getTime();
+
+}
+
+
+function startOfWeek(){
+
+    const d =
+        new Date();
+
+    d.setHours(
+        0,0,0,0
+    );
+
+    const day =
+        d.getDay();
+
+    const diff =
+        day === 0
+            ? 6
+            : day - 1;
+
+    d.setDate(
+        d.getDate() - diff
+    );
+
+    return d.getTime();
+
+}
+
+
+function startOfMonth(){
+
+    const d =
+        new Date();
+
+    d.setHours(
+        0,0,0,0
+    );
+
+    d.setDate(1);
+
+    return d.getTime();
+
+}
+
+
+function salesFromTimestamp(
+    startTime,
+    endTime=Date.now()
+){
+
+    let total = 0;
+
+    getDeliveredOrders()
+        .forEach(
+            ([id,order]) => {
+
+                const time =
+                    getSalesTimestamp(
+                        order
+                    );
+
+                if(
+                    time >= startTime &&
+                    time <= endTime
+                ){
+
+                    total +=
+                        orderTotal(order);
+
+                }
+
+            }
+        );
+
+    return total;
+
+}
+
+
+function renderSales(){
+
+    const delivered =
+        getDeliveredOrders();
+
+    let totalSales = 0;
+
+    delivered.forEach(
+        ([id,order]) => {
+
+            totalSales +=
+                orderTotal(order);
+
+        }
+    );
+
+    const today =
+        salesFromTimestamp(
+            startOfToday()
+        );
+
+    const weekly =
+        salesFromTimestamp(
+            startOfWeek()
+        );
+
+    const monthly =
+        salesFromTimestamp(
+            startOfMonth()
+        );
+
+    document.getElementById(
+        "statSales"
+    ).textContent =
+        "₱" +
+        money(totalSales);
+
+    document.getElementById(
+        "todaySales"
+    ).textContent =
+        "₱" +
+        money(today);
+
+    document.getElementById(
+        "weeklySales"
+    ).textContent =
+        "₱" +
+        money(weekly);
+
+    document.getElementById(
+        "monthlySales"
+    ).textContent =
+        "₱" +
+        money(monthly);
+
+    const todayCount =
+        delivered.filter(
+            ([id,order]) =>
+                getSalesTimestamp(order) >=
+                startOfToday()
+        ).length;
+
+    document.getElementById(
+        "todaySalesLabel"
+    ).textContent =
+        todayCount +
+        " delivered order(s) today";
+
+}
+
+
+function renderOrders(){
+
+    const tbody =
+        document.getElementById(
+            "ordersTable"
+        );
+
+    const empty =
+        document.getElementById(
+            "ordersEmpty"
+        );
+
+    const search =
+        String(
+            document.getElementById(
+                "orderSearch"
+            ).value || ""
+        ).toLowerCase();
+
+    const filter =
+        document.getElementById(
+            "orderFilter"
+        ).value;
+
+    let list =
+        getSellerOrders();
+
+    list =
+        list.filter(
+            ([id,order]) => {
+
+                const status =
+                    String(
+                        order.status ||
+                        "pending"
+                    ).toLowerCase();
+
+                if(
+                    filter !== "all" &&
+                    status !== filter
+                ){
+
+                    return false;
+
+                }
+
+                const text = [
+
+                    id,
+
+                    order.orderNumber,
+
+                    order.customerName,
+
+                    order.retailerName,
+
+                    order.username,
+
+                    order.mobile
+
+                ]
+                .join(" ")
+                .toLowerCase();
+
+                return text.includes(
+                    search
+                );
+
+            }
+        );
+
+    list.sort(
+        (a,b) =>
+            Number(
+                b[1].updatedAt ||
+                b[1].createdAt ||
+                0
+            ) -
+            Number(
+                a[1].updatedAt ||
+                a[1].createdAt ||
+                0
+            )
+    );
+
+    if(!list.length){
+
+        tbody.innerHTML = "";
+
+        empty.style.display =
+            "block";
+
+        return;
+
+    }
+
+    empty.style.display =
+        "none";
+
+    tbody.innerHTML =
+        list.map(
+            ([id,order]) => {
+
+                const customer =
+                    order.customerName ||
+                    order.retailerName ||
+                    order.name ||
+                    "Customer";
+
+                const items =
+                    getOrderItems(
+                        order
+                    );
+
+                const total =
+                    orderTotal(order);
+
+                const status =
+                    String(
+                        order.status ||
+                        "pending"
+                    ).toLowerCase();
+
+                return `
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                ${escapeHTML(
+                                    order.orderNumber ||
+                                    id
+                                )}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${escapeHTML(customer)}
+                        </td>
+
+                        <td>
+                            ${items.length}
+                            item(s)
+                        </td>
+
+                        <td>
+                            ₱${money(total)}
+                        </td>
+
+                        <td>
+                            ${statusBadge(status)}
+                        </td>
+
+                        <td>
+                            ${formatDate(
+                                order.createdAt ||
+                                order.updatedAt
+                            )}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="viewOrder('${id}')">
+                                    VIEW
+                                </button>
+
+                                ${
+                                    status === "pending"
+                                    ?
+                                    `
+                                    <button
+                                        class="btn btn-success"
+                                        onclick="acceptOrder('${id}')">
+                                        ACCEPT
+                                    </button>
+
+                                    <button
+                                        class="btn btn-danger"
+                                        onclick="rejectOrder('${id}')">
+                                        REJECT
+                                    </button>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                                ${
+                                    isDeliveredOrder(order)
+                                    ?
+                                    `
+                                    <button
+                                        class="btn btn-info"
+                                        onclick="printReceipt('${id}')">
+                                        🖨 RECEIPT
+                                    </button>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+function renderDashboard(){
+
+    const storeOrders =
+        getSellerOrders();
+
+    const newOrders =
+        storeOrders.filter(
+            ([id,order]) =>
+                String(
+                    order.status ||
+                    "pending"
+                ).toLowerCase() ===
+                "pending"
+        );
+
+    document.getElementById(
+        "statOrders"
+    ).textContent =
+        newOrders.length;
+
+    renderSales();
+
+    const recent =
+        storeOrders
+        .sort(
+            (a,b) =>
+                Number(
+                    b[1].updatedAt ||
+                    b[1].createdAt ||
+                    0
+                ) -
+                Number(
+                    a[1].updatedAt ||
+                    a[1].createdAt ||
+                    0
+                )
+        )
+        .slice(0,5);
+
+    const container =
+        document.getElementById(
+            "dashboardOrders"
+        );
+
+    if(!recent.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🛒
+                </div>
+
+                No orders yet.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = `
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ORDER</th>
+                        <th>CUSTOMER</th>
+                        <th>TOTAL</th>
+                        <th>STATUS</th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${
+                        recent.map(
+                            ([id,order]) => {
+
+                                return `
+
+                                    <tr>
+
+                                        <td>
+                                            ${
+                                                escapeHTML(
+                                                    order.orderNumber ||
+                                                    id
+                                                )
+                                            }
+                                        </td>
+
+                                        <td>
+                                            ${
+                                                escapeHTML(
+                                                    order.customerName ||
+                                                    order.retailerName ||
+                                                    "Customer"
+                                                )
+                                            }
+                                        </td>
+
+                                        <td>
+                                            ₱${money(
+                                                orderTotal(order)
+                                            )}
+                                        </td>
+
+                                        <td>
+                                            ${statusBadge(
+                                                String(
+                                                    order.status ||
+                                                    "pending"
+                                                ).toLowerCase()
+                                            )}
+                                        </td>
+
+                                        <td>
+
+                                            <button
+                                                class="btn btn-secondary"
+                                                onclick="viewOrder('${id}')">
+                                                VIEW
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                `;
+
+                            }
+                        ).join("")
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ACCEPT ORDER */
+
+async function acceptOrder(id){
+
+    const order =
+        orders[id];
+
+    if(!order){
+        return;
+    }
+
+    if(!confirm(
+        "Accept this order?"
+    )){
+
+        return;
+
+    }
+
+    try{
+
+        showLoading(
+            "Accepting order..."
+        );
+
+        const now =
+            Date.now();
+
+        await update(
+
+            ref(
+                db,
+                "orders/" +
+                id
+            ),
+
+            {
+
+                status:"accepted",
+
+                sellerUid:
+                    seller.uid,
+
+                sellerName:
+                    seller.name || "",
+
+                sellerStoreNumber:
+                    String(
+                        seller.storeNumber
+                    ),
+
+                storeNumber:
+                    String(
+                        seller.storeNumber
+                    ),
+
+                acceptedAt:
+                    now,
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+        orders[id] = {
+
+            ...orders[id],
+
+            status:"accepted",
+
+            sellerUid:seller.uid,
+
+            sellerName:seller.name || "",
+
+            sellerStoreNumber:
+                String(
+                    seller.storeNumber
+                ),
+
+            storeNumber:
+                String(
+                    seller.storeNumber
+                ),
+
+            acceptedAt:now,
+
+            updatedAt:now
+
+        };
+
+        hideLoading();
+
+        renderOrders();
+
+        renderDashboard();
+
+        toast(
+            "Order accepted. It is now ready for packing."
+        );
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        toast(
+            "Unable to accept order: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* REJECT ORDER */
+
+async function rejectOrder(id){
+
+    const order =
+        orders[id];
+
+    if(!order){
+        return;
+    }
+
+    const reason =
+        prompt(
+            "Reason for rejecting this order:",
+            ""
+        );
+
+    if(reason === null){
+        return;
+    }
+
+    try{
+
+        showLoading(
+            "Rejecting order..."
+        );
+
+        const now =
+            Date.now();
+
+        await update(
+
+            ref(
+                db,
+                "orders/" +
+                id
+            ),
+
+            {
+
+                status:"rejected",
+
+                rejectedBy:
+                    seller.uid,
+
+                rejectedByName:
+                    seller.name || "",
+
+                rejectionReason:
+                    reason.trim(),
+
+                rejectedAt:
+                    now,
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+        orders[id] = {
+
+            ...orders[id],
+
+            status:"rejected",
+
+            rejectedBy:seller.uid,
+
+            rejectedByName:
+                seller.name || "",
+
+            rejectionReason:
+                reason.trim(),
+
+            rejectedAt:now,
+
+            updatedAt:now
+
+        };
+
+        hideLoading();
+
+        renderOrders();
+
+        renderDashboard();
+
+        toast(
+            "Order rejected."
+        );
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        toast(
+            "Unable to reject order."
+        );
+
+    }
+
+}
+
+
+/* ORDER DETAILS */
+
+function viewOrder(id){
+
+    const order =
+        orders[id];
+
+    if(!order){
+        return;
+    }
+
+    currentOrderId =
+        id;
+
+    const items =
+        getOrderItems(order);
+
+    const customer =
+        order.customerName ||
+        order.retailerName ||
+        order.name ||
+        "Customer";
+
+    const total =
+        orderTotal(order);
+
+    const status =
+        String(
+            order.status ||
+            "pending"
+        ).toLowerCase();
+
+    document.getElementById(
+        "orderDetails"
+    ).innerHTML = `
+
+        <div class="profile-grid">
+
+            <div class="info-item">
+                <small>ORDER NUMBER</small>
+                <strong>
+                    ${escapeHTML(
+                        order.orderNumber ||
+                        id
+                    )}
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <small>STATUS</small>
+                <strong>
+                    ${statusBadge(status)}
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <small>CUSTOMER</small>
+                <strong>
+                    ${escapeHTML(customer)}
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <small>MOBILE</small>
+                <strong>
+                    ${escapeHTML(
+                        order.mobile ||
+                        order.customerMobile ||
+                        "-"
+                    )}
+                </strong>
+            </div>
+
+        </div>
+
+        <div class="order-info-box">
+
+            <div>
+                <strong>
+                    Delivery Address:
+                </strong>
+                <br>
+                ${escapeHTML(
+                    order.deliveryAddress ||
+                    order.address ||
+                    "-"
+                )}
+            </div>
+
+            <div>
+                <strong>
+                    Payment Method:
+                </strong>
+                ${escapeHTML(
+                    order.paymentMethod ||
+                    "-"
+                )}
+            </div>
+
+            <div>
+                <strong>
+                    Order Date:
+                </strong>
+                ${formatDate(
+                    order.createdAt
+                )}
+            </div>
+
+            ${
+                order.deliveredAt
+                ?
+                `
+                <div>
+                    <strong>
+                        Delivered:
+                    </strong>
+                    ${formatDate(
+                        order.deliveredAt
+                    )}
+                </div>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+        <div class="order-items">
+
+            ${
+                items.length
+                ?
+                items.map(
+                    item => {
+
+                        const name =
+                            item.name ||
+                            item.productName ||
+                            "Product";
+
+                        const qty =
+                            Number(
+                                item.quantity ||
+                                item.qty ||
+                                1
+                            );
+
+                        const price =
+                            Number(
+                                item.price ||
+                                item.unitPrice ||
+                                0
+                            );
+
+                        return `
+
+                            <div class="order-item">
+
+                                <div>
+                                    <strong>
+                                        ${escapeHTML(name)}
+                                    </strong>
+
+                                    <br>
+
+                                    ${qty}
+                                    ×
+                                    ₱${money(price)}
+
+                                </div>
+
+                                <strong>
+                                    ₱${money(
+                                        qty * price
+                                    )}
+                                </strong>
+
+                            </div>
+
+                        `;
+
+                    }
+                ).join("")
+                :
+                `
+                    <div class="empty">
+                        No item details available.
+                    </div>
+                `
+            }
+
+        </div>
+
+        <div class="total-row">
+
+            <span>
+                TOTAL
+            </span>
+
+            <span>
+                ₱${money(total)}
+            </span>
+
+        </div>
+
+        <div class="modal-actions">
+
+            ${
+                status === "pending"
+                ?
+                `
+                <button
+                    class="btn btn-danger"
+                    onclick="closeModal('orderModal');rejectOrder('${id}')">
+                    REJECT
+                </button>
+
+                <button
+                    class="btn btn-success"
+                    onclick="closeModal('orderModal');acceptOrder('${id}')">
+                    ACCEPT ORDER
+                </button>
+                `
+                :
+                ""
+            }
+
+            ${
+                isDeliveredOrder(order)
+                ?
+                `
+                <button
+                    class="btn btn-info"
+                    onclick="printReceipt('${id}')">
+                    🖨 PRINT RECEIPT
+                </button>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+    `;
+
+    document.getElementById(
+        "orderModal"
+    ).classList.add("show");
+
+}
+
+
+/* RECEIPT */
+
+function printReceipt(id){
+
+    const order =
+        orders[id];
+
+    if(!order){
+
+        toast(
+            "Order not found."
+        );
+
+        return;
+
+    }
+
+    if(!isDeliveredOrder(order)){
+
+        toast(
+            "Receipt can only be printed after delivery."
+        );
+
+        return;
+
+    }
+
+    const items =
+        getOrderItems(order);
+
+    const total =
+        orderTotal(order);
+
+    const customer =
+        order.customerName ||
+        order.retailerName ||
+        "Customer";
+
+    const orderNumber =
+        order.orderNumber ||
+        id;
+
+    const date =
+        formatDate(
+            order.deliveredAt ||
+            order.completedAt ||
+            order.updatedAt ||
+            order.createdAt
+        );
+
+    const printArea =
+        document.getElementById(
+            "printArea"
+        );
+
+    printArea.style.display =
+        "block";
+
+    printArea.innerHTML = `
+
+        <div
+            style="
+                max-width:380px;
+                margin:auto;
+                font-family:Arial,sans-serif;
+                color:#000;
+            ">
+
+            <div
+                style="
+                    text-align:center;
+                    border-bottom:1px dashed #000;
+                    padding-bottom:15px;
+                    margin-bottom:15px;
+                ">
+
+                <h2
+                    style="
+                        margin:0;
+                        font-size:22px;
+                    ">
+                    SARI-SARI STORE
+                </h2>
+
+                <div
+                    style="
+                        margin-top:5px;
+                        font-size:12px;
+                    ">
+                    ${escapeHTML(
+                        seller.storeName ||
+                        "Store"
+                    )}
+                </div>
+
+                <div
+                    style="
+                        font-size:11px;
+                        margin-top:3px;
+                    ">
+                    Store No:
+                    ${escapeHTML(
+                        String(
+                            seller.storeNumber || ""
+                        )
+                    )}
+                </div>
+
+                <div
+                    style="
+                        font-size:11px;
+                        margin-top:3px;
+                    ">
+                    ${escapeHTML(
+                        seller.storeAddress ||
+                        ""
+                    )}
+                </div>
+
+            </div>
+
+            <div
+                style="
+                    font-size:12px;
+                    line-height:1.6;
+                ">
+
+                <div>
+                    <strong>ORDER:</strong>
+                    ${escapeHTML(orderNumber)}
+                </div>
+
+                <div>
+                    <strong>CUSTOMER:</strong>
+                    ${escapeHTML(customer)}
+                </div>
+
+                <div>
+                    <strong>MOBILE:</strong>
+                    ${escapeHTML(
+                        order.customerMobile ||
+                        order.mobile ||
+                        "-"
+                    )}
+                </div>
+
+                <div>
+                    <strong>DATE:</strong>
+                    ${escapeHTML(date)}
+                </div>
+
+                <div>
+                    <strong>PAYMENT:</strong>
+                    ${escapeHTML(
+                        order.paymentMethod ||
+                        "-"
+                    )}
+                </div>
+
+            </div>
+
+            <div
+                style="
+                    border-top:1px dashed #000;
+                    border-bottom:1px dashed #000;
+                    margin-top:15px;
+                    padding:10px 0;
+                ">
+
+                ${
+                    items.map(
+                        item => {
+
+                            const name =
+                                item.name ||
+                                item.productName ||
+                                "Product";
+
+                            const qty =
+                                Number(
+                                    item.quantity ||
+                                    item.qty ||
+                                    1
+                                );
+
+                            const price =
+                                Number(
+                                    item.price ||
+                                    item.unitPrice ||
+                                    0
+                                );
+
+                            const subtotal =
+                                qty * price;
+
+                            return `
+
+                                <div
+                                    style="
+                                        margin-bottom:8px;
+                                        font-size:12px;
+                                    ">
+
+                                    <div
+                                        style="
+                                            font-weight:bold;
+                                        ">
+                                        ${escapeHTML(name)}
+                                    </div>
+
+                                    <div
+                                        style="
+                                            display:flex;
+                                            justify-content:space-between;
+                                        ">
+
+                                        <span>
+                                            ${qty}
+                                            ×
+                                            ₱${money(price)}
+                                        </span>
+
+                                        <span>
+                                            ₱${money(subtotal)}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+                    ).join("")
+                }
+
+            </div>
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    font-size:18px;
+                    font-weight:bold;
+                    margin-top:15px;
+                ">
+
+                <span>
+                    TOTAL
+                </span>
+
+                <span>
+                    ₱${money(total)}
+                </span>
+
+            </div>
+
+            <div
+                style="
+                    text-align:center;
+                    margin-top:25px;
+                    padding-top:15px;
+                    border-top:1px dashed #000;
+                    font-size:11px;
+                ">
+
+                <div>
+                    ORDER DELIVERED
+                </div>
+
+                <div
+                    style="
+                        margin-top:5px;
+                    ">
+                    Thank you for your order!
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    setTimeout(
+        () => {
+
+            window.print();
+
+            setTimeout(
+                () => {
+
+                    printArea.style.display =
+                        "none";
+
+                },
+                500
+            );
+
+        },
+        100
+    );
+
+}
+
+
+/* MONTHLY SALES REPORT */
+
+function getMonthRange(monthValue){
+
+    if(!monthValue){
+
+        const now =
+            new Date();
+
+        return {
+
+            start:
+                new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    1,
+                    0,0,0,0
+                ).getTime(),
+
+            end:
+                new Date(
+                    now.getFullYear(),
+                    now.getMonth() + 1,
+                    0,
+                    23,59,59,999
+                ).getTime(),
+
+            label:
+                now.toLocaleDateString(
+                    "en-PH",
+                    {
+                        month:"long",
+                        year:"numeric"
+                    }
+                )
+
+        };
+
+    }
+
+    const parts =
+        monthValue.split("-");
+
+    const year =
+        Number(parts[0]);
+
+    const month =
+        Number(parts[1]) - 1;
+
+    const startDate =
+        new Date(
+            year,
+            month,
+            1,
+            0,0,0,0
+        );
+
+    const endDate =
+        new Date(
+            year,
+            month + 1,
+            0,
+            23,59,59,999
+        );
+
+    return {
+
+        start:
+            startDate.getTime(),
+
+        end:
+            endDate.getTime(),
+
+        label:
+            startDate.toLocaleDateString(
+                "en-PH",
+                {
+                    month:"long",
+                    year:"numeric"
+                }
+            )
+
+    };
+
+}
+
+
+function getMonthlyDeliveredOrders(
+    monthValue
+){
+
+    const range =
+        getMonthRange(
+            monthValue
+        );
+
+    return getDeliveredOrders()
+        .filter(
+            ([id,order]) => {
+
+                const time =
+                    getSalesTimestamp(
+                        order
+                    );
+
+                return (
+                    time >= range.start &&
+                    time <= range.end
+                );
+
+            }
+        )
+        .sort(
+            (a,b) =>
+                getSalesTimestamp(b[1]) -
+                getSalesTimestamp(a[1])
+        );
+
+}
+
+
+function updateMonthlyReportPreview(){
+
+    const input =
+        document.getElementById(
+            "reportMonth"
+        );
+
+    const monthValue =
+        input
+            ? input.value
+            : "";
+
+    const list =
+        getMonthlyDeliveredOrders(
+            monthValue
+        );
+
+    const total =
+        list.reduce(
+            (sum,[id,order]) =>
+                sum +
+                orderTotal(order),
+            0
+        );
+
+    document.getElementById(
+        "reportMonthSales"
+    ).textContent =
+        "₱" +
+        money(total);
+
+    document.getElementById(
+        "reportMonthOrders"
+    ).textContent =
+        list.length;
+
+}
+
+
+function printMonthlyReport(){
+
+    const input =
+        document.getElementById(
+            "reportMonth"
+        );
+
+    const monthValue =
+        input
+            ? input.value
+            : "";
+
+    const range =
+        getMonthRange(
+            monthValue
+        );
+
+    const list =
+        getMonthlyDeliveredOrders(
+            monthValue
+        );
+
+    const total =
+        list.reduce(
+            (sum,[id,order]) =>
+                sum +
+                orderTotal(order),
+            0
+        );
+
+    const printArea =
+        document.getElementById(
+            "printArea"
+        );
+
+    printArea.style.display =
+        "block";
+
+    printArea.innerHTML = `
+
+        <div
+            style="
+                max-width:850px;
+                margin:auto;
+                font-family:Arial,sans-serif;
+                color:#000;
+            ">
+
+            <div
+                style="
+                    text-align:center;
+                    border-bottom:2px solid #000;
+                    padding-bottom:15px;
+                    margin-bottom:20px;
+                ">
+
+                <h1
+                    style="
+                        margin:0;
+                        font-size:24px;
+                    ">
+                    SARI-SARI STORE
+                </h1>
+
+                <h2
+                    style="
+                        margin:7px 0;
+                        font-size:18px;
+                    ">
+                    MONTHLY SALES REPORT
+                </h2>
+
+                <div
+                    style="
+                        font-size:13px;
+                    ">
+                    ${escapeHTML(
+                        seller.storeName ||
+                        "Store"
+                    )}
+                </div>
+
+                <div
+                    style="
+                        font-size:12px;
+                        margin-top:4px;
+                    ">
+                    Store Number:
+                    ${escapeHTML(
+                        String(
+                            seller.storeNumber || ""
+                        )
+                    )}
+                </div>
+
+                <div
+                    style="
+                        font-size:13px;
+                        margin-top:8px;
+                        font-weight:bold;
+                    ">
+                    ${escapeHTML(
+                        range.label
+                    )}
+                </div>
+
+            </div>
+
+            <div
+                style="
+                    display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:15px;
+                    margin-bottom:25px;
+                ">
+
+                <div
+                    style="
+                        border:1px solid #ddd;
+                        padding:15px;
+                    ">
+
+                    <div
+                        style="
+                            font-size:11px;
+                            color:#555;
+                        ">
+                        DELIVERED ORDERS
+                    </div>
+
+                    <div
+                        style="
+                            font-size:24px;
+                            font-weight:bold;
+                            margin-top:5px;
+                        ">
+                        ${list.length}
+                    </div>
+
+                </div>
+
+                <div
+                    style="
+                        border:1px solid #ddd;
+                        padding:15px;
+                    ">
+
+                    <div
+                        style="
+                            font-size:11px;
+                            color:#555;
+                        ">
+                        TOTAL SALES
+                    </div>
+
+                    <div
+                        style="
+                            font-size:24px;
+                            font-weight:bold;
+                            margin-top:5px;
+                        ">
+                        ₱${money(total)}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <table
+                style="
+                    width:100%;
+                    border-collapse:collapse;
+                    font-size:12px;
+                ">
+
+                <thead>
+
+                    <tr>
+
+                        <th
+                            style="
+                                border:1px solid #ccc;
+                                padding:9px;
+                                text-align:left;
+                            ">
+                            #
+                        </th>
+
+                        <th
+                            style="
+                                border:1px solid #ccc;
+                                padding:9px;
+                                text-align:left;
+                            ">
+                            ORDER
+                        </th>
+
+                        <th
+                            style="
+                                border:1px solid #ccc;
+                                padding:9px;
+                                text-align:left;
+                            ">
+                            CUSTOMER
+                        </th>
+
+                        <th
+                            style="
+                                border:1px solid #ccc;
+                                padding:9px;
+                                text-align:left;
+                            ">
+                            DATE DELIVERED
+                        </th>
+
+                        <th
+                            style="
+                                border:1px solid #ccc;
+                                padding:9px;
+                                text-align:right;
+                            ">
+                            AMOUNT
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${
+                        list.length
+                        ?
+                        list.map(
+                            ([id,order],index) => {
+
+                                return `
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                border:1px solid #ccc;
+                                                padding:9px;
+                                            ">
+                                            ${index + 1}
+                                        </td>
+
+                                        <td
+                                            style="
+                                                border:1px solid #ccc;
+                                                padding:9px;
+                                            ">
+                                            ${escapeHTML(
+                                                order.orderNumber ||
+                                                id
+                                            )}
+                                        </td>
+
+                                        <td
+                                            style="
+                                                border:1px solid #ccc;
+                                                padding:9px;
+                                            ">
+                                            ${escapeHTML(
+                                                order.customerName ||
+                                                order.retailerName ||
+                                                "Customer"
+                                            )}
+                                        </td>
+
+                                        <td
+                                            style="
+                                                border:1px solid #ccc;
+                                                padding:9px;
+                                            ">
+                                            ${formatDate(
+                                                getSalesTimestamp(
+                                                    order
+                                                )
+                                            )}
+                                        </td>
+
+                                        <td
+                                            style="
+                                                border:1px solid #ccc;
+                                                padding:9px;
+                                                text-align:right;
+                                            ">
+                                            ₱${money(
+                                                orderTotal(
+                                                    order
+                                                )
+                                            )}
+                                        </td>
+
+                                    </tr>
+
+                                `;
+
+                            }
+                        ).join("")
+                        :
+                        `
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    style="
+                                        border:1px solid #ccc;
+                                        padding:20px;
+                                        text-align:center;
+                                    ">
+                                    No delivered sales for this month.
+                                </td>
+
+                            </tr>
+                        `
+                    }
+
+                </tbody>
+
+                <tfoot>
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            style="
+                                border:1px solid #ccc;
+                                padding:10px;
+                                text-align:right;
+                                font-weight:bold;
+                            ">
+                            TOTAL SALES
+                        </td>
+
+                        <td
+                            style="
+                                border:1px solid #ccc;
+                                padding:10px;
+                                text-align:right;
+                                font-weight:bold;
+                            ">
+                            ₱${money(total)}
+                        </td>
+
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+            <div
+                style="
+                    margin-top:35px;
+                    font-size:11px;
+                    display:flex;
+                    justify-content:space-between;
+                ">
+
+                <div>
+                    Prepared by:
+                    ${escapeHTML(
+                        seller.name ||
+                        "Seller"
+                    )}
+                </div>
+
+                <div>
+                    Generated:
+                    ${formatDate(
+                        Date.now()
+                    )}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+    setTimeout(
+        () => {
+
+            window.print();
+
+            setTimeout(
+                () => {
+
+                    printArea.style.display =
+                        "none";
+
+                },
+                500
+            );
+
+        },
+        100
+    );
+
+}
+
+
+/* USERS / WORKERS */
+
+async function loadUsers(){
+
+    const snapshot =
+        await get(
+            ref(db,"users")
+        );
+
+    users =
+        snapshot.exists()
+            ? snapshot.val()
+            : {};
+
+}
+
+
+function workerBelongsToSeller(user){
+
+    if(!user){
+        return false;
+    }
+
+    const assigned =
+        String(
+            user.assignedStoreNumber ||
+            user.storeNumber ||
+            ""
+        );
+
+    const requested =
+        String(
+            user.requestedStoreNumber ||
+            ""
+        );
+
+    const sellerNumber =
+        String(
+            seller.storeNumber
+        );
+
+    return (
+        assigned === sellerNumber ||
+        requested === sellerNumber
+    );
+
+}
+
+
+function renderWorkers(){
+
+    const packers =
+        Object.entries(users)
+        .filter(
+            ([uid,user]) =>
+                user.role === "packer" &&
+                workerBelongsToSeller(user)
+        );
+
+    const deliveries =
+        Object.entries(users)
+        .filter(
+            ([uid,user]) =>
+                user.role === "delivery" &&
+                workerBelongsToSeller(user)
+        );
+
+    document.getElementById(
+        "statWorkers"
+    ).textContent =
+        packers.filter(
+            ([id,user]) =>
+                user.status === "active"
+        ).length +
+        deliveries.filter(
+            ([id,user]) =>
+                user.status === "active"
+        ).length;
+
+    renderWorkerTable(
+        "packerTable",
+        "packerEmpty",
+        packers,
+        "packer"
+    );
+
+    renderWorkerTable(
+        "deliveryTable",
+        "deliveryEmpty",
+        deliveries,
+        "delivery"
+    );
+
+}
+
+
+function renderWorkerTable(
+    tableId,
+    emptyId,
+    list,
+    role
+){
+
+    const tbody =
+        document.getElementById(
+            tableId
+        );
+
+    const empty =
+        document.getElementById(
+            emptyId
+        );
+
+    if(!list.length){
+
+        tbody.innerHTML = "";
+
+        empty.style.display =
+            "block";
+
+        return;
+
+    }
+
+    empty.style.display =
+        "none";
+
+    tbody.innerHTML =
+        list.map(
+            ([uid,user]) => {
+
+                const status =
+                    String(
+                        user.status ||
+                        "pending"
+                    ).toLowerCase();
+
+                return `
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                ${escapeHTML(
+                                    user.name ||
+                                    "-"
+                                )}
+                            </strong>
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                user.mobile ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(
+                                user.username ||
+                                "-"
+                            )}
+                        </td>
+
+                        <td>
+                            ${statusBadge(status)}
+                        </td>
+
+                        <td>
+
+                            <div class="actions">
+
+                                ${
+                                    status === "pending"
+                                    ?
+                                    `
+                                    <button
+                                        class="btn btn-success"
+                                        onclick="approveWorker('${uid}')">
+                                        APPROVE
+                                    </button>
+
+                                    <button
+                                        class="btn btn-danger"
+                                        onclick="rejectWorker('${uid}')">
+                                        REJECT
+                                    </button>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                                ${
+                                    status === "active"
+                                    ?
+                                    `
+                                    <button
+                                        class="btn btn-danger"
+                                        onclick="rejectWorker('${uid}')">
+                                        REMOVE
+                                    </button>
+                                    `
+                                    :
+                                    ""
+                                }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* APPROVE WORKER */
+
+async function approveWorker(uid){
+
+    const worker =
+        users[uid];
+
+    if(!worker){
+        return;
+    }
+
+    if(!workerBelongsToSeller(worker)){
+
+        toast(
+            "This worker is not applying to your store."
+        );
+
+        return;
+
+    }
+
+    const roleName =
+        worker.role === "packer"
+            ? "Packer"
+            : "Delivery";
+
+    if(!confirm(
+        "Approve this " +
+        roleName +
+        " for your store?"
+    )){
+
+        return;
+
+    }
+
+    try{
+
+        showLoading(
+            "Approving " +
+            roleName +
+            "..."
+        );
+
+        const storeNumber =
+            String(
+                seller.storeNumber
+            );
+
+        const now =
+            Date.now();
+
+        await update(
+
+            ref(
+                db,
+                "users/" +
+                uid
+            ),
+
+            {
+
+                status:"active",
+
+                sellerUid:
+                    seller.uid,
+
+                assignedStoreNumber:
+                    storeNumber,
+
+                storeNumber:
+                    storeNumber,
+
+                approvedBySeller:
+                    seller.uid,
+
+                approvedBySellerName:
+                    seller.name || "",
+
+                approvedAt:
+                    now,
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+        users[uid] = {
+
+            ...users[uid],
+
+            status:"active",
+
+            sellerUid:seller.uid,
+
+            assignedStoreNumber:
+                storeNumber,
+
+            storeNumber:
+                storeNumber,
+
+            approvedBySeller:
+                seller.uid,
+
+            approvedBySellerName:
+                seller.name || "",
+
+            approvedAt:now,
+
+            updatedAt:now
+
+        };
+
+        await createNotification(
+
+            uid,
+
+            roleName +
+            " Application Approved",
+
+            "Your " +
+            roleName.toLowerCase() +
+            " application has been approved by " +
+            seller.storeName +
+            ". You can now login and access your assigned store.",
+
+            "worker_approved"
+
+        );
+
+        hideLoading();
+
+        renderWorkers();
+
+        toast(
+            roleName +
+            " approved successfully."
+        );
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        toast(
+            "Unable to approve worker: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* REJECT / REMOVE WORKER */
+
+async function rejectWorker(uid){
+
+    const worker =
+        users[uid];
+
+    if(!worker){
+        return;
+    }
+
+    const roleName =
+        worker.role === "packer"
+            ? "Packer"
+            : "Delivery";
+
+    const active =
+        worker.status === "active";
+
+    if(!confirm(
+        active
+        ?
+        "Remove this " +
+        roleName +
+        " from your store?"
+        :
+        "Reject this " +
+        roleName +
+        " application?"
+    )){
+
+        return;
+
+    }
+
+    try{
+
+        showLoading(
+            active
+                ? "Removing worker..."
+                : "Rejecting application..."
+        );
+
+        const now =
+            Date.now();
+
+        await update(
+
+            ref(
+                db,
+                "users/" +
+                uid
+            ),
+
+            {
+
+                status:"rejected",
+
+                assignedStoreNumber:"",
+
+                storeNumber:"",
+
+                rejectedBySeller:
+                    seller.uid,
+
+                rejectedBySellerName:
+                    seller.name || "",
+
+                rejectedAt:
+                    now,
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+        users[uid] = {
+
+            ...users[uid],
+
+            status:"rejected",
+
+            assignedStoreNumber:"",
+
+            storeNumber:"",
+
+            rejectedBySeller:
+                seller.uid,
+
+            rejectedBySellerName:
+                seller.name || "",
+
+            rejectedAt:now,
+
+            updatedAt:now
+
+        };
+
+        await createNotification(
+
+            uid,
+
+            roleName +
+            " Application",
+
+            active
+                ?
+                "You have been removed from " +
+                seller.storeName +
+                "."
+                :
+                "Your " +
+                roleName.toLowerCase() +
+                " application for " +
+                seller.storeName +
+                " was rejected.",
+
+            "worker_rejected"
+
+        );
+
+        hideLoading();
+
+        renderWorkers();
+
+        toast(
+            active
+                ?
+                roleName +
+                " removed."
+                :
+                roleName +
+                " application rejected."
+        );
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(error);
+
+        toast(
+            "Unable to update worker."
+        );
+
+    }
+
+}
+
+
+/* NOTIFICATIONS */
+
+async function loadNotifications(){
+
+    const snapshot =
+        await get(
+
+            ref(
+                db,
+                "notifications/" +
+                seller.uid
+            )
+
+        );
+
+    notifications =
+        snapshot.exists()
+            ? snapshot.val()
+            : {};
+
+}
+
+
+function renderNotifications(){
+
+    const container =
+        document.getElementById(
+            "notificationsList"
+        );
+
+    const list =
+        Object.entries(
+            notifications
+        )
+        .sort(
+            (a,b) =>
+                Number(
+                    b[1].createdAt || 0
+                ) -
+                Number(
+                    a[1].createdAt || 0
+                )
+        );
+
+    if(!list.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🔔
+                </div>
+
+                No notifications.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML =
+        list.map(
+            ([id,n]) => {
+
+                return `
+
+                    <div
+                        style="
+                            padding:15px;
+                            border-bottom:1px solid #eee;
+                            background:${
+                                n.read
+                                ? "#fff"
+                                : "#fff5f8"
+                            };
+                        ">
+
+                        <strong
+                            style="
+                                color:#9c174c;
+                                font-size:13px;
+                            ">
+
+                            ${escapeHTML(
+                                n.title ||
+                                "Notification"
+                            )}
+
+                        </strong>
+
+                        <p
+                            style="
+                                color:#666;
+                                font-size:12px;
+                                margin-top:5px;
+                                line-height:1.5;
+                            ">
+
+                            ${escapeHTML(
+                                n.message ||
+                                ""
+                            )}
+
+                        </p>
+
+                        <small
+                            style="
+                                color:#999;
+                                font-size:10px;
+                            ">
+
+                            ${formatDate(
+                                n.createdAt
+                            )}
+
+                        </small>
+
+                    </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* NOTIFICATION HELPER */
+
+async function createNotification(
+    uid,
+    title,
+    message,
+    type
+){
+
+    const notificationId =
+        "notif_" +
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2,8);
+
+    await set(
+
+        ref(
+            db,
+            "notifications/" +
+            uid +
+            "/" +
+            notificationId
+        ),
+
+        {
+
+            id:notificationId,
+
+            title:title,
+
+            message:message,
+
+            type:type,
+
+            status:"unread",
+
+            read:false,
+
+            createdAt:Date.now()
+
+        }
+
+    );
+
+}
+
+
+/* SECTION */
+
+function showSection(section){
+
+    const sections =
+        [
+            "dashboard",
+            "products",
+            "orders",
+            "workers",
+            "notifications",
+            "account"
+        ];
+
+    sections.forEach(
+        name => {
+
+            const element =
+                document.getElementById(
+                    "section" +
+                    capitalize(name)
+                );
+
+            if(element){
+
+                element.classList.toggle(
+                    "active",
+                    name === section
+                );
+
+            }
+
+        }
+    );
+
+    document.querySelectorAll(
+        ".nav button"
+    ).forEach(
+        button => {
+
+            button.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+    const nav =
+        document.getElementById(
+            "nav" +
+            capitalize(section)
+        );
+
+    if(nav){
+        nav.classList.add("active");
+    }
+
+    document.querySelectorAll(
+        ".mobile-nav button"
+    ).forEach(
+        button => {
+
+            button.classList.remove(
+                "active"
+            );
+
+        }
+    );
+
+    const mobile =
+        document.getElementById(
+            "mobile" +
+            capitalize(section)
+        );
+
+    if(mobile){
+
+        mobile.classList.add(
+            "active"
+        );
+
+    }
+
+    const titles = {
+
+        dashboard:"Seller Dashboard",
+
+        products:"My Products",
+
+        orders:"Store Orders",
+
+        workers:"Packer & Delivery",
+
+        notifications:"Notifications",
+
+        account:"My Account"
+
+    };
+
+    document.getElementById(
+        "pageTitle"
+    ).textContent =
+        titles[section] ||
+        "Seller Dashboard";
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    if(!confirm(
+        "Are you sure you want to logout?"
+    )){
+
+        return;
+
+    }
+
+    localStorage.removeItem(
+        "sariStoreSession"
+    );
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* MODAL */
+
+function closeModal(id){
+
+    document.getElementById(
+        id
+    ).classList.remove(
+        "show"
+    );
+
+}
+
+
+/* HELPERS */
+
+function statusBadge(status){
+
+    const labels = {
+
+        pending:"PENDING",
+
+        active:"ACTIVE",
+
+        accepted:"ACCEPTED",
+
+        packing:"PACKING",
+
+        packed:"PACKED",
+
+        delivery:"DELIVERY",
+
+        delivered:"DELIVERED",
+
+        completed:"COMPLETED",
+
+        rejected:"REJECTED",
+
+        cancelled:"CANCELLED"
+
+    };
+
+    const safe =
+        String(
+            status || "pending"
+        ).toLowerCase();
+
+    return `
+
+        <span
+            class="status status-${escapeHTML(safe)}">
+
+            ${labels[safe] ||
+              escapeHTML(
+                  safe.toUpperCase()
+              )}
+
+        </span>
+
+    `;
+
+}
+
+
+function money(value){
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "en-PH",
+        {
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }
+    );
+
+}
+
+
+function formatDate(timestamp){
+
+    if(!timestamp){
+        return "-";
+    }
+
+    const date =
+        new Date(
+            Number(timestamp)
+        );
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "-";
+
+    }
+
+    return date.toLocaleString(
+        "en-PH",
+        {
+            year:"numeric",
+            month:"short",
+            day:"numeric",
+            hour:"numeric",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+function getInitials(name){
+
+    const parts =
+        String(
+            name || "S"
+        )
+        .trim()
+        .split(/\s+/)
+        .slice(0,2);
+
+    return parts
+        .map(
+            x =>
+                x.charAt(0)
+        )
+        .join("")
+        .toUpperCase() ||
+        "S";
+
+}
+
+
+function capitalize(text){
+
+    return text
+        .charAt(0).toUpperCase() +
+        text.slice(1);
+
+}
+
+
+function escapeHTML(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+function showLoading(text){
+
+    document.getElementById(
+        "loadingText"
+    ).textContent =
+        text ||
+        "Please wait...";
+
+    document.getElementById(
+        "loading"
+    ).classList.add(
+        "show"
+    );
+
+}
+
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).classList.remove(
+        "show"
+    );
+
+}
+
+
+function toast(message){
+
+    const element =
+        document.getElementById(
+            "toast"
+        );
+
+    element.textContent =
+        message;
+
+    element.classList.add(
+        "show"
+    );
+
+    setTimeout(
+        () => {
+
+            element.classList.remove(
+                "show"
+            );
+
+        },
+        3000
+    );
+
+}
+
+
+/* CLOSE MODALS OUTSIDE */
+
+document
+    .querySelectorAll(".modal")
+    .forEach(
+        modal => {
+
+            modal.addEventListener(
+                "click",
+                function(e){
+
+                    if(
+                        e.target ===
+                        modal
+                    ){
+
+                        modal.classList.remove(
+                            "show"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

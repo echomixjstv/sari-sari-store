@@ -1,0 +1,2696 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SARI-SARI STORE - Packer</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f3f4f6;
+    color:#111827;
+    min-height:100vh;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* HEADER */
+
+.header{
+    background:#111827;
+    color:white;
+    padding:16px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    background:#f97316;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+}
+
+.brand h1{
+    font-size:20px;
+}
+
+.brand p{
+    font-size:12px;
+    color:#d1d5db;
+    margin-top:3px;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.user-name{
+    text-align:right;
+}
+
+.user-name strong{
+    display:block;
+    font-size:14px;
+}
+
+.user-name span{
+    display:block;
+    color:#d1d5db;
+    font-size:11px;
+    margin-top:2px;
+}
+
+.logout-btn{
+    border:0;
+    background:#dc2626;
+    color:white;
+    padding:10px 14px;
+    border-radius:9px;
+    font-weight:700;
+}
+
+
+/* MAIN */
+
+.container{
+    width:min(1200px,94%);
+    margin:25px auto 50px;
+}
+
+
+/* STORE STATUS */
+
+.store-card{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+    margin-bottom:22px;
+}
+
+.store-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.store-title{
+    font-size:20px;
+    font-weight:800;
+}
+
+.store-number{
+    color:#6b7280;
+    font-size:13px;
+    margin-top:5px;
+}
+
+.status-badge{
+    padding:8px 13px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.status-none{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-pending{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+.status-active{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.status-rejected{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+
+/* APPLICATION */
+
+.application-card{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+    margin-bottom:22px;
+}
+
+.application-card h2{
+    margin-bottom:8px;
+}
+
+.application-card p{
+    color:#6b7280;
+    font-size:14px;
+    line-height:1.5;
+    margin-bottom:18px;
+}
+
+.application-form{
+    display:flex;
+    gap:10px;
+    max-width:600px;
+}
+
+.application-form input{
+    flex:1;
+    padding:13px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    outline:none;
+}
+
+.application-form input:focus{
+    border-color:#f97316;
+    box-shadow:0 0 0 3px rgba(249,115,22,.1);
+}
+
+.primary-btn{
+    border:0;
+    background:#f97316;
+    color:white;
+    padding:13px 20px;
+    border-radius:10px;
+    font-weight:800;
+}
+
+.primary-btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+.message{
+    display:none;
+    padding:12px;
+    border-radius:10px;
+    font-size:13px;
+    margin-top:14px;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.message.error{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.message.info{
+    background:#dbeafe;
+    color:#1e40af;
+}
+
+
+/* DASHBOARD */
+
+.dashboard{
+    display:none;
+}
+
+.dashboard.show{
+    display:block;
+}
+
+.dashboard-title{
+    margin-bottom:18px;
+}
+
+.dashboard-title h2{
+    font-size:25px;
+}
+
+.dashboard-title p{
+    color:#6b7280;
+    margin-top:5px;
+    font-size:14px;
+}
+
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:22px;
+}
+
+.stat{
+    background:white;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 5px 18px rgba(0,0,0,.05);
+}
+
+.stat-icon{
+    font-size:28px;
+}
+
+.stat-number{
+    font-size:30px;
+    font-weight:900;
+    margin-top:8px;
+}
+
+.stat-label{
+    color:#6b7280;
+    font-size:13px;
+    margin-top:3px;
+}
+
+
+/* ORDERS */
+
+.orders-card{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.orders-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.orders-header h2{
+    font-size:20px;
+}
+
+.refresh-btn{
+    border:1px solid #d1d5db;
+    background:white;
+    padding:9px 13px;
+    border-radius:9px;
+    font-weight:700;
+}
+
+.order-list{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.order{
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:18px;
+}
+
+.order-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:flex-start;
+}
+
+.order-number{
+    font-weight:900;
+    font-size:16px;
+}
+
+.order-date{
+    color:#9ca3af;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.order-status{
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+}
+
+.order-status.accepted{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.order-status.packing{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.order-status.packed{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.order-details{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.detail{
+    background:#f9fafb;
+    padding:10px;
+    border-radius:9px;
+}
+
+.detail-label{
+    color:#6b7280;
+    font-size:11px;
+}
+
+.detail-value{
+    font-size:13px;
+    font-weight:700;
+    margin-top:3px;
+}
+
+.items{
+    margin-top:15px;
+    border-top:1px solid #e5e7eb;
+    padding-top:15px;
+}
+
+.items h4{
+    margin-bottom:8px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:7px 0;
+    font-size:13px;
+    border-bottom:1px dashed #e5e7eb;
+}
+
+.item:last-child{
+    border-bottom:0;
+}
+
+.order-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:15px;
+}
+
+.pack-btn{
+    border:0;
+    background:#f97316;
+    color:white;
+    padding:11px 17px;
+    border-radius:9px;
+    font-weight:800;
+}
+
+.packed-btn{
+    border:0;
+    background:#16a34a;
+    color:white;
+    padding:11px 17px;
+    border-radius:9px;
+    font-weight:800;
+}
+
+.empty{
+    text-align:center;
+    padding:45px 20px;
+    color:#9ca3af;
+}
+
+.empty-icon{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+
+/* LOADING */
+
+.loading{
+    position:fixed;
+    inset:0;
+    background:rgba(17,24,39,.72);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+
+.loading.show{
+    display:flex;
+}
+
+.loading-box{
+    background:white;
+    padding:28px 35px;
+    border-radius:18px;
+    text-align:center;
+}
+
+.spinner{
+    width:40px;
+    height:40px;
+    border:4px solid #e5e7eb;
+    border-top-color:#f97316;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:0 auto 14px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .header{
+        padding:12px 15px;
+    }
+
+    .brand h1{
+        font-size:17px;
+    }
+
+    .user-name{
+        display:none;
+    }
+
+    .container{
+        width:94%;
+    }
+
+    .store-header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .application-form{
+        flex-direction:column;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .order-details{
+        grid-template-columns:1fr;
+    }
+
+    .order-top{
+        flex-direction:column;
+    }
+
+    .order-actions{
+        flex-direction:column;
+    }
+
+    .pack-btn,
+    .packed-btn{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+
+<div class="brand">
+
+    <div class="brand-icon">
+        📦
+    </div>
+
+    <div>
+        <h1>PACKER DASHBOARD</h1>
+        <p>SARI-SARI STORE</p>
+    </div>
+
+</div>
+
+
+<div class="header-right">
+
+    <div class="user-name">
+
+        <strong id="headerName">
+            Packer
+        </strong>
+
+        <span id="headerUsername">
+            —
+        </span>
+
+    </div>
+
+    <button
+        class="logout-btn"
+        onclick="logout()"
+    >
+        LOG OUT
+    </button>
+
+</div>
+
+
+</header>
+
+<main class="container">
+
+
+<!-- STORE STATUS -->
+
+<section class="store-card">
+
+    <div class="store-header">
+
+        <div>
+
+            <div
+                class="store-title"
+                id="storeName"
+            >
+                No Store Assigned
+            </div>
+
+            <div
+                class="store-number"
+                id="storeNumber"
+            >
+                Store Number: —
+            </div>
+
+        </div>
+
+        <div
+            id="storeStatus"
+            class="status-badge status-none"
+        >
+            NO STORE
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- APPLICATION -->
+
+<section
+    class="application-card"
+    id="applicationCard"
+>
+
+    <h2>Apply to a Store Owner</h2>
+
+    <p>
+        Enter the Store Number of the Seller you want to work with.
+        Your application will be sent to the Store Owner for approval.
+    </p>
+
+    <div class="application-form">
+
+        <input
+            id="storeNumberInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="7"
+            placeholder="Enter Store Number"
+        >
+
+        <button
+            class="primary-btn"
+            id="applyButton"
+            onclick="applyToStore()"
+        >
+            APPLY TO STORE
+        </button>
+
+    </div>
+
+    <div
+        id="applicationMessage"
+        class="message"
+    ></div>
+
+</section>
+
+
+<!-- DASHBOARD -->
+
+<section
+    class="dashboard"
+    id="dashboard"
+>
+
+    <div class="dashboard-title">
+
+        <h2>Order Packing</h2>
+
+        <p>
+            Orders accepted by the Store Owner will appear here.
+        </p>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📥
+            </div>
+
+            <div
+                class="stat-number"
+                id="acceptedCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Accepted Orders
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+            <div
+                class="stat-number"
+                id="packingCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Currently Packing
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div
+                class="stat-number"
+                id="packedCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Packed Orders
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ORDERS -->
+
+    <section class="orders-card">
+
+        <div class="orders-header">
+
+            <h2>Orders</h2>
+
+            <button
+                class="refresh-btn"
+                onclick="loadOrders()"
+            >
+                ↻ REFRESH
+            </button>
+
+        </div>
+
+        <div
+            class="order-list"
+            id="orderList"
+        >
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                <div>
+                    No orders yet.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+
+</main>
+
+<!-- LOADING -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+
+<div class="loading-box">
+
+    <div class="spinner"></div>
+
+    <div id="loadingText">
+        Please wait...
+    </div>
+
+</div>
+
+
+</div>
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    push,
+    update
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCU09cUR4NMydnRuU0DuJCUvQfZbTMuQSM",
+
+    authDomain:
+        "saristore-950d3.firebaseapp.com",
+
+    databaseURL:
+        "https://saristore-950d3-default-rtdb.firebaseio.com/",
+
+    projectId:
+        "saristore-950d3",
+
+    storageBucket:
+        "saristore-950d3.firebasestorage.app",
+
+    messagingSenderId:
+        "232515496765",
+
+    appId:
+        "1:232515496765:web:0862d4b5e932bfc21cf354",
+
+    measurementId:
+        "G-N1VDQT033E"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* GLOBAL */
+
+let currentUser = null;
+let currentStoreNumber = "";
+let currentSeller = null;
+
+
+/* START */
+
+window.addEventListener(
+    "load",
+    initialize
+);
+
+
+async function initialize(){
+
+    const savedSession =
+        localStorage.getItem(
+            "sariStoreSession"
+        );
+
+    if(!savedSession){
+
+        window.location.href =
+            "index.html";
+
+        return;
+    }
+
+
+    try{
+
+        const session =
+            JSON.parse(
+                savedSession
+            );
+
+
+        if(
+            !session ||
+            !session.uid ||
+            session.role !== "packer"
+        ){
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+
+        showLoading(
+            "Loading your account..."
+        );
+
+
+        const snapshot =
+            await get(
+                ref(
+                    db,
+                    "users/" +
+                    session.uid
+                )
+            );
+
+
+        if(!snapshot.exists()){
+
+            hideLoading();
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+
+        currentUser =
+            snapshot.val();
+
+
+        if(currentUser.status === "banned"){
+
+            hideLoading();
+
+            alert(
+                "Your account has been banned."
+            );
+
+            localStorage.removeItem(
+                "sariStoreSession"
+            );
+
+            window.location.href =
+                "index.html";
+
+            return;
+        }
+
+
+        renderUser();
+
+
+        await checkStoreApplication();
+
+
+        hideLoading();
+
+
+    }catch(error){
+
+        console.error(
+            "INITIALIZATION ERROR:",
+            error
+        );
+
+        hideLoading();
+
+        alert(
+            "Unable to load your account: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* USER */
+
+function renderUser(){
+
+    document.getElementById(
+        "headerName"
+    ).textContent =
+        currentUser.name ||
+        "Packer";
+
+
+    document.getElementById(
+        "headerUsername"
+    ).textContent =
+        "@" +
+        (
+            currentUser.username ||
+            ""
+        );
+
+
+    currentStoreNumber =
+        String(
+            currentUser.assignedStoreNumber ||
+            currentUser.storeNumber ||
+            ""
+        ).trim();
+
+}
+
+
+/* STORE APPLICATION STATUS */
+
+async function checkStoreApplication(){
+
+    currentStoreNumber =
+        String(
+            currentUser.assignedStoreNumber ||
+            currentUser.storeNumber ||
+            ""
+        ).trim();
+
+
+    /*
+        APPROVED / ASSIGNED
+    */
+
+    if(currentUser.status === "active" &&
+       currentStoreNumber !== ""){
+
+        await loadSeller();
+
+        showAssignedStore();
+
+        await loadOrders();
+
+        return;
+    }
+
+
+    /*
+        CHECK PENDING APPLICATION
+    */
+
+    const requested =
+        String(
+            currentUser.requestedStoreNumber ||
+            ""
+        ).trim();
+
+
+    if(requested !== ""){
+
+        showPendingApplication(
+            requested
+        );
+
+        return;
+    }
+
+
+    /*
+        NO APPLICATION
+    */
+
+    showNoStore();
+
+}
+
+
+/* LOAD SELLER */
+
+async function loadSeller(){
+
+    currentSeller = null;
+
+    try{
+
+        const usersSnapshot =
+            await get(
+                ref(db,"users")
+            );
+
+
+        if(!usersSnapshot.exists()){
+            return;
+        }
+
+
+        const users =
+            usersSnapshot.val();
+
+
+        Object.values(users)
+            .some(user => {
+
+                if(
+                    user.role !== "seller"
+                ){
+                    return false;
+                }
+
+
+                const sellerStoreNumber =
+                    String(
+                        user.storeNumber ||
+                        ""
+                    ).trim();
+
+
+                if(
+                    sellerStoreNumber ===
+                    currentStoreNumber &&
+                    user.status === "active"
+                ){
+
+                    currentSeller =
+                        user;
+
+                    return true;
+
+                }
+
+
+                return false;
+
+            });
+
+
+    }catch(error){
+
+        console.error(
+            "LOAD SELLER ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* SHOW NO STORE */
+
+function showNoStore(){
+
+    document.getElementById(
+        "storeName"
+    ).textContent =
+        "No Store Assigned";
+
+
+    document.getElementById(
+        "storeNumber"
+    ).textContent =
+        "Store Number: —";
+
+
+    setStatus(
+        "NO STORE",
+        "status-none"
+    );
+
+
+    document.getElementById(
+        "applicationCard"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "dashboard"
+    ).classList.remove("show");
+
+}
+
+
+/* SHOW PENDING */
+
+function showPendingApplication(
+    storeNumber
+){
+
+    document.getElementById(
+        "storeName"
+    ).textContent =
+        "Waiting for Store Owner";
+
+
+    document.getElementById(
+        "storeNumber"
+    ).textContent =
+        "Store Number: " +
+        storeNumber;
+
+
+    setStatus(
+        "APPLICATION PENDING",
+        "status-pending"
+    );
+
+
+    document.getElementById(
+        "applicationCard"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "storeNumberInput"
+    ).value =
+        storeNumber;
+
+
+    document.getElementById(
+        "storeNumberInput"
+    ).disabled =
+        true;
+
+
+    document.getElementById(
+        "applyButton"
+    ).disabled =
+        true;
+
+
+    document.getElementById(
+        "dashboard"
+    ).classList.remove("show");
+
+
+    showMessage(
+        "applicationMessage",
+        "Your application for Store " +
+        storeNumber +
+        " is waiting for the Store Owner's approval.",
+        "info"
+    );
+
+}
+
+
+/* SHOW ASSIGNED */
+
+function showAssignedStore(){
+
+    const sellerName =
+        currentSeller
+            ? (
+                currentSeller.storeName ||
+                currentSeller.name ||
+                "Store Owner"
+            )
+            : "Store Owner";
+
+
+    document.getElementById(
+        "storeName"
+    ).textContent =
+        sellerName;
+
+
+    document.getElementById(
+        "storeNumber"
+    ).textContent =
+        "Store Number: " +
+        currentStoreNumber;
+
+
+    setStatus(
+        "ACTIVE",
+        "status-active"
+    );
+
+
+    document.getElementById(
+        "applicationCard"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "dashboard"
+    ).classList.add("show");
+
+
+    clearMessage(
+        "applicationMessage"
+    );
+
+}
+
+
+/* STATUS */
+
+function setStatus(
+    text,
+    className
+){
+
+    const element =
+        document.getElementById(
+            "storeStatus"
+        );
+
+
+    element.textContent =
+        text;
+
+
+    element.className =
+        "status-badge " +
+        className;
+
+}
+
+
+/* APPLY */
+
+async function applyToStore(){
+
+    clearMessage(
+        "applicationMessage"
+    );
+
+
+    const storeNumber =
+        document.getElementById(
+            "storeNumberInput"
+        ).value
+        .trim();
+
+
+    if(!storeNumber){
+
+        showMessage(
+            "applicationMessage",
+            "Please enter the Store Number.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(
+        !/^[0-9]{1,7}$/
+            .test(storeNumber)
+    ){
+
+        showMessage(
+            "applicationMessage",
+            "Please enter a valid Store Number.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        showLoading(
+            "Checking Store Number..."
+        );
+
+
+        /*
+            FIND SELLER
+        */
+
+        const usersSnapshot =
+            await get(
+                ref(db,"users")
+            );
+
+
+        if(!usersSnapshot.exists()){
+
+            hideLoading();
+
+            showMessage(
+                "applicationMessage",
+                "No seller accounts were found.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const users =
+            usersSnapshot.val();
+
+
+        let seller = null;
+
+
+        Object.values(users)
+            .some(user => {
+
+                if(
+                    user.role !== "seller"
+                ){
+                    return false;
+                }
+
+
+                if(
+                    user.status !== "active"
+                ){
+                    return false;
+                }
+
+
+                const sellerStoreNumber =
+                    String(
+                        user.storeNumber ||
+                        ""
+                    ).trim();
+
+
+                if(
+                    sellerStoreNumber ===
+                    storeNumber
+                ){
+
+                    seller =
+                        user;
+
+                    return true;
+
+                }
+
+
+                return false;
+
+            });
+
+
+        if(!seller){
+
+            hideLoading();
+
+            showMessage(
+                "applicationMessage",
+                "Store Number not found. Please check the Store Number and try again.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /*
+            PREVENT APPLYING AGAIN TO SAME STORE
+        */
+
+        const currentRequested =
+            String(
+                currentUser.requestedStoreNumber ||
+                ""
+            ).trim();
+
+
+        if(
+            currentRequested ===
+            storeNumber
+        ){
+
+            hideLoading();
+
+            showPendingApplication(
+                storeNumber
+            );
+
+            return;
+        }
+
+
+        /*
+            If already assigned to another store,
+            don't allow another application.
+        */
+
+        if(
+            currentUser.status === "active" &&
+            String(
+                currentUser.assignedStoreNumber ||
+                currentUser.storeNumber ||
+                ""
+            ).trim() !== ""
+        ){
+
+            hideLoading();
+
+            showMessage(
+                "applicationMessage",
+                "You are already assigned to a Store Owner.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /*
+            SAVE APPLICATION DIRECTLY
+            TO USER RECORD.
+
+            seller.html already looks for:
+
+            requestedStoreNumber
+        */
+
+        const now =
+            Date.now();
+
+
+        await update(
+
+            ref(
+                db,
+                "users/" +
+                currentUser.uid
+            ),
+
+            {
+
+                requestedStoreNumber:
+                    storeNumber,
+
+                storeApplicationStatus:
+                    "pending",
+
+                storeApplicationAt:
+                    now,
+
+                storeApplicationSellerUid:
+                    seller.uid,
+
+                storeApplicationSellerName:
+                    seller.name || "",
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+
+        /*
+            NOTIFICATION FOR SELLER
+        */
+
+        const notificationRef =
+            push(
+                ref(
+                    db,
+                    "notifications/" +
+                    seller.uid
+                )
+            );
+
+
+        await set(
+
+            notificationRef,
+            {
+
+                title:
+                    "New Packer Application",
+
+                message:
+                    (
+                        currentUser.name ||
+                        "A packer"
+                    ) +
+                    " wants to join your store as a packer. Store Number: " +
+                    storeNumber,
+
+                type:
+                    "store_application",
+
+                applicantUid:
+                    currentUser.uid,
+
+                applicantRole:
+                    "packer",
+
+                storeNumber:
+                    storeNumber,
+
+                read:
+                    false,
+
+                createdAt:
+                    now
+
+            }
+
+        );
+
+
+        /*
+            Refresh local user
+        */
+
+        currentUser.requestedStoreNumber =
+            storeNumber;
+
+        currentUser.storeApplicationStatus =
+            "pending";
+
+        currentUser.storeApplicationAt =
+            now;
+
+        currentUser.storeApplicationSellerUid =
+            seller.uid;
+
+
+        hideLoading();
+
+
+        showPendingApplication(
+            storeNumber
+        );
+
+
+        showMessage(
+            "applicationMessage",
+            "Application submitted successfully. Please wait for the Store Owner to approve your request.",
+            "success"
+        );
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "APPLY TO STORE ERROR:",
+            error
+        );
+
+
+        showMessage(
+            "applicationMessage",
+            "Unable to submit application: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* LOAD ORDERS */
+
+async function loadOrders(){
+
+    if(
+        !currentStoreNumber
+    ){
+        return;
+    }
+
+
+    const orderList =
+        document.getElementById(
+            "orderList"
+        );
+
+
+    orderList.innerHTML = `
+        <div class="empty">
+            <div class="empty-icon">⏳</div>
+            Loading orders...
+        </div>
+    `;
+
+
+    try{
+
+        const ordersSnapshot =
+            await get(
+                ref(db,"orders")
+            );
+
+
+        if(!ordersSnapshot.exists()){
+
+            renderEmptyOrders();
+
+            updateStats([]);
+
+            return;
+        }
+
+
+        const orders =
+            ordersSnapshot.val();
+
+
+        const list = [];
+
+
+        Object.entries(orders)
+            .forEach(
+                ([id,order]) => {
+
+                    if(!order){
+                        return;
+                    }
+
+
+                    /*
+                        Accept several possible
+                        Store Number field names.
+                    */
+
+                    const orderStoreNumber =
+                        String(
+                            order.storeNumber ||
+                            order.sellerStoreNumber ||
+                            order.assignedStoreNumber ||
+                            ""
+                        ).trim();
+
+
+                    if(
+                        orderStoreNumber !==
+                        currentStoreNumber
+                    ){
+                        return;
+                    }
+
+
+                    const status =
+                        String(
+                            order.status ||
+                            ""
+                        ).toLowerCase();
+
+
+                    /*
+                        Packer only needs orders
+                        accepted / packing / packed.
+                    */
+
+                    if(
+                        status !== "accepted" &&
+                        status !== "packing" &&
+                        status !== "packed"
+                    ){
+                        return;
+                    }
+
+
+                    list.push({
+
+                        id:id,
+
+                        ...order
+
+                    });
+
+                }
+            );
+
+
+        list.sort(
+            (a,b) =>
+                Number(
+                    b.updatedAt ||
+                    b.createdAt ||
+                    0
+                ) -
+                Number(
+                    a.updatedAt ||
+                    a.createdAt ||
+                    0
+                )
+        );
+
+
+        updateStats(list);
+
+
+        renderOrders(list);
+
+
+    }catch(error){
+
+        console.error(
+            "LOAD ORDERS ERROR:",
+            error
+        );
+
+
+        orderList.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">⚠️</div>
+                Unable to load orders.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* STATS */
+
+function updateStats(
+    orders
+){
+
+    let accepted = 0;
+    let packing = 0;
+    let packed = 0;
+
+
+    orders.forEach(order => {
+
+        const status =
+            String(
+                order.status ||
+                ""
+            ).toLowerCase();
+
+
+        if(status === "accepted"){
+            accepted++;
+        }
+
+        if(status === "packing"){
+            packing++;
+        }
+
+        if(status === "packed"){
+            packed++;
+        }
+
+    });
+
+
+    document.getElementById(
+        "acceptedCount"
+    ).textContent =
+        accepted;
+
+
+    document.getElementById(
+        "packingCount"
+    ).textContent =
+        packing;
+
+
+    document.getElementById(
+        "packedCount"
+    ).textContent =
+        packed;
+
+}
+
+
+/* RENDER ORDERS */
+
+function renderOrders(
+    orders
+){
+
+    const orderList =
+        document.getElementById(
+            "orderList"
+        );
+
+
+    if(!orders.length){
+
+        renderEmptyOrders();
+
+        return;
+    }
+
+
+    orderList.innerHTML = "";
+
+
+    orders.forEach(
+        order => {
+
+            orderList.appendChild(
+                createOrderElement(order)
+            );
+
+        }
+    );
+
+}
+
+
+/* EMPTY */
+
+function renderEmptyOrders(){
+
+    document.getElementById(
+        "orderList"
+    ).innerHTML = `
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                📦
+            </div>
+
+            <div>
+                No accepted orders yet.
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* CREATE ORDER */
+
+function createOrderElement(
+    order
+){
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "order";
+
+
+    const status =
+        String(
+            order.status ||
+            ""
+        ).toLowerCase();
+
+
+    const orderNumber =
+        order.orderNumber ||
+        order.orderId ||
+        order.id ||
+        "ORDER";
+
+
+    const customerName =
+        order.customerName ||
+        order.buyerName ||
+        order.retailerName ||
+        "Customer";
+
+
+    const mobile =
+        order.customerMobile ||
+        order.buyerMobile ||
+        order.mobile ||
+        "—";
+
+
+    const address =
+        order.deliveryAddress ||
+        order.address ||
+        order.customerAddress ||
+        "—";
+
+
+    const createdAt =
+        formatDate(
+            order.createdAt ||
+            order.updatedAt
+        );
+
+
+    element.innerHTML = `
+
+        <div class="order-top">
+
+            <div>
+
+                <div class="order-number">
+                    ${escapeHtml(orderNumber)}
+                </div>
+
+                <div class="order-date">
+                    ${escapeHtml(createdAt)}
+                </div>
+
+            </div>
+
+            <div class="order-status ${status}">
+                ${status.toUpperCase()}
+            </div>
+
+        </div>
+
+
+        <div class="order-details">
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Customer
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(customerName)}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Mobile
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(mobile)}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Delivery Address
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(address)}
+                </div>
+
+            </div>
+
+
+            <div class="detail">
+
+                <div class="detail-label">
+                    Payment
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHtml(
+                        order.paymentMethod ||
+                        order.paymentStatus ||
+                        "—"
+                    )}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="items">
+
+            <h4>
+                Order Items
+            </h4>
+
+            <div id="items-${escapeHtml(order.id)}">
+                ${renderItems(order)}
+            </div>
+
+        </div>
+
+
+        <div class="order-actions">
+
+            ${
+                status === "accepted"
+                ?
+                `
+                    <button
+                        class="pack-btn"
+                        onclick="startPacking('${escapeJs(order.id)}')"
+                    >
+                        START PACKING
+                    </button>
+                `
+                :
+                ""
+            }
+
+
+            ${
+                status === "packing"
+                ?
+                `
+                    <button
+                        class="packed-btn"
+                        onclick="markPacked('${escapeJs(order.id)}')"
+                    >
+                        MARK AS PACKED
+                    </button>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+    `;
+
+
+    return element;
+
+}
+
+
+/* ITEMS */
+
+function renderItems(
+    order
+){
+
+    const items =
+        order.items ||
+        order.products ||
+        order.cart ||
+        [];
+
+
+    if(Array.isArray(items)){
+
+        if(!items.length){
+
+            return `
+                <div class="item">
+                    <span>No item details</span>
+                </div>
+            `;
+
+        }
+
+
+        return items
+            .map(
+                item => {
+
+                    const name =
+                        item.name ||
+                        item.productName ||
+                        item.title ||
+                        "Product";
+
+
+                    const quantity =
+                        item.quantity ||
+                        item.qty ||
+                        1;
+
+
+                    const price =
+                        Number(
+                            item.price ||
+                            item.amount ||
+                            0
+                        );
+
+
+                    return `
+                        <div class="item">
+
+                            <span>
+                                ${escapeHtml(name)}
+                                × ${escapeHtml(quantity)}
+                            </span>
+
+                            <strong>
+                                ₱${price.toFixed(2)}
+                            </strong>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+    }
+
+
+    if(
+        typeof items === "object"
+    ){
+
+        return Object.values(items)
+            .map(
+                item => {
+
+                    const name =
+                        item.name ||
+                        item.productName ||
+                        item.title ||
+                        "Product";
+
+
+                    const quantity =
+                        item.quantity ||
+                        item.qty ||
+                        1;
+
+
+                    const price =
+                        Number(
+                            item.price ||
+                            item.amount ||
+                            0
+                        );
+
+
+                    return `
+                        <div class="item">
+
+                            <span>
+                                ${escapeHtml(name)}
+                                × ${escapeHtml(quantity)}
+                            </span>
+
+                            <strong>
+                                ₱${price.toFixed(2)}
+                            </strong>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+    }
+
+
+    return `
+        <div class="item">
+            <span>No item details</span>
+        </div>
+    `;
+
+}
+
+
+/* START PACKING */
+
+async function startPacking(
+    orderId
+){
+
+    if(!orderId){
+        return;
+    }
+
+
+    if(!confirm(
+        "Start packing this order?"
+    )){
+        return;
+    }
+
+
+    try{
+
+        showLoading(
+            "Starting packing..."
+        );
+
+
+        const now =
+            Date.now();
+
+
+        await update(
+
+            ref(
+                db,
+                "orders/" +
+                orderId
+            ),
+
+            {
+
+                status:
+                    "packing",
+
+                packingBy:
+                    currentUser.uid,
+
+                packingByName:
+                    currentUser.name || "",
+
+                packingStartedAt:
+                    now,
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+
+        hideLoading();
+
+
+        await loadOrders();
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "START PACKING ERROR:",
+            error
+        );
+
+
+        alert(
+            "Unable to start packing: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* MARK PACKED */
+
+async function markPacked(
+    orderId
+){
+
+    if(!orderId){
+        return;
+    }
+
+
+    if(!confirm(
+        "Mark this order as PACKED?"
+    )){
+        return;
+    }
+
+
+    try{
+
+        showLoading(
+            "Marking order as packed..."
+        );
+
+
+        const now =
+            Date.now();
+
+
+        await update(
+
+            ref(
+                db,
+                "orders/" +
+                orderId
+            ),
+
+            {
+
+                status:
+                    "packed",
+
+                packedBy:
+                    currentUser.uid,
+
+                packedByName:
+                    currentUser.name || "",
+
+                packedAt:
+                    now,
+
+                updatedAt:
+                    now
+
+            }
+
+        );
+
+
+        hideLoading();
+
+
+        await loadOrders();
+
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "MARK PACKED ERROR:",
+            error
+        );
+
+
+        alert(
+            "Unable to mark order as packed: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.removeItem(
+        "sariStoreSession"
+    );
+
+    currentUser = null;
+
+    currentSeller = null;
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* MESSAGE */
+
+function showMessage(
+    id,
+    text,
+    type
+){
+
+    const element =
+        document.getElementById(id);
+
+
+    element.textContent =
+        text;
+
+
+    element.className =
+        "message show " +
+        type;
+
+}
+
+
+function clearMessage(id){
+
+    const element =
+        document.getElementById(id);
+
+
+    element.textContent =
+        "";
+
+
+    element.className =
+        "message";
+
+}
+
+
+/* LOADING */
+
+function showLoading(text){
+
+    document.getElementById(
+        "loadingText"
+    ).textContent =
+        text ||
+        "Please wait...";
+
+
+    document.getElementById(
+        "loading"
+    ).classList.add("show");
+
+}
+
+
+function hideLoading(){
+
+    document.getElementById(
+        "loading"
+    ).classList.remove("show");
+
+}
+
+
+/* STORE NUMBER ONLY */
+
+document
+    .getElementById(
+        "storeNumberInput"
+    )
+    .addEventListener(
+        "input",
+        function(){
+
+            this.value =
+                this.value
+                    .replace(/\D/g,"")
+                    .substring(0,7);
+
+        }
+    );
+
+
+/* ENTER TO APPLY */
+
+document
+    .getElementById(
+        "storeNumberInput"
+    )
+    .addEventListener(
+        "keydown",
+        function(e){
+
+            if(e.key === "Enter"){
+
+                applyToStore();
+
+            }
+
+        }
+    );
+
+
+/* ESCAPE HTML */
+
+function escapeHtml(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJs(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
+
+}
+
+
+/* DATE */
+
+function formatDate(timestamp){
+
+    if(!timestamp){
+        return "Date unavailable";
+    }
+
+
+    const date =
+        new Date(
+            Number(timestamp)
+        );
+
+
+    if(
+        Number.isNaN(
+            date.getTime()
+        )
+    ){
+
+        return "Date unavailable";
+
+    }
+
+
+    return date.toLocaleString(
+        "en-PH",
+        {
+            year:"numeric",
+            month:"short",
+            day:"numeric",
+            hour:"numeric",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* EXPOSE */
+
+window.applyToStore =
+    applyToStore;
+
+window.loadOrders =
+    loadOrders;
+
+window.startPacking =
+    startPacking;
+
+window.markPacked =
+    markPacked;
+
+window.logout =
+    logout;
+
+</script>
+
+</body>
+</html>
