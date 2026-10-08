@@ -462,6 +462,19 @@ button{
     font-weight:800;
 }
 
+.print-btn{
+    border:1px solid #d1d5db;
+    background:#fff;
+    color:#111827;
+    padding:11px 17px;
+    border-radius:9px;
+    font-weight:800;
+}
+
+.print-btn:hover{
+    background:#f3f4f6;
+}
+
 .empty{
     text-align:center;
     padding:45px 20px;
@@ -2139,6 +2152,13 @@ function createOrderElement(
 
         <div class="order-actions">
 
+            <button
+                class="print-btn"
+                onclick="printWarehouseReceipt('${escapeJs(order.id)}')"
+            >
+                🖨 PRINT RECEIPT
+            </button>
+
             ${
                 status === "accepted"
                 ?
@@ -2483,6 +2503,532 @@ async function markPacked(
 }
 
 
+/* WAREHOUSE RECEIPT / PACKING SLIP */
+
+async function printWarehouseReceipt(orderId){
+
+    if(!orderId){
+        return;
+    }
+
+    try{
+
+        showLoading("Preparing warehouse receipt...");
+
+        const snapshot =
+            await get(
+                ref(
+                    db,
+                    "orders/" + orderId
+                )
+            );
+
+        hideLoading();
+
+        if(!snapshot.exists()){
+
+            alert("Order not found.");
+            return;
+
+        }
+
+        const order =
+            snapshot.val();
+
+        const orderNumber =
+            order.orderNumber ||
+            order.orderId ||
+            orderId;
+
+        const customerName =
+            order.customerName ||
+            order.buyerName ||
+            order.retailerName ||
+            "Customer";
+
+        const mobile =
+            order.customerMobile ||
+            order.buyerMobile ||
+            order.mobile ||
+            "—";
+
+        const address =
+            order.deliveryAddress ||
+            order.address ||
+            order.customerAddress ||
+            "—";
+
+        const payment =
+            order.paymentMethod ||
+            order.paymentStatus ||
+            "—";
+
+        const items =
+            order.items ||
+            order.products ||
+            order.cart ||
+            [];
+
+        let itemRows = "";
+        let computedTotal = 0;
+
+        const addItem = (item) => {
+
+            const name =
+                item.name ||
+                item.productName ||
+                item.title ||
+                "Product";
+
+            const quantity =
+                Number(
+                    item.quantity ||
+                    item.qty ||
+                    1
+                );
+
+            const unitPrice =
+                Number(
+                    item.price ||
+                    item.unitPrice ||
+                    0
+                );
+
+            const lineTotal =
+                Number(
+                    item.total ||
+                    item.subtotal ||
+                    item.amount ||
+                    (unitPrice * quantity)
+                );
+
+            computedTotal += lineTotal;
+
+            itemRows += `
+                <tr>
+                    <td>${escapeHtml(name)}</td>
+                    <td class="center">${quantity}</td>
+                    <td class="right">₱${lineTotal.toFixed(2)}</td>
+                </tr>
+            `;
+
+        };
+
+        if(Array.isArray(items)){
+
+            items.forEach(item => {
+
+                if(item){
+                    addItem(item);
+                }
+
+            });
+
+        }else if(
+            items &&
+            typeof items === "object"
+        ){
+
+            Object.values(items).forEach(item => {
+
+                if(item){
+                    addItem(item);
+                }
+
+            });
+
+        }
+
+        if(!itemRows){
+
+            itemRows = `
+                <tr>
+                    <td colspan="3" class="center">
+                        No item details
+                    </td>
+                </tr>
+            `;
+
+        }
+
+        const total =
+            Number(
+                order.total ??
+                order.grandTotal ??
+                computedTotal
+            );
+
+        const sellerName =
+            currentSeller
+            ? (
+                currentSeller.storeName ||
+                currentSeller.name ||
+                "SARI-SARI STORE"
+            )
+            : "SARI-SARI STORE";
+
+        const storeNumber =
+            currentStoreNumber || "—";
+
+        const packedBy =
+            order.packedByName ||
+            currentUser.name ||
+            "________________";
+
+        const receiptWindow =
+            window.open(
+                "",
+                "_blank",
+                "width=800,height=900"
+            );
+
+        if(!receiptWindow){
+
+            alert(
+                "Unable to open the print window. Please allow pop-ups for this site."
+            );
+
+            return;
+
+        }
+
+        receiptWindow.document.open();
+
+        receiptWindow.document.write(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Warehouse Receipt - ${escapeHtml(orderNumber)}</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:25px;
+    background:#fff;
+    color:#111827;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.receipt{
+    width:100%;
+    max-width:760px;
+    margin:0 auto;
+}
+
+.header{
+    text-align:center;
+    border-bottom:2px solid #111827;
+    padding-bottom:15px;
+    margin-bottom:18px;
+}
+
+.header h1{
+    margin:0;
+    font-size:25px;
+    letter-spacing:.5px;
+}
+
+.header h2{
+    margin:5px 0 0;
+    font-size:15px;
+    font-weight:700;
+}
+
+.header p{
+    margin:5px 0 0;
+    font-size:12px;
+    color:#4b5563;
+}
+
+.title{
+    text-align:center;
+    font-size:18px;
+    font-weight:900;
+    margin:12px 0 18px;
+}
+
+.info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.info-box{
+    border:1px solid #d1d5db;
+    border-radius:6px;
+    padding:9px;
+}
+
+.label{
+    color:#6b7280;
+    font-size:10px;
+    text-transform:uppercase;
+    font-weight:700;
+}
+
+.value{
+    margin-top:3px;
+    font-size:12px;
+    font-weight:700;
+    word-break:break-word;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th{
+    background:#111827;
+    color:#fff;
+    padding:9px;
+    font-size:11px;
+    text-align:left;
+}
+
+td{
+    border-bottom:1px solid #e5e7eb;
+    padding:9px;
+    font-size:12px;
+}
+
+.center{
+    text-align:center;
+}
+
+.right{
+    text-align:right;
+}
+
+.total-row td{
+    border-top:2px solid #111827;
+    border-bottom:0;
+    font-size:15px;
+    font-weight:900;
+}
+
+.instruction{
+    margin-top:20px;
+    padding:12px;
+    border:2px solid #111827;
+    text-align:center;
+    font-weight:900;
+    font-size:13px;
+}
+
+.signatures{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:35px;
+    margin-top:45px;
+}
+
+.signature{
+    border-top:1px solid #111827;
+    padding-top:6px;
+    text-align:center;
+    font-size:11px;
+}
+
+.footer{
+    margin-top:25px;
+    text-align:center;
+    color:#6b7280;
+    font-size:10px;
+}
+
+@media print{
+
+    body{
+        padding:0;
+    }
+
+    .receipt{
+        max-width:none;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="receipt">
+
+    <div class="header">
+
+        <h1>${escapeHtml(sellerName)}</h1>
+
+        <h2>STORE NUMBER: ${escapeHtml(storeNumber)}</h2>
+
+        <p>Warehouse / Packing Department</p>
+
+    </div>
+
+    <div class="title">
+        WAREHOUSE RECEIPT / PACKING SLIP
+    </div>
+
+    <div class="info">
+
+        <div class="info-box">
+            <div class="label">Order Number</div>
+            <div class="value">
+                ${escapeHtml(orderNumber)}
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Order Date</div>
+            <div class="value">
+                ${escapeHtml(
+                    formatDate(
+                        order.createdAt ||
+                        order.updatedAt ||
+                        Date.now()
+                    )
+                )}
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Customer</div>
+            <div class="value">
+                ${escapeHtml(customerName)}
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Mobile</div>
+            <div class="value">
+                ${escapeHtml(mobile)}
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Delivery Address</div>
+            <div class="value">
+                ${escapeHtml(address)}
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Payment</div>
+            <div class="value">
+                ${escapeHtml(payment)}
+            </div>
+        </div>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ITEM</th>
+                <th class="center">QTY</th>
+                <th class="right">AMOUNT</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            ${itemRows}
+
+            <tr class="total-row">
+                <td colspan="2" class="right">
+                    TOTAL
+                </td>
+                <td class="right">
+                    ₱${total.toFixed(2)}
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <div class="instruction">
+        FOR WAREHOUSE PACKING — CHECK ALL ITEMS AND QUANTITIES BEFORE HANDING TO DELIVERY.
+    </div>
+
+    <div class="signatures">
+
+        <div class="signature">
+            Packed By:<br>
+            <strong>${escapeHtml(packedBy)}</strong>
+        </div>
+
+        <div class="signature">
+            Checked By:<br>
+            ______________________________
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Printed from SARI-SARI STORE Packer Dashboard
+    </div>
+
+</div>
+
+<script>
+
+window.onload = function(){
+
+    setTimeout(function(){
+
+        window.print();
+
+        setTimeout(function(){
+            window.close();
+        }, 500);
+
+    }, 300);
+
+};
+
+<\/script>
+
+</body>
+</html>
+        `);
+
+        receiptWindow.document.close();
+
+    }catch(error){
+
+        hideLoading();
+
+        console.error(
+            "PRINT RECEIPT ERROR:",
+            error
+        );
+
+        alert(
+            "Unable to prepare receipt: " +
+            error.message
+        );
+
+    }
+
+}
+
+
 /* LOGOUT */
 
 function logout(){
@@ -2686,6 +3232,9 @@ window.startPacking =
 
 window.markPacked =
     markPacked;
+
+window.printWarehouseReceipt =
+    printWarehouseReceipt;
 
 window.logout =
     logout;
