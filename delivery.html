@@ -954,15 +954,20 @@ window.openOrderScanner = async function() {
             { facingMode: "environment" },
             {
                 fps: 15,
-                // Larger responsive scan area helps read printed CODE128 barcodes.
+                // Wide, shallow scan window is better for horizontal CODE128 barcodes.
                 qrbox: (viewWidth, viewHeight) => {
-                    const width = Math.min(Math.floor(viewWidth * 0.92), 520);
-                    const height = Math.min(Math.floor(viewHeight * 0.70), 240);
-                    return { width, height };
+                    const width = Math.max(180, Math.min(Math.floor(viewWidth * 0.96), 640));
+                    const height = Math.max(70, Math.min(Math.floor(viewHeight * 0.42), 150));
+                    return { width: Math.min(width, viewWidth), height: Math.min(height, viewHeight) };
                 },
-                aspectRatio: 1.8,
+                aspectRatio: 2.2,
                 disableFlip: false,
-                // Let html5-qrcode detect supported barcode formats automatically.
+                // Prioritize the CODE128 format used on SUPPLYGO order receipts.
+                formatsToSupport: [
+                    Html5QrcodeSupportedFormats.CODE_128,
+                    Html5QrcodeSupportedFormats.CODE_39,
+                    Html5QrcodeSupportedFormats.QR_CODE
+                ],
             },
             async decodedText => {
                 if (scannerProcessing) return;
