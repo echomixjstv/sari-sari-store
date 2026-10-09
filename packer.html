@@ -1979,6 +1979,22 @@ function renderEmptyOrders(){
 
 /* CREATE ORDER */
 
+/* ONE CANONICAL ORDER NUMBER FOR DISPLAY AND BARCODE */
+function getCanonicalOrderNumber(order, fallbackId = ""){
+    const raw = String(
+        order?.orderNumber ??
+        order?.orderId ??
+        order?.orderNo ??
+        fallbackId ??
+        "ORDER"
+    ).trim().toUpperCase();
+
+    if(!raw || raw === "ORDER") return "ORDER";
+    // Remove any existing ORD prefix, then add it exactly once.
+    const numberPart = raw.replace(/^ORD[\\s-]*/i, "").trim();
+    return "ORD-" + (numberPart || "ORDER");
+}
+
 function createOrderElement(
     order
 ){
@@ -2000,11 +2016,7 @@ function createOrderElement(
         ).toLowerCase();
 
 
-    const orderNumber =
-        order.orderNumber ||
-        order.orderId ||
-        order.id ||
-        "ORDER";
+    const orderNumber = getCanonicalOrderNumber(order, order.id);
 
 
     const customerName =
@@ -2516,15 +2528,9 @@ async function printWarehouseReceipt(orderId){
         const order =
             snapshot.val();
 
-        const orderNumber =
-            order.orderNumber ||
-            order.orderId ||
-            orderId;
-
-        // Barcode value always uses the ORD-# format.
-        const barcodeValue = String(orderNumber).toUpperCase().startsWith("ORD-")
-            ? String(orderNumber).toUpperCase()
-            : "ORD-" + String(orderNumber).replace(/^ORD[- ]?/i, "");
+        // Use exactly the same canonical order number shown on the order card.
+        const orderNumber = getCanonicalOrderNumber(order, orderId);
+        const barcodeValue = orderNumber;
 
         const customerName =
             order.customerName ||

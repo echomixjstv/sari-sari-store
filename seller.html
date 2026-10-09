@@ -1907,7 +1907,8 @@ import {
     get,
     set,
     update,
-    remove
+    remove,
+    onValue
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 
@@ -1957,6 +1958,7 @@ let products = {};
 let orders = {};
 let users = {};
 let notifications = {};
+let productsRealtimeStarted = false;
 
 let currentOrderId = "";
 
@@ -2155,6 +2157,8 @@ async function init(){
 
         await loadAll();
 
+        startRealtimeProductUpdates();
+
         hideLoading();
 
     }catch(error){
@@ -2312,6 +2316,42 @@ async function loadProducts(){
         snapshot.exists()
             ? snapshot.val()
             : {};
+
+}
+
+
+/* REAL-TIME PRODUCT AND STOCK UPDATES */
+function startRealtimeProductUpdates(){
+
+    if(productsRealtimeStarted){
+        return;
+    }
+
+    productsRealtimeStarted = true;
+
+    onValue(
+        ref(db,"products"),
+        snapshot => {
+
+            products =
+                snapshot.exists()
+                    ? snapshot.val()
+                    : {};
+
+            // Update the seller's product cards immediately when stock changes.
+            if(seller){
+                renderProducts();
+                renderDashboard();
+            }
+
+        },
+        error => {
+            console.error(
+                "Realtime product update failed:",
+                error
+            );
+        }
+    );
 
 }
 
