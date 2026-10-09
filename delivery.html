@@ -219,6 +219,19 @@ button{cursor:pointer}
         </p>
         <div id="orderScanner"></div>
         <div id="scannerMessage" class="scanner-error"></div>
+
+        <div style="margin-top:14px;text-align:left">
+            <label for="manualOrderBarcode" style="display:block;font-weight:bold;margin-bottom:6px">
+                Hindi mabasa? Ilagay ang order code:
+            </label>
+            <input id="manualOrderBarcode" type="text"
+                   placeholder="Hal. ORD-12345"
+                   autocomplete="off" autocapitalize="characters"
+                   style="width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font-size:16px">
+            <button class="primary-btn" style="margin-top:8px"
+                    onclick="submitManualOrderBarcode()">HANAPIN ANG ORDER</button>
+        </div>
+
         <button class="secondary-btn" style="margin-top:15px;width:100%"
                 onclick="closeOrderScanner()">Close Scanner</button>
     </div>
@@ -783,7 +796,7 @@ function createOrderCard(order, viewStatus) {
         statusText = "DELIVERED";
     }
 
-    const orderNumber = order.orderNumber || order.orderId || "ORDER";
+    const orderNumber = canonicalOrderNumber(order);
     const customerName = order.retailerName || order.customerName || "Customer";
     const mobile = order.customerMobile || order.retailerMobile || order.mobile || "";
     const address = order.deliveryAddress || order.address || "No delivery address";
@@ -859,6 +872,7 @@ window.openOrderScanner = async function() {
     }
 
     $("scannerMessage").textContent = "";
+    $("manualOrderBarcode").value = "";
     $("scannerModal").classList.add("show");
     scannerProcessing = false;
 
@@ -872,38 +886,23 @@ window.openOrderScanner = async function() {
         await orderScanner.start(
             { facingMode: "environment" },
             {
-                fps: 10,
-                qrbox: { width: 280, height: 120 },
-                aspectRatio: 1.5,
-                formatsToSupport: [
-                    Html5QrcodeSupportedFormats.CODE_128,
-                    Html5QrcodeSupportedFormats.CODE_39,
-                    Html5QrcodeSupportedFormats.EAN_13,
-                    Html5QrcodeSupportedFormats.EAN_8,
-                    Html5QrcodeSupportedFormats.UPC_A,
-                    Html5QrcodeSupportedFormats.UPC_E,
-                    Html5QrcodeSupportedFormats.ITF,
-                    Html5QrcodeSupportedFormats.QR_CODE
-                ]
+                fps: 15,
+                // Larger responsive scan area helps read printed CODE128 barcodes.
+                qrbox: (viewWidth, viewHeight) => {
+                    const width = Math.min(Math.floor(viewWidth * 0.92), 520);
+                    const height = Math.min(Math.floor(viewHeight * 0.70), 240);
+                    return { width, height };
+                },
+                aspectRatio: 1.8,
+                disableFlip: false,
+                // Let html5-qrcode detect supported barcode formats automatically.
             },
             async decodedText => {
                 if (scannerProcessing) return;
 
                 const scanned = String(decodedText || "").trim();
 
-                // Ignore repeated invalid scans to avoid repeated messages.
-                if (!/^ORD-.+$/i.test(scanned)) {
-                    const now = Date.now();
-
-                    if (scanned !== lastInvalidBarcode ||
-                        now - lastInvalidBarcodeAt > 2500) {
-                        lastInvalidBarcode = scanned;
-                        lastInvalidBarcodeAt = now;
-                        $("scannerMessage").textContent =
-                            "Invalid barcode. Expected ORD-#.";
-                    }
-                    return;
-                }
+                if (!scanned) return;
 
                 scannerProcessing = true;
                 await stopScanner();
@@ -945,17 +944,61 @@ window.closeOrderScanner = async function() {
 };
 
 /* FIND SCANNED ORDER */
-async function findOrderByBarcode(barcode) {
-    const scannedOrderNumber = String(barcode).trim().toUpperCase();
+function canonicalOrderNumber(order) {
+    const raw = String(
+        order?.orderNumber ??
+        order?.orderId ??
+        order?.orderNo ??
+        "ORDER"
+    ).trim().toUpperCase();
 
-    // Match the printed barcode to the order number in Firebase.
+    if (!raw || raw === "ORDER") return "ORDER";
+    const numberPart = raw.replace(/^ORD[\\s-]*/i, "").trim();
+    return "ORD-" + (numberPart || "ORDER");
+}
+
+function normalizeScannedOrderNumber(value) {
+    const raw = String(value ?? "")
+        .trim()
+        .toUpperCase()
+        .replace(/[\\s\\u00A0]+/g, "");
+
+    if (!raw) return "";
+    // Accept ORD-123, ORD123, or just the numeric/key part.
+    const noPrefix = raw.replace(/^ORD-?/i, "");
+    return "ORD-" + noPrefix.replace(/^-+/, "");
+}
+
+window.submitManualOrderBarcode = async function() {
+    const input = $("manualOrderBarcode");
+    const value = String(input?.value || "").trim();
+
+    if (!value) {
+        $("scannerMessage").textContent = "Ilagay muna ang order code.";
+        input?.focus();
+        return;
+    }
+
+    scannerProcessing = true;
+    await stopScanner();
+    $("scannerModal").classList.remove("show");
+    await findOrderByBarcode(value);
+};
+
+async function findOrderByBarcode(barcode) {
+    const scannedOrderNumber = normalizeScannedOrderNumber(barcode);
+
+    // Match the same canonical order number used by the printed packer receipt,
+    // while also accepting older records whose order number lacks the ORD- prefix.
     const order = allOrders.find(item =>
-        String(item.orderNumber || "").trim().toUpperCase() === scannedOrderNumber
+        normalizeScannedOrderNumber(canonicalOrderNumber(item)) === scannedOrderNumber ||
+        normalizeScannedOrderNumber(item.orderNumber || "") === scannedOrderNumber ||
+        normalizeScannedOrderNumber(item.orderId || "") === scannedOrderNumber
     );
 
     if (!order) {
         scannerProcessing = false;
-        toast("Order " + scannedOrderNumber + " was not found in your assigned store.");
+        toast("Order " + scannedOrderNumber + " was not found in your assigned store. Check the printed barcode/order number.");
         return;
     }
 
