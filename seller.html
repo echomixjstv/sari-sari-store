@@ -140,6 +140,25 @@ button{
     font-weight:bold;
 }
 
+/* MOBILE SIDEBAR CONTROLS */
+.mobile-menu-toggle{
+    display:none;
+    border:0;
+    background:#9c174c;
+    color:#fff;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    font-size:23px;
+    line-height:1;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+.mobile-sidebar-overlay{
+    display:none;
+}
+
 /* MAIN */
 
 .main{
@@ -873,9 +892,42 @@ td{
 
 @media(max-width:600px){
 
-    .sidebar{
-        display:none;
+    .mobile-menu-toggle{
+        display:inline-flex;
     }
+
+    .sidebar{
+        display:flex;
+        width:min(285px,86vw);
+        min-height:100vh;
+        transform:translateX(-105%);
+        transition:transform .25s ease;
+        z-index:5001;
+        box-shadow:8px 0 28px rgba(0,0,0,.18);
+        overflow-y:auto;
+    }
+
+    body.mobile-menu-open .sidebar{
+        transform:translateX(0);
+    }
+
+    .mobile-sidebar-overlay{
+        display:block;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,.45);
+        opacity:0;
+        visibility:hidden;
+        transition:opacity .25s ease,visibility .25s ease;
+        z-index:5000;
+    }
+
+    body.mobile-menu-open .mobile-sidebar-overlay{
+        opacity:1;
+        visibility:visible;
+    }
+
+    .nav{overflow-y:auto;}
 
     .main{
         margin-left:0;
@@ -890,7 +942,12 @@ td{
 
     .topbar h1{
         font-size:18px;
+        flex:1;
+        margin-left:10px;
     }
+
+    .top-user{gap:6px;font-size:11px;}
+    .user-circle{width:32px;height:32px;}
 
     .content{
         padding:15px;
@@ -1076,12 +1133,16 @@ td{
 
 </aside>
 
+<div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="closeMobileMenu()"></div>
+
 <!-- MAIN -->
 
 <main class="main">
 
 
 <header class="topbar">
+
+    <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
 
     <h1 id="pageTitle">
         Seller Dashboard
@@ -2027,14 +2088,6 @@ import {
     onValue
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-import {
-    getStorage,
-    ref as storageRef,
-    uploadBytes,
-    getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
-
-
 /* FIREBASE */
 
 const firebaseConfig = {
@@ -2071,9 +2124,6 @@ const app =
 const db =
     getDatabase(app);
 
-const storage = getStorage(app);
-
-
 /* GLOBAL DATA */
 
 let session = null;
@@ -2098,6 +2148,8 @@ let productImageLibraryLoading = false;
 
 window.showSection = showSection;
 window.logout = logout;
+window.toggleMobileMenu = toggleMobileMenu;
+window.closeMobileMenu = closeMobileMenu;
 
 window.openProductModal = openProductModal;
 window.closeModal = closeModal;
@@ -2667,6 +2719,8 @@ function renderProducts(){
 
 const PRODUCT_IMAGE_API = "https://api.github.com/repos/echomixjstv/sari-sari-store/contents/productimages";
 const PRODUCT_IMAGE_BASE = "https://echomixjstv.github.io/sari-sari-store/productimages/";
+// Deploy github-photo-upload-worker.js to Cloudflare Workers, then replace this URL.
+const GITHUB_PHOTO_UPLOAD_ENDPOINT = "https://YOUR-CLOUDFLARE-WORKER.workers.dev/upload-product-photo";
 let productCameraStream = null;
 let capturedProductBlob = null;
 let capturedProductFile = null;
@@ -2793,7 +2847,7 @@ async function openProductCamera(){
             document.getElementById("captureProductPhotoButton").style.display = "none";
             document.getElementById("retakeProductPhotoButton").style.display = "inline-block";
             document.getElementById("uploadProductPhotoButton").style.display = "inline-block";
-            status.textContent = "Photo selected. Press SAVE PHOTO to upload it to Firebase Storage.";
+            status.textContent = "Photo selected. Press SAVE PHOTO to upload it to the GitHub productimages folder.";
         };
         const pick = document.createElement("button");
         pick.type = "button"; pick.className = "btn btn-secondary"; pick.textContent = "TAKE PHOTO / CHOOSE CAMERA";
@@ -2829,7 +2883,7 @@ function captureProductPhoto(){
         document.getElementById("captureProductPhotoButton").style.display = "none";
         document.getElementById("retakeProductPhotoButton").style.display = "inline-block";
         document.getElementById("uploadProductPhotoButton").style.display = "inline-block";
-        if(status) status.textContent = "Check the preview. Press SAVE PHOTO to upload it to Firebase Storage.";
+        if(status) status.textContent = "...";
         stopProductCamera();
     },"image/jpeg",0.88);
 }
@@ -2850,24 +2904,52 @@ async function uploadCapturedProductPhoto(){
     if(!capturedProductBlob){ toast("Take a photo first."); return; }
     const productName = document.getElementById("productName")?.value.trim();
     if(!productName){ toast("Enter the product name first."); return; }
+    if(GITHUB_PHOTO_UPLOAD_ENDPOINT.includes("YOUR-CLOUDFLARE-WORKER")){
+        const message = "uploading";
+        const status = document.getElementById("productCameraStatus");
+        if(status) status.textContent = message;
+        toast("Configure the secure GitHub upload Worker first.");
+        return;
+    }
     const button = document.getElementById("uploadProductPhotoButton");
     const status = document.getElementById("productCameraStatus");
     button.disabled = true; button.textContent = "UPLOADING...";
     try{
-        const safeName = productName.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,70) || "product";
-        const filename = `${Date.now()}_${safeName}.jpg`;
-        const target = storageRef(storage,`productimages/${filename}`);
         const blob = capturedProductFile || capturedProductBlob;
-        await uploadBytes(target,blob,{contentType:blob.type || "image/jpeg"});
-        const url = await getDownloadURL(target);
+        if(blob.size > 8 * 1024 * 1024) throw new Error("Photo is too large. Please use a picture under 8 MB.");
+        const dataUrl = await new Promise((resolve,reject)=>{
+            const reader = new FileReader();
+            reader.onload = ()=>resolve(String(reader.result || ""));
+            reader.onerror = ()=>reject(new Error("Could not read the captured photo."));
+            reader.readAsDataURL(blob);
+        });
+        const base64 = dataUrl.includes(",") ? dataUrl.split(",",2)[1] : "";
+        if(!base64) throw new Error("Could not prepare the photo for upload.");
+        const response = await fetch(GITHUB_PHOTO_UPLOAD_ENDPOINT,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({productName, imageBase64:base64, contentType:blob.type || "image/jpeg"})
+        });
+        let result = {};
+        try{ result = await response.json(); }catch(_){ }
+        if(!response.ok || !result.success || !result.url){
+            throw new Error(result.error || ("Upload server returned HTTP " + response.status + "."));
+        }
+        const url = result.url;
+        const uploadedName = result.filename || url.split("/").pop() || "product-photo.jpg";
+        const item = {name:uploadedName,url};
+        if(!productImageLibrary.some(x=>x.url===url)) productImageLibrary.unshift(item);
+        productImageLibraryLoaded = true;
         selectProductImage(url);
-        if(status) status.textContent = "Photo uploaded successfully and selected for this product. Press SAVE PRODUCT in the product form to finish.";
-        toast("Product photo uploaded to Firebase Storage.");
+        const grid = document.getElementById("productImageSuggestions");
+        if(grid) grid.style.display = "grid";
+        if(status) status.textContent = "Photo uploaded to GitHub productimages and selected. Press SAVE PRODUCT to finish.";
+        toast("Photo saved to GitHub productimages.");
         closeProductCamera();
     }catch(error){
-        console.error("Product photo upload failed:",error);
-        if(status) status.textContent = "Upload failed. Check Firebase Storage setup/rules and internet connection. " + (error?.code || error?.message || "");
-        toast("Photo upload failed. Check Firebase Storage rules.");
+        console.error("GitHub product photo upload failed:",error);
+        if(status) status.textContent = "Upload failed. Check that the Cloudflare Worker is deployed, its GITHUB_TOKEN secret is configured, and its allowed website origin is correct. " + (error?.message || "");
+        toast("Photo upload failed. Check the upload Worker setup.");
     }finally{
         button.disabled = false; button.textContent = "SAVE PHOTO";
     }
@@ -6034,9 +6116,32 @@ async function createNotification(
 }
 
 
+/* MOBILE BURGER MENU */
+function toggleMobileMenu(){
+    const open = !document.body.classList.contains("mobile-menu-open");
+    document.body.classList.toggle("mobile-menu-open",open);
+    const button = document.getElementById("mobileMenuToggle");
+    if(button){
+        button.setAttribute("aria-expanded",open ? "true" : "false");
+        button.setAttribute("aria-label",open ? "Close navigation menu" : "Open navigation menu");
+        button.textContent = open ? "×" : "☰";
+    }
+}
+
+function closeMobileMenu(){
+    document.body.classList.remove("mobile-menu-open");
+    const button = document.getElementById("mobileMenuToggle");
+    if(button){
+        button.setAttribute("aria-expanded","false");
+        button.setAttribute("aria-label","Open navigation menu");
+        button.textContent = "☰";
+    }
+}
+
 /* SECTION */
 
 function showSection(section){
+    closeMobileMenu();
 
     const sections =
         [
