@@ -96,7 +96,23 @@ button{cursor:pointer}
 .scanner-help{font-size:14px;color:#6b7280;line-height:1.5}
 #orderScanner{width:100%;margin:12px auto;overflow:hidden}
 #orderScanner video{border-radius:8px}
+
 .scanner-error{color:#b91c1c;font-size:14px;margin-top:10px}
+.packed-list-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:12px}
+.packed-list-main{min-width:0;flex:1}
+.packed-list-number{font-weight:bold;font-size:15px;overflow-wrap:anywhere}
+.packed-list-meta{font-size:12px;color:#6b7280;margin-top:5px;line-height:1.4}
+.view-order-btn{flex-shrink:0;border:0;border-radius:8px;background:#2563eb;color:#fff;padding:10px 14px;font-weight:bold}
+.view-order-btn:hover{background:#1d4ed8}
+.packed-list{display:flex;flex-direction:column;gap:9px}
+.order-detail-modal{position:fixed;inset:0;background:#0009;z-index:1600;display:none;align-items:center;justify-content:center;padding:14px}
+.order-detail-modal.show{display:flex}
+.order-detail-box{background:#f4f6f8;width:100%;max-width:620px;max-height:90vh;overflow:auto;border-radius:14px;padding:16px}
+.order-detail-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.order-detail-head h2{font-size:19px;margin:0}
+.order-detail-close{border:0;background:#e5e7eb;border-radius:8px;padding:9px 12px;font-weight:bold}
+@media(max-width:400px){.packed-list-row{padding:10px}.view-order-btn{padding:9px 11px}}
+
 @media(max-width:700px){
 .header{padding:12px 14px}
 .header-title{font-size:17px}
@@ -209,6 +225,17 @@ button{cursor:pointer}
     </section>
 </main>
 
+<!-- PACKED ORDER DETAILS POPUP -->
+<div id="packedOrderModal" class="order-detail-modal" onclick="if(event.target===this)closePackedOrder()">
+    <div class="order-detail-box">
+        <div class="order-detail-head">
+            <h2>📦 Order Details</h2>
+            <button class="order-detail-close" onclick="closePackedOrder()">Close ✕</button>
+        </div>
+        <div id="packedOrderDetailContent"></div>
+    </div>
+</div>
+
 <!-- BARCODE SCANNER POPUP -->
 <div id="scannerModal" class="loading" style="z-index:1500">
     <div class="loading-box">
@@ -249,7 +276,7 @@ button{cursor:pointer}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-    getDatabase, ref, get, update, set, push
+    getDatabase, ref, get, update, set, push, onValue
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 /* FIREBASE */
@@ -271,6 +298,8 @@ let session = null;
 let currentUser = null;
 let currentStore = null;
 let allOrders = [];
+let ordersListenerAttached = false;
+let stopOrdersListener = null;
 
 let selectedHistoryPeriod = "today";
 let deliveryHistoryOpen = false;
@@ -468,7 +497,7 @@ async function refreshPage() {
         storeCard.classList.remove("hidden");
         storeNumberDisplay.textContent = assignedStoreNumber;
         await loadStore(assignedStoreNumber);
-        await loadOrders();
+        startOrdersRealtimeListener();
         return;
     }
 
@@ -680,49 +709,56 @@ window.resetApplication = async function() {
 };
 
 /* LOAD ORDERS */
-async function loadOrders() {
+function startOrdersRealtimeListener() {
     if (!currentUser) return;
 
     const storeNumber = String(
         currentUser.assignedStoreNumber || currentUser.storeNumber || ""
-    );
-
+    ).trim();
     if (!storeNumber) return;
 
-    try {
-        const snapshot = await get(ref(db, "orders"));
-        allOrders = [];
+    // Attach only once: Firebase pushes every new order/status change automatically.
+    if (ordersListenerAttached && stopOrdersListener) return;
 
+    ordersListenerAttached = true;
+    stopOrdersListener = onValue(ref(db, "orders"), snapshot => {
+        const nextOrders = [];
         if (snapshot.exists()) {
             const orders = snapshot.val();
-
             Object.keys(orders).forEach(key => {
                 const order = { orderId: key, ...orders[key] };
-
                 const orderStoreNumber = String(
                     order.storeNumber ||
                     order.sellerStoreNumber ||
                     order.assignedStoreNumber ||
                     ""
-                );
-
-                if (orderStoreNumber === storeNumber) {
-                    allOrders.push(order);
-                }
+                ).trim();
+                if (orderStoreNumber === storeNumber) nextOrders.push(order);
             });
         }
 
-        allOrders.sort((a, b) =>
+        const previousPackedIds = new Set(
+            allOrders.filter(o => String(o.status || "").toLowerCase() === "packed")
+                .map(o => String(o.orderId))
+        );
+        allOrders = nextOrders.sort((a, b) =>
             Number(b.createdAt || 0) - Number(a.createdAt || 0)
         );
-
         renderOrders();
-    } catch (error) {
-        console.error(error);
-        packedOrders.innerHTML = '<div class="empty">Unable to load orders.</div>';
-        currentDeliveries.innerHTML = '<div class="empty">Unable to load deliveries.</div>';
-        myDeliveries.innerHTML = '<div class="empty">Unable to load delivery history.</div>';
-    }
+
+        const newPacked = allOrders.filter(o =>
+            String(o.status || "").toLowerCase() === "packed" &&
+            !previousPackedIds.has(String(o.orderId))
+        );
+        if (newPacked.length) {
+            toast(newPacked.length === 1
+                ? "May bagong order na ready for delivery!"
+                : `May ${newPacked.length} bagong order na ready for delivery!`);
+        }
+    }, error => {
+        console.error("Realtime orders listener:", error);
+        packedOrders.innerHTML = '<div class="empty">Hindi ma-update ang orders. Tingnan ang internet connection.</div>';
+    });
 }
 
 /* RENDER ORDERS */
@@ -755,14 +791,45 @@ function renderPackedOrders(orders) {
         packedOrders.innerHTML = `
             <div class="empty">
                 <div class="empty-icon">📦</div>
-                <div>No packed orders are waiting for delivery.</div>
+                <div>Walang order na naghihintay ng delivery.</div>
             </div>`;
         return;
     }
 
-    packedOrders.innerHTML = orders
-        .map(order => createOrderCard(order, "packed")).join("");
+    packedOrders.classList.add("packed-list");
+    packedOrders.innerHTML = orders.map(order => `
+        <div class="packed-list-row">
+            <div class="packed-list-main">
+                <div class="packed-list-number">${escapeHtml(canonicalOrderNumber(order))}</div>
+                <div class="packed-list-meta">
+                    ${escapeHtml(order.retailerName || order.customerName || "Customer")}
+                    · ₱${formatMoney(Number(order.totalAmount || order.total || 0))}
+                    <br>${escapeHtml(formatDate(order.createdAt))}
+                </div>
+            </div>
+            <button class="view-order-btn" onclick="viewPackedOrder('${escapeAttr(order.orderId)}')">VIEW</button>
+        </div>
+    `).join("");
 }
+
+window.viewPackedOrder = function(orderId) {
+    const order = allOrders.find(item => String(item.orderId) === String(orderId));
+    if (!order) {
+        toast("Hindi na available ang order na ito.");
+        return;
+    }
+    if (String(order.status || "").toLowerCase() !== "packed") {
+        toast("Nagbago na ang status ng order na ito.");
+        return;
+    }
+    $("packedOrderDetailContent").innerHTML = createOrderCard(order, "packed");
+    $("packedOrderModal").classList.add("show");
+};
+
+window.closePackedOrder = function() {
+    $("packedOrderModal").classList.remove("show");
+    $("packedOrderDetailContent").innerHTML = "";
+};
 
 function renderMyDeliveries(orders) {
     if (!orders.length) {
