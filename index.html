@@ -47,19 +47,24 @@ button{
     gap:14px;
 }
 
+
 .brand-logo{
     width:54px;
     height:54px;
     border-radius:15px;
-    background:linear-gradient(135deg,#f97316,#ef4444);
+    overflow:hidden;
+    background:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
-    color:#fff;
-    font-size:27px;
-    font-weight:900;
+    flex-shrink:0;
 }
 
+.brand-logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
 .brand h1{
     font-size:24px;
     color:#111827;
@@ -147,13 +152,19 @@ button{
     color:#fff;
 }
 
+
 .login-panel{
+    display:none;
     max-width:520px;
     margin:0 auto 40px;
     background:#fff;
     padding:28px;
     border-radius:22px;
     box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+.login-panel.show{
+    display:block;
 }
 
 .login-panel h2{
@@ -496,10 +507,11 @@ button{
 <body>
 
 <header class="header">
-    <div class="brand">
-        <div class="brand-logo">🛒</div>
-        <div>
-            <h1>SARI-SARI STORE</h1>
+    
+<div class="brand-logo">
+    <img src="logo.png" alt="SARI-SARI STORE Logo">
+</div>
+            <h1>SUPPLYGO</h1>
             <p>Wholesale Marketplace</p>
         </div>
     </div>
@@ -508,7 +520,7 @@ button{
 <main class="container">
 
 <section class="hero">
-    <h2>Welcome to Sari-Sari Store</h2>
+    <h2>Welcome to SUPPLYGO</h2>
     <p>Choose your account type to continue.</p>
 </section>
 
@@ -1024,41 +1036,54 @@ window.updateRegistrationFields = updateRegistrationFields;
 
 /* ROLE */
 
+
 function selectRole(role){
 
     selectedRole = role;
 
-    document
-        .querySelectorAll(".role-card")
-        .forEach(card =>
-            card.classList.remove("selected")
-        );
+    document.querySelectorAll(".role-card").forEach(card => {
+        card.classList.remove("selected");
+    });
 
-    const card =
-        document.getElementById(
-            "role" +
-            role.charAt(0).toUpperCase() +
-            role.slice(1)
-        );
+    const card = document.getElementById(
+        "role" + role.charAt(0).toUpperCase() + role.slice(1)
+    );
 
     if(card){
         card.classList.add("selected");
     }
 
     const names = {
-        seller:"Seller",
-        retailer:"Retailer",
-        packer:"Packer",
-        delivery:"Delivery"
+        seller: "Seller",
+        retailer: "Retailer",
+        packer: "Packer",
+        delivery: "Delivery"
     };
 
-    document.getElementById(
-        "selectedRoleBox"
-    ).textContent =
-        "Selected: " +
-        (names[role] || role);
-}
+    document.getElementById("selectedRoleBox").textContent =
+        "Selected: " + (names[role] || role);
 
+    // Show the login and registration options only after role selection.
+    const loginPanel = document.querySelector(".login-panel");
+    loginPanel.classList.add("show");
+
+    // Update the registration role to match the selected role.
+    const registerRole = document.getElementById("registerRole");
+
+    if(role === "seller"){
+        registerRole.value = "retailer";
+    }else{
+        registerRole.value = role;
+    }
+
+    updateRegistrationFields();
+
+    // Scroll to the login panel.
+    loginPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
 
 /* REGISTER */
 
@@ -2736,7 +2761,6 @@ async function restoreSession(){
 
 /* DEFAULT */
 
-selectRole("retailer");
 
 updateRegistrationFields();
 
