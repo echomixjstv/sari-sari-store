@@ -1,2736 +1,1233 @@
-html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delivery - SUPPLYGO</title>
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>Delivery - SARI-SARI STORE</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
-
-html,
-body{
-    margin:0;
-    padding:0;
-    width:100%;
-    min-height:100%;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f6f8;
-    color:#222;
-}
-
-body{
-    overflow-x:hidden;
-}
-
-button,
-input{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.header{
-    background:#111827;
-    color:white;
-    padding:16px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    position:sticky;
-    top:0;
-    z-index:100;
-    box-shadow:0 3px 12px rgba(0,0,0,.15);
-}
-
-.header-left{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.logo{
-    width:42px;
-    height:42px;
-    border-radius:10px;
-    background:#22c55e;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:21px;
-    font-weight:bold;
-}
-
-.header-title{
-    font-size:20px;
-    font-weight:bold;
-}
-
-.header-subtitle{
-    font-size:12px;
-    opacity:.7;
-    margin-top:3px;
-}
-
-.logout-btn{
-    border:0;
-    background:#ef4444;
-    color:white;
-    padding:10px 15px;
-    border-radius:8px;
-    font-weight:bold;
-}
-
-.logout-btn:hover{
-    background:#dc2626;
-}
-
-.container{
-    width:100%;
-    max-width:1100px;
-    margin:auto;
-    padding:20px;
-}
-
-.welcome{
-    background:white;
-    border-radius:14px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.welcome h2{
-    margin:0 0 6px;
-    font-size:24px;
-}
-
-.welcome p{
-    margin:0;
-    color:#6b7280;
-}
-
-.store-card{
-    background:#ecfdf5;
-    border:1px solid #bbf7d0;
-    border-radius:14px;
-    padding:18px;
-    margin-top:15px;
-}
-
-.store-card h3{
-    margin:0 0 10px;
-    color:#166534;
-}
-
-.store-number{
-    font-size:27px;
-    font-weight:bold;
-    letter-spacing:2px;
-    color:#15803d;
-}
-
-.store-info{
-    margin-top:8px;
-    color:#4b5563;
-    line-height:1.6;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:18px;
-}
-
-.card{
-    background:white;
-    border-radius:14px;
-    padding:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.card h3{
-    margin:0 0 15px;
-}
-
-.application-card{
-    max-width:650px;
-    margin:40px auto;
-}
-
-.application-icon{
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    background:#dcfce7;
-    color:#16a34a;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:32px;
-    margin:0 auto 15px;
-}
-
-.application-card h2{
-    text-align:center;
-    margin:0 0 8px;
-}
-
-.application-card p{
-    text-align:center;
-    color:#6b7280;
-    line-height:1.5;
-}
-
-.form-group{
-    margin-top:18px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:7px;
-    font-weight:bold;
-    color:#374151;
-}
-
-.form-group input{
-    width:100%;
-    padding:13px;
-    border:1px solid #d1d5db;
-    border-radius:9px;
-    outline:none;
-    font-size:16px;
-}
-
-.form-group input:focus{
-    border-color:#22c55e;
-    box-shadow:0 0 0 3px rgba(34,197,94,.12);
-}
-
-.primary-btn{
-    width:100%;
-    border:0;
-    background:#16a34a;
-    color:white;
-    padding:13px;
-    border-radius:9px;
-    font-size:16px;
-    font-weight:bold;
-    margin-top:15px;
-}
-
-.primary-btn:hover{
-    background:#15803d;
-}
-
-.primary-btn:disabled{
-    background:#9ca3af;
-    cursor:not-allowed;
-}
-
-.secondary-btn{
-    border:0;
-    background:#e5e7eb;
-    color:#374151;
-    padding:10px 15px;
-    border-radius:8px;
-    font-weight:bold;
-}
-
-.status-box{
-    border-radius:12px;
-    padding:18px;
-    margin-bottom:20px;
-}
-
-.status-pending{
-    background:#fff7ed;
-    border:1px solid #fed7aa;
-    color:#9a3412;
-}
-
-.status-rejected{
-    background:#fef2f2;
-    border:1px solid #fecaca;
-    color:#991b1b;
-}
-
-.status-approved{
-    background:#ecfdf5;
-    border:1px solid #bbf7d0;
-    color:#166534;
-}
-
-.status-box h3{
-    margin:0 0 7px;
-}
-
-.status-box p{
-    margin:4px 0;
-}
-
-.section-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.section-title h2{
-    margin:0;
-}
-
-.count-badge{
-    min-width:30px;
-    padding:5px 9px;
-    border-radius:20px;
-    background:#dcfce7;
-    color:#166534;
-    font-weight:bold;
-    text-align:center;
-}
-
-.orders{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-}
-
-.order-card{
-    background:white;
-    border-radius:14px;
-    padding:18px;
-    box-shadow:0 3px 12px rgba(0,0,0,.07);
-    border-left:5px solid #22c55e;
-}
-
-.order-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:12px;
-    margin-bottom:12px;
-}
-
-.order-number{
-    font-size:18px;
-    font-weight:bold;
-}
-
-.order-date{
-    color:#6b7280;
-    font-size:12px;
-    margin-top:4px;
-}
-
-.status{
-    padding:6px 10px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
-    white-space:nowrap;
-}
-
-.status-packed{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
-
-.status-delivery{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.status-delivered{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.status-pending{
-    background:#f3f4f6;
-    color:#374151;
-}
-
-.customer-box{
-    background:#f9fafb;
-    border-radius:10px;
-    padding:12px;
-    margin-bottom:12px;
-}
-
-.customer-box strong{
-    display:block;
-    margin-bottom:4px;
-}
-
-.customer-box div{
-    color:#4b5563;
-    font-size:14px;
-    line-height:1.5;
-}
-
-.items{
-    border-top:1px solid #e5e7eb;
-    padding-top:12px;
-}
-
-.item-row{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    padding:7px 0;
-    font-size:14px;
-}
-
-.item-name{
-    flex:1;
-}
-
-.item-price{
-    font-weight:bold;
-}
-
-.order-bottom{
-    border-top:1px solid #e5e7eb;
-    margin-top:12px;
-    padding-top:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
-
-.total{
-    font-size:18px;
-    font-weight:bold;
-    color:#15803d;
-}
-
-.delivery-btn{
-    border:0;
-    background:#16a34a;
-    color:white;
-    padding:11px 15px;
-    border-radius:8px;
-    font-weight:bold;
-}
-
-.delivery-btn:hover{
-    background:#15803d;
-}
-
-.delivery-btn.orange{
-    background:#f59e0b;
-}
-
-.delivery-btn.orange:hover{
-    background:#d97706;
-}
-
-.empty{
-    background:white;
-    border-radius:14px;
-    padding:35px 20px;
-    text-align:center;
-    color:#6b7280;
-    box-shadow:0 3px 12px rgba(0,0,0,.06);
-}
-
-.empty-icon{
-    font-size:40px;
-    margin-bottom:10px;
-}
-
-.loading{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.45);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-}
-
-.loading.show{
-    display:flex;
-}
-
-.loading-box{
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    text-align:center;
-    min-width:220px;
-}
-
-.spinner{
-    width:35px;
-    height:35px;
-    border:4px solid #e5e7eb;
-    border-top-color:#16a34a;
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-    margin:0 auto 12px;
-}
-
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:25px;
-    transform:translateX(-50%) translateY(20px);
-    background:#111827;
-    color:white;
-    padding:13px 18px;
-    border-radius:9px;
-    opacity:0;
-    pointer-events:none;
-    transition:.25s;
-    z-index:2000;
-    max-width:90%;
-    text-align:center;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-}
-
-.hidden{
-    display:none !important;
-}
-
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#222}
+body{overflow-x:hidden}
+button,input{font-family:inherit}
+button{cursor:pointer}
+.header{background:#111827;color:white;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px;position:sticky;top:0;z-index:100;box-shadow:0 3px 12px #0002}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:10px;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:bold}
+.header-title{font-size:20px;font-weight:bold}
+.header-subtitle{font-size:12px;opacity:.7;margin-top:3px}
+.logout-btn{border:0;background:#ef4444;color:white;padding:10px 15px;border-radius:8px;font-weight:bold}
+.container{width:100%;max-width:1100px;margin:auto;padding:20px}
+.welcome,.card,.order-card,.empty{background:white;border-radius:14px;box-shadow:0 3px 12px #0001}
+.welcome{padding:20px;margin-bottom:20px}
+.welcome h2{margin:0 0 6px;font-size:24px}
+.welcome p{margin:0;color:#6b7280}
+.store-card{background:#ecfdf5;border:1px solid #bbf7d0;border-radius:14px;padding:18px;margin-top:15px}
+.store-card h3{margin:0 0 10px;color:#166534}
+.store-number{font-size:27px;font-weight:bold;letter-spacing:2px;color:#15803d}
+.store-info{margin-top:8px;color:#4b5563;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{padding:20px;min-width:0}
+.card h3{margin:0 0 15px}
+.application-card{max-width:650px;margin:40px auto;background:white;padding:20px;border-radius:14px;box-shadow:0 3px 12px #0001}
+.application-icon{width:70px;height:70px;border-radius:50%;background:#dcfce7;color:#16a34a;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 15px}
+.application-card h2{text-align:center;margin:0 0 8px}
+.application-card p{text-align:center;color:#6b7280;line-height:1.5}
+.form-group{margin-top:18px}
+.form-group label{display:block;margin-bottom:7px;font-weight:bold;color:#374151}
+.form-group input{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:9px;outline:none;font-size:16px}
+.form-group input:focus{border-color:#22c55e;box-shadow:0 0 0 3px #22c55120}
+.primary-btn{width:100%;border:0;background:#16a34a;color:white;padding:13px;border-radius:9px;font-size:16px;font-weight:bold;margin-top:15px}
+.primary-btn:hover,.delivery-btn:hover{background:#15803d}
+.primary-btn:disabled{background:#9ca3af;cursor:not-allowed}
+.secondary-btn{border:0;background:#e5e7eb;color:#374151;padding:10px 15px;border-radius:8px;font-weight:bold}
+.status-box{border-radius:12px;padding:18px;margin-bottom:20px}
+.status-pending{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}
+.status-rejected{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.status-approved{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534}
+.status-box h3{margin:0 0 7px}
+.status-box p{margin:4px 0}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
+.section-title h2{margin:0;font-size:20px}
+.count-badge{min-width:30px;padding:5px 9px;border-radius:20px;background:#dcfce7;color:#166534;font-weight:bold;text-align:center}
+.orders{display:flex;flex-direction:column;gap:15px}
+.order-card{padding:18px;border-left:5px solid #22c55e;scroll-margin-top:100px;transition:outline .2s}
+.order-card.scan-highlight{outline:4px solid #16a34a;outline-offset:3px}
+.order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.order-number{font-size:18px;font-weight:bold;overflow-wrap:anywhere}
+.order-date{color:#6b7280;font-size:12px;margin-top:4px}
+.status{padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold;white-space:nowrap}
+.status-packed{background:#dbeafe;color:#1d4ed8}
+.status-delivery{background:#fef3c7;color:#92400e}
+.status-delivered{background:#dcfce7;color:#166534}
+.status-pending{background:#f3f4f6;color:#374151}
+.customer-box{background:#f9fafb;border-radius:10px;padding:12px;margin-bottom:12px;overflow-wrap:anywhere}
+.customer-box strong{display:block;margin-bottom:4px}
+.customer-box div{color:#4b5563;font-size:14px;line-height:1.5}
+.items{border-top:1px solid #e5e7eb;padding-top:12px}
+.item-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:14px}
+.item-name{flex:1;overflow-wrap:anywhere}
+.item-price{font-weight:bold;white-space:nowrap}
+.order-bottom{border-top:1px solid #e5e7eb;margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.total{font-size:18px;font-weight:bold;color:#15803d}
+.delivery-btn{border:0;background:#16a34a;color:white;padding:11px 15px;border-radius:8px;font-weight:bold}
+.delivery-btn.orange{background:#f59e0b}
+.delivery-btn.orange:hover{background:#d97706}
+.empty{padding:30px 15px;text-align:center;color:#6b7280}
+.empty-icon{font-size:35px;margin-bottom:10px}
+.loading{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:1000;padding:15px}
+.loading.show{display:flex}
+.loading-box{background:white;padding:25px;border-radius:12px;text-align:center;width:100%;max-width:500px;max-height:90vh;overflow:auto}
+.spinner{width:35px;height:35px;border:4px solid #e5e7eb;border-top-color:#16a34a;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:#111827;color:white;padding:13px 18px;border-radius:9px;opacity:0;pointer-events:none;transition:.25s;z-index:2000;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hidden{display:none!important}
+.history-toggle-btn{width:100%;border:0;background:#16a34a;color:white;padding:15px;border-radius:10px;font-size:16px;font-weight:bold;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.history-toggle-btn:hover{background:#15803d}
+.history-panel{margin-top:15px}
+.history-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:15px}
+.history-filter-btn{border:1px solid #d1d5db;background:#f9fafb;color:#374151;padding:11px 6px;border-radius:8px;font-weight:bold}
+.history-filter-btn.active{background:#166534;color:white;border-color:#166534}
+.history-summary{background:#ecfdf5;border:1px solid #bbf7d0;border-radius:10px;padding:13px;margin-bottom:15px;color:#166534;font-weight:bold;line-height:1.5}
+.scanner-help{font-size:14px;color:#6b7280;line-height:1.5}
+#orderScanner{width:100%;margin:12px auto;overflow:hidden}
+#orderScanner video{border-radius:8px}
+.scanner-error{color:#b91c1c;font-size:14px;margin-top:10px}
 @media(max-width:700px){
-
-    .header{
-        padding:12px 14px;
-    }
-
-    .header-title{
-        font-size:17px;
-    }
-
-    .container{
-        padding:12px;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .order-top{
-        flex-direction:column;
-    }
-
-    .order-bottom{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .delivery-btn{
-        width:100%;
-    }
-
-    .total{
-        text-align:center;
-    }
-
+.header{padding:12px 14px}
+.header-title{font-size:17px}
+.container{padding:12px}
+.grid{grid-template-columns:1fr}
+.order-top{flex-direction:column}
+.order-bottom{flex-direction:column;align-items:stretch}
+.order-bottom>div:last-child{width:100%}
+.delivery-btn{width:100%}
+.total{text-align:center}
 }
-
+@media(max-width:400px){
+.history-filters{grid-template-columns:1fr}
+}
 </style>
-
 </head>
 
 <body>
 
 <header class="header">
-
     <div class="header-left">
-
-        <div class="logo">
-            🚚
-        </div>
-
+        <div class="logo">🚚</div>
         <div>
-            <div class="header-title">
-                SARI-SARI STORE
-            </div>
-
-            <div class="header-subtitle">
-                Delivery Dashboard
-            </div>
+            <div class="header-title">SUPPLYGO</div>
+            <div class="header-subtitle">Delivery Dashboard</div>
         </div>
-
     </div>
-
-    <button
-        class="logout-btn"
-        onclick="logout()">
-        Logout
-    </button>
-
+    <button class="logout-btn" onclick="logout()">Logout</button>
 </header>
-
 
 <main class="container">
 
-    <div
-        id="welcomeCard"
-        class="welcome">
+    <div id="welcomeCard" class="welcome">
+        <h2 id="welcomeName">Delivery</h2>
+        <p>Manage your delivery orders here.</p>
 
-        <h2 id="welcomeName">
-            Delivery
-        </h2>
-
-        <p>
-            Manage your delivery orders here.
-        </p>
-
-        <div
-            id="storeCard"
-            class="store-card hidden">
-
-            <h3>
-                Assigned Store
-            </h3>
-
-            <div
-                id="storeNumberDisplay"
-                class="store-number">
-                --------
-            </div>
-
-            <div
-                id="storeInfo"
-                class="store-info">
-                Loading store information...
-            </div>
-
+        <div id="storeCard" class="store-card hidden">
+            <h3>Assigned Store</h3>
+            <div id="storeNumberDisplay" class="store-number">--------</div>
+            <div id="storeInfo" class="store-info">Loading store information...</div>
         </div>
-
     </div>
 
-
-    <!-- APPLICATION AREA -->
-
-    <section
-        id="applicationArea"
-        class="application-card">
-
-        <div
-            id="applicationContent">
-        </div>
-
+    <section id="applicationArea" class="application-card">
+        <div id="applicationContent"></div>
     </section>
 
+    <section id="dashboardArea" class="hidden">
 
-    <!-- DASHBOARD -->
-
-    <section
-        id="dashboardArea"
-        class="hidden">
+        <!-- BARCODE SCANNER -->
+        <div class="card" style="margin-bottom:18px">
+            <h3>📦 Scan Order Barcode</h3>
+            <p style="color:#6b7280;line-height:1.5">
+                Scan the barcode containing the order number, for example
+                <strong>ORD-12345</strong>.
+            </p>
+            <button class="primary-btn" style="margin-top:0"
+                    onclick="openOrderScanner()">
+                📷 SCAN ORDER BARCODE
+            </button>
+            <p style="font-size:12px;color:#6b7280;margin-bottom:0">
+                Allow camera access when prompted.
+            </p>
+        </div>
 
         <div class="grid">
 
             <div class="card">
-
                 <div class="section-title">
-
-                    <h2>
-                        Ready for Delivery
-                    </h2>
-
-                    <span
-                        id="packedCount"
-                        class="count-badge">
-                        0
-                    </span>
-
+                    <h2>Ready for Delivery</h2>
+                    <span id="packedCount" class="count-badge">0</span>
                 </div>
-
-                <div
-                    id="packedOrders"
-                    class="orders">
-                </div>
-
+                <div id="packedOrders" class="orders"></div>
             </div>
-
 
             <div class="card">
-
                 <div class="section-title">
-
-                    <h2>
-                        My Deliveries
-                    </h2>
-
-                    <span
-                        id="deliveryCount"
-                        class="count-badge">
-                        0
-                    </span>
-
+                    <h2>My Deliveries</h2>
+                    <span id="deliveryCount" class="count-badge">0</span>
                 </div>
 
-                <div
-                    id="myDeliveries"
-                    class="orders">
+                <div id="currentDeliveries" class="orders" style="margin-bottom:15px">
+                    <div class="empty">No delivery assigned yet.</div>
                 </div>
 
+                <button id="historyToggleBtn" class="history-toggle-btn"
+                        onclick="toggleDeliveryHistory()">
+                    <span>📋 MY DELIVERIES</span>
+                    <span id="historyArrow">▼</span>
+                </button>
+
+                <div id="deliveryHistoryPanel" class="history-panel hidden">
+                    <div class="history-filters">
+                        <button class="history-filter-btn active"
+                                data-period="today"
+                                onclick="filterDeliveryHistory('today',this)">Today</button>
+                        <button class="history-filter-btn"
+                                data-period="week"
+                                onclick="filterDeliveryHistory('week',this)">This Week</button>
+                        <button class="history-filter-btn"
+                                data-period="month"
+                                onclick="filterDeliveryHistory('month',this)">This Month</button>
+                    </div>
+                    <div id="historySummary" class="history-summary">Delivered Today: 0</div>
+                    <div id="myDeliveries" class="orders"></div>
+                </div>
             </div>
 
         </div>
-
     </section>
-
 </main>
 
-
-<div
-    id="loading"
-    class="loading">
-
+<!-- BARCODE SCANNER POPUP -->
+<div id="scannerModal" class="loading" style="z-index:1500">
     <div class="loading-box">
-
-        <div class="spinner"></div>
-
-        <div>
-            Please wait...
-        </div>
-
+        <h2 style="margin-top:0">📷 Scan Order Barcode</h2>
+        <p class="scanner-help">
+            Itapat ang camera sa barcode ng order.
+            Dapat ang laman ay ORD-# gaya ng ORD-12345.
+        </p>
+        <div id="orderScanner"></div>
+        <div id="scannerMessage" class="scanner-error"></div>
+        <button class="secondary-btn" style="margin-top:15px;width:100%"
+                onclick="closeOrderScanner()">Close Scanner</button>
     </div>
-
 </div>
 
-
-<div
-    id="toast"
-    class="toast">
+<div id="loading" class="loading">
+    <div class="loading-box">
+        <div class="spinner"></div>
+        <div>Please wait...</div>
+    </div>
 </div>
 
+<div id="toast" class="toast"></div>
 
 <script type="module">
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-
-import {
-    getDatabase,
-    ref,
-    get,
-    set,
-    update,
-    push
+    getDatabase, ref, get, update, set, push
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-
-/* =========================================
-   FIREBASE
-========================================= */
-
+/* FIREBASE */
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyCU09cUR4NMydnRuU0DuJCUvQfZbTMuQSM",
-
-    authDomain:
-        "saristore-950d3.firebaseapp.com",
-
-    databaseURL:
-        "https://saristore-950d3-default-rtdb.firebaseio.com/",
-
-    projectId:
-        "saristore-950d3",
-
-    storageBucket:
-        "saristore-950d3.firebasestorage.app",
-
-    messagingSenderId:
-        "232515496765",
-
-    appId:
-        "1:232515496765:web:0862d4b5e932bfc21cf354",
-
-    measurementId:
-        "G-N1VDQT033E"
+    apiKey: "AIzaSyCU09cUR4NMydnRuU0DuJCUvQfZbTMuQSM",
+    authDomain: "saristore-950d3.firebaseapp.com",
+    databaseURL: "https://saristore-950d3-default-rtdb.firebaseio.com/",
+    projectId: "saristore-950d3",
+    storageBucket: "saristore-950d3.firebasestorage.app",
+    messagingSenderId: "232515496765",
+    appId: "1:232515496765:web:0862d4b5e932bfc21cf354",
+    measurementId: "G-N1VDQT033E"
 };
 
-
-const app =
-    initializeApp(firebaseConfig);
-
-const db =
-    getDatabase(app);
-
-
-/* =========================================
-   SESSION
-========================================= */
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 let session = null;
 let currentUser = null;
 let currentStore = null;
-
 let allOrders = [];
 
+let selectedHistoryPeriod = "today";
+let deliveryHistoryOpen = false;
 
-/* =========================================
-   ELEMENTS
-========================================= */
+/* SCANNER STATE */
+let orderScanner = null;
+let scannerProcessing = false;
+let lastInvalidBarcode = "";
+let lastInvalidBarcodeAt = 0;
 
-const applicationArea =
-    document.getElementById("applicationArea");
+const $ = id => document.getElementById(id);
 
-const applicationContent =
-    document.getElementById("applicationContent");
+const applicationArea = $("applicationArea");
+const applicationContent = $("applicationContent");
+const dashboardArea = $("dashboardArea");
+const storeCard = $("storeCard");
+const storeNumberDisplay = $("storeNumberDisplay");
+const storeInfo = $("storeInfo");
+const welcomeName = $("welcomeName");
+const packedOrders = $("packedOrders");
+const myDeliveries = $("myDeliveries");
+const currentDeliveries = $("currentDeliveries");
+const packedCount = $("packedCount");
+const deliveryCount = $("deliveryCount");
 
-const dashboardArea =
-    document.getElementById("dashboardArea");
-
-const storeCard =
-    document.getElementById("storeCard");
-
-const storeNumberDisplay =
-    document.getElementById("storeNumberDisplay");
-
-const storeInfo =
-    document.getElementById("storeInfo");
-
-const welcomeName =
-    document.getElementById("welcomeName");
-
-const packedOrders =
-    document.getElementById("packedOrders");
-
-const myDeliveries =
-    document.getElementById("myDeliveries");
-
-const packedCount =
-    document.getElementById("packedCount");
-
-const deliveryCount =
-    document.getElementById("deliveryCount");
-
-
-/* =========================================
-   SESSION CHECK
-========================================= */
-
-function getSession(){
-
-    try{
-
-        const saved =
-            localStorage.getItem(
-                "sariStoreSession"
-            );
-
-        if(!saved){
-            return null;
-        }
-
-        return JSON.parse(saved);
-
-    }catch(error){
-
+/* SESSION */
+function getSession() {
+    try {
+        const saved = localStorage.getItem("sariStoreSession");
+        return saved ? JSON.parse(saved) : null;
+    } catch (error) {
         console.error(error);
-
         return null;
     }
 }
 
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-window.logout = function(){
-
-    localStorage.removeItem(
-        "sariStoreSession"
-    );
-
-    window.location.href =
-        "index.html";
+window.logout = function() {
+    localStorage.removeItem("sariStoreSession");
+    window.location.href = "index.html";
 };
 
-
-/* =========================================
-   TOAST
-========================================= */
-
+/* TOAST */
 let toastTimer;
-
-function toast(message){
-
-    const element =
-        document.getElementById("toast");
-
-    element.textContent =
-        message;
-
+function toast(message) {
+    const element = $("toast");
+    element.textContent = message;
     element.classList.add("show");
-
     clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(()=>{
-
-            element.classList.remove("show");
-
-        },3000);
+    toastTimer = setTimeout(() => element.classList.remove("show"), 3000);
 }
 
+/* LOADING */
+function showLoading() { $("loading").classList.add("show"); }
+function hideLoading() { $("loading").classList.remove("show"); }
 
-/* =========================================
-   LOADING
-========================================= */
+/* DELIVERY HISTORY */
+window.toggleDeliveryHistory = function() {
+    deliveryHistoryOpen = !deliveryHistoryOpen;
+    $("deliveryHistoryPanel").classList.toggle("hidden", !deliveryHistoryOpen);
+    $("historyArrow").textContent = deliveryHistoryOpen ? "▲" : "▼";
+    if (deliveryHistoryOpen) renderDeliveryHistory();
+};
 
-function showLoading(){
+window.filterDeliveryHistory = function(period, button) {
+    selectedHistoryPeriod = period;
+    document.querySelectorAll(".history-filter-btn")
+        .forEach(btn => btn.classList.remove("active"));
+    button.classList.add("active");
+    renderDeliveryHistory();
+};
 
-    document
-        .getElementById("loading")
-        .classList.add("show");
+function isWithinSelectedPeriod(timestamp) {
+    if (!timestamp) return false;
+    const date = new Date(Number(timestamp));
+    const now = new Date();
+    if (Number.isNaN(date.getTime())) return false;
+
+    if (selectedHistoryPeriod === "today") {
+        return date.toDateString() === now.toDateString();
+    }
+
+    if (selectedHistoryPeriod === "week") {
+        const start = new Date(now);
+        const day = start.getDay();
+        start.setDate(start.getDate() - (day === 0 ? 6 : day - 1));
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(start);
+        end.setDate(end.getDate() + 7);
+        return date >= start && date < end;
+    }
+
+    if (selectedHistoryPeriod === "month") {
+        return date.getFullYear() === now.getFullYear() &&
+               date.getMonth() === now.getMonth();
+    }
+
+    return false;
 }
 
-function hideLoading(){
-
-    document
-        .getElementById("loading")
-        .classList.remove("show");
+function isAssignedToCurrentUser(order) {
+    return order.deliveryBy === currentUser.uid ||
+           order.deliveryUid === currentUser.uid ||
+           order.deliveryStaffUid === currentUser.uid;
 }
 
+function renderDeliveryHistory() {
+    const deliveredOrders = allOrders.filter(order =>
+        String(order.status || "").toLowerCase() === "delivered" &&
+        isAssignedToCurrentUser(order)
+    );
 
-/* =========================================
-   INIT
-========================================= */
+    const filteredOrders = deliveredOrders.filter(order =>
+        isWithinSelectedPeriod(
+            order.deliveredAt || order.updatedAt || order.createdAt
+        )
+    );
 
-async function init(){
+    const labels = {
+        today: "Today",
+        week: "This Week",
+        month: "This Month"
+    };
 
-    session =
-        getSession();
+    const total = filteredOrders.reduce(
+        (sum, order) => sum + Number(order.totalAmount || order.total || 0), 0
+    );
 
-    if(!session){
+    $("historySummary").textContent =
+        `Delivered ${labels[selectedHistoryPeriod]}: ${filteredOrders.length} | Total: ₱${formatMoney(total)}`;
 
-        window.location.href =
-            "index.html";
-
+    if (!filteredOrders.length) {
+        myDeliveries.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">📦</div>
+                <div>No delivered orders for ${labels[selectedHistoryPeriod].toLowerCase()}.</div>
+            </div>`;
         return;
     }
 
-    if(session.role !== "delivery"){
+    myDeliveries.innerHTML = filteredOrders
+        .sort((a, b) =>
+            Number(b.deliveredAt || b.updatedAt || 0) -
+            Number(a.deliveredAt || a.updatedAt || 0)
+        )
+        .map(order => createOrderCard(order, "delivered"))
+        .join("");
+}
 
-        window.location.href =
-            "index.html";
+/* INIT */
+async function init() {
+    session = getSession();
 
+    if (!session || session.role !== "delivery") {
+        window.location.href = "index.html";
         return;
     }
 
-    try{
+    try {
+        const snapshot = await get(ref(db, "users/" + session.uid));
 
-        const snapshot =
-            await get(
-                ref(
-                    db,
-                    "users/" +
-                    session.uid
-                )
-            );
-
-        if(!snapshot.exists()){
-
-            localStorage.removeItem(
-                "sariStoreSession"
-            );
-
-            window.location.href =
-                "index.html";
-
+        if (!snapshot.exists()) {
+            localStorage.removeItem("sariStoreSession");
+            window.location.href = "index.html";
             return;
         }
 
-        currentUser =
-            {
-                uid:session.uid,
-                ...snapshot.val()
-            };
+        currentUser = { uid: session.uid, ...snapshot.val() };
 
-
-        if(
-            currentUser.banned === true ||
-            currentUser.status === "banned"
-        ){
-
-            alert(
-                "Your account has been banned."
-            );
-
-            localStorage.removeItem(
-                "sariStoreSession"
-            );
-
-            window.location.href =
-                "index.html";
-
+        if (currentUser.banned === true || currentUser.status === "banned") {
+            alert("Your account has been banned.");
+            localStorage.removeItem("sariStoreSession");
+            window.location.href = "index.html";
             return;
         }
-
 
         welcomeName.textContent =
-            "Hello, " +
-            (
-                currentUser.name ||
-                session.name ||
-                "Delivery"
-            );
-
+            "Hello, " + (currentUser.name || session.name || "Delivery");
 
         await refreshPage();
-
-    }catch(error){
-
+    } catch (error) {
         console.error(error);
-
-        toast(
-            "Unable to load your account."
-        );
+        toast("Unable to load your account.");
     }
 }
 
+/* REFRESH */
+async function refreshPage() {
+    const assignedStoreNumber = String(
+        currentUser.assignedStoreNumber || currentUser.storeNumber || ""
+    ).trim();
 
-/* =========================================
-   REFRESH PAGE
-========================================= */
-
-async function refreshPage(){
-
-    const assignedStoreNumber =
-        String(
-            currentUser.assignedStoreNumber ||
-            currentUser.storeNumber ||
-            ""
-        ).trim();
-
-
-    /*
-        ACTIVE + ASSIGNED
-    */
-
-    if(
-        currentUser.status === "active" &&
-        assignedStoreNumber
-    ){
-
-        applicationArea
-            .classList.add("hidden");
-
-        dashboardArea
-            .classList.remove("hidden");
-
-        storeCard
-            .classList.remove("hidden");
-
-        storeNumberDisplay.textContent =
-            assignedStoreNumber;
-
-        await loadStore(
-            assignedStoreNumber
-        );
-
+    if (currentUser.status === "active" && assignedStoreNumber) {
+        applicationArea.classList.add("hidden");
+        dashboardArea.classList.remove("hidden");
+        storeCard.classList.remove("hidden");
+        storeNumberDisplay.textContent = assignedStoreNumber;
+        await loadStore(assignedStoreNumber);
         await loadOrders();
-
         return;
     }
 
-
-    /*
-        PENDING STORE APPLICATION
-    */
-
-    if(
-        currentUser.requestedStoreNumber &&
-        currentUser.storeApplicationStatus === "pending"
-    ){
-
-        dashboardArea
-            .classList.add("hidden");
-
-        applicationArea
-            .classList.remove("hidden");
-
-        storeCard
-            .classList.add("hidden");
-
+    if (currentUser.requestedStoreNumber &&
+        currentUser.storeApplicationStatus === "pending") {
+        dashboardArea.classList.add("hidden");
+        applicationArea.classList.remove("hidden");
+        storeCard.classList.add("hidden");
         showPendingApplication();
-
         return;
     }
 
-
-    /*
-        REJECTED APPLICATION
-    */
-
-    if(
-        currentUser.storeApplicationStatus === "rejected"
-    ){
-
-        dashboardArea
-            .classList.add("hidden");
-
-        applicationArea
-            .classList.remove("hidden");
-
-        storeCard
-            .classList.add("hidden");
-
+    if (currentUser.storeApplicationStatus === "rejected") {
+        dashboardArea.classList.add("hidden");
+        applicationArea.classList.remove("hidden");
+        storeCard.classList.add("hidden");
         showRejectedApplication();
-
         return;
     }
 
-
-    /*
-        NO STORE
-    */
-
-    dashboardArea
-        .classList.add("hidden");
-
-    applicationArea
-        .classList.remove("hidden");
-
-    storeCard
-        .classList.add("hidden");
-
+    dashboardArea.classList.add("hidden");
+    applicationArea.classList.remove("hidden");
+    storeCard.classList.add("hidden");
     showApplicationForm();
 }
 
+/* LOAD STORE */
+async function loadStore(storeNumber) {
+    try {
+        const snapshot = await get(ref(db, "users"));
 
-/* =========================================
-   LOAD STORE
-========================================= */
-
-async function loadStore(storeNumber){
-
-    try{
-
-        const usersSnapshot =
-            await get(
-                ref(db,"users")
-            );
-
-        if(!usersSnapshot.exists()){
-
-            storeInfo.textContent =
-                "Store information unavailable.";
-
+        if (!snapshot.exists()) {
+            storeInfo.textContent = "Store information unavailable.";
             return;
         }
 
-        const users =
-            usersSnapshot.val();
-
+        const users = snapshot.val();
         let seller = null;
 
-        Object.keys(users).some(uid=>{
-
-            const user =
-                users[uid];
-
-            const sellerStore =
-                String(
-                    user.storeNumber ||
-                    ""
-                );
-
-            if(
-                user.role === "seller" &&
-                sellerStore === String(storeNumber)
-            ){
-
-                seller =
-                    {
-                        uid,
-                        ...user
-                    };
-
+        Object.keys(users).some(uid => {
+            const user = users[uid];
+            if (user.role === "seller" &&
+                String(user.storeNumber || "") === String(storeNumber)) {
+                seller = { uid, ...user };
                 return true;
             }
-
             return false;
         });
 
+        currentStore = seller;
 
-        currentStore =
-            seller;
-
-
-        if(!seller){
-
-            storeInfo.textContent =
-                "Store Number: " +
-                storeNumber;
-
+        if (!seller) {
+            storeInfo.textContent = "Store Number: " + storeNumber;
             return;
         }
 
-
         storeInfo.innerHTML =
-            "<strong>" +
-            escapeHtml(
-                seller.storeName ||
-                "Store"
-            ) +
-            "</strong><br>" +
-
-            escapeHtml(
-                seller.name ||
-                ""
-            ) +
-
-            (
-                seller.address
-                    ? "<br>" +
-                      escapeHtml(
-                          seller.address
-                      )
-                    : ""
-            );
-
-    }catch(error){
-
+            "<strong>" + escapeHtml(seller.storeName || "Store") +
+            "</strong><br>" + escapeHtml(seller.name || "") +
+            (seller.address ? "<br>" + escapeHtml(seller.address) : "");
+    } catch (error) {
         console.error(error);
-
-        storeInfo.textContent =
-            "Unable to load store information.";
+        storeInfo.textContent = "Unable to load store information.";
     }
 }
 
-
-/* =========================================
-   APPLICATION FORM
-========================================= */
-
-function showApplicationForm(){
-
+/* APPLICATION FORM */
+function showApplicationForm() {
     applicationContent.innerHTML = `
-
-        <div class="application-icon">
-            🚚
-        </div>
-
-        <h2>
-            Apply as Delivery Staff
-        </h2>
-
-        <p>
-            Enter the 7-digit Store Number
-            of the seller you want to work for.
-        </p>
-
+        <div class="application-icon">🚚</div>
+        <h2>Apply as Delivery Staff</h2>
+        <p>Enter the 7-digit Store Number of the seller you want to work for.</p>
         <div class="form-group">
-
-            <label>
-                Seller Store Number
-            </label>
-
-            <input
-                id="storeNumberInput"
-                type="text"
-                inputmode="numeric"
-                maxlength="7"
-                placeholder="Example: 1000001"
-            >
-
+            <label>Seller Store Number</label>
+            <input id="storeNumberInput" type="text" inputmode="numeric"
+                   maxlength="7" placeholder="Example: 1000001">
         </div>
-
-        <button
-            class="primary-btn"
-            onclick="applyToStore()">
-
-            Apply to Store
-
-        </button>
-
-    `;
+        <button class="primary-btn" onclick="applyToStore()">Apply to Store</button>`;
 }
 
+window.applyToStore = async function() {
+    const input = $("storeNumberInput");
+    if (!input) return;
 
-/* =========================================
-   APPLY TO STORE
-========================================= */
+    const storeNumber = input.value.replace(/\D/g, "").trim();
 
-window.applyToStore =
-async function(){
-
-    const input =
-        document.getElementById(
-            "storeNumberInput"
-        );
-
-    if(!input){
+    if (!storeNumber) {
+        toast("Please enter the Store Number.");
         return;
     }
 
-    const storeNumber =
-        input.value
-            .replace(/\D/g,"")
-            .trim();
-
-
-    if(!storeNumber){
-
-        toast(
-            "Please enter the Store Number."
-        );
-
+    if (!/^\d{7}$/.test(storeNumber)) {
+        toast("Store Number must be 7 digits.");
         return;
     }
-
-
-    if(!/^\d{7}$/.test(storeNumber)){
-
-        toast(
-            "Store Number must be 7 digits."
-        );
-
-        return;
-    }
-
 
     showLoading();
 
+    try {
+        const usersSnapshot = await get(ref(db, "users"));
 
-    try{
-
-        const usersSnapshot =
-            await get(
-                ref(db,"users")
-            );
-
-
-        if(!usersSnapshot.exists()){
-
+        if (!usersSnapshot.exists()) {
             hideLoading();
-
-            toast(
-                "Store not found."
-            );
-
+            toast("Store not found.");
             return;
         }
 
-
-        const users =
-            usersSnapshot.val();
-
+        const users = usersSnapshot.val();
         let seller = null;
 
-
-        Object.keys(users).some(uid=>{
-
-            const user =
-                users[uid];
-
-            const sellerStore =
-                String(
-                    user.storeNumber ||
-                    ""
-                );
-
-            if(
-                user.role === "seller" &&
-                sellerStore === storeNumber &&
+        Object.keys(users).some(uid => {
+            const user = users[uid];
+            if (user.role === "seller" &&
+                String(user.storeNumber || "") === storeNumber &&
                 user.status === "active" &&
-                user.sellerApproved === true
-            ){
-
-                seller =
-                    {
-                        uid,
-                        ...user
-                    };
-
+                user.sellerApproved === true) {
+                seller = { uid, ...user };
                 return true;
             }
-
             return false;
         });
 
-
-        if(!seller){
-
+        if (!seller) {
             hideLoading();
-
-            toast(
-                "No active seller found for this Store Number."
-            );
-
+            toast("No active seller found for this Store Number.");
             return;
         }
 
+        const now = Date.now();
 
-        const now =
-            Date.now();
+        await update(ref(db, "users/" + currentUser.uid), {
+            requestedStoreNumber: storeNumber,
+            storeApplicationStatus: "pending",
+            storeApplicationAt: now,
+            storeApplicationSellerUid: seller.uid,
+            storeApplicationSellerName: seller.name || "",
+            updatedAt: now
+        });
 
+        const notificationRef = push(ref(db, "notifications/" + seller.uid));
 
-        await update(
-            ref(
-                db,
-                "users/" +
-                currentUser.uid
-            ),
-            {
+        await set(notificationRef, {
+            title: "New Delivery Application",
+            message: `${currentUser.name || "A delivery staff"} wants to join your store as delivery staff. Store Number: ${storeNumber}`,
+            type: "store_application",
+            applicantUid: currentUser.uid,
+            applicantRole: "delivery",
+            storeNumber,
+            read: false,
+            createdAt: now
+        });
 
-                requestedStoreNumber:
-                    storeNumber,
-
-                storeApplicationStatus:
-                    "pending",
-
-                storeApplicationAt:
-                    now,
-
-                storeApplicationSellerUid:
-                    seller.uid,
-
-                storeApplicationSellerName:
-                    seller.name || "",
-
-                updatedAt:
-                    now
-            }
-        );
-
-
-        /*
-            NOTIFY SELLER
-        */
-
-        const notificationRef =
-            push(
-                ref(
-                    db,
-                    "notifications/" +
-                    seller.uid
-                )
-            );
-
-
-        await set(
-            notificationRef,
-            {
-
-                title:
-                    "New Delivery Application",
-
-                message:
-                    `${currentUser.name || "A delivery staff"} wants to join your store as delivery staff. Store Number: ${storeNumber}`,
-
-                type:
-                    "store_application",
-
-                applicantUid:
-                    currentUser.uid,
-
-                applicantRole:
-                    "delivery",
-
-                storeNumber:
-                    storeNumber,
-
-                read:
-                    false,
-
-                createdAt:
-                    now
-            }
-        );
-
-
-        currentUser.requestedStoreNumber =
-            storeNumber;
-
-        currentUser.storeApplicationStatus =
-            "pending";
-
+        currentUser.requestedStoreNumber = storeNumber;
+        currentUser.storeApplicationStatus = "pending";
 
         hideLoading();
-
         showPendingApplication();
-
-        toast(
-            "Application sent successfully!"
-        );
-
-
-    }catch(error){
-
+        toast("Application sent successfully!");
+    } catch (error) {
         console.error(error);
-
         hideLoading();
-
-        toast(
-            "Unable to submit application."
-        );
+        toast("Unable to submit application.");
     }
 };
 
-
-/* =========================================
-   PENDING APPLICATION
-========================================= */
-
-function showPendingApplication(){
-
+function showPendingApplication() {
     applicationContent.innerHTML = `
-
         <div class="status-box status-pending">
-
-            <h3>
-                APPLICATION PENDING
-            </h3>
-
-            <p>
-                Your application is waiting for
-                the seller's approval.
-            </p>
-
-            <p>
-                Store Number:
-                <strong>
-                    ${escapeHtml(
-                        String(
-                            currentUser.requestedStoreNumber ||
-                            ""
-                        )
-                    )}
-                </strong>
-            </p>
-
+            <h3>APPLICATION PENDING</h3>
+            <p>Your application is waiting for the seller's approval.</p>
+            <p>Store Number: <strong>${escapeHtml(String(currentUser.requestedStoreNumber || ""))}</strong></p>
         </div>
-
-        <div class="application-card"
-             style="margin:0;padding:0;box-shadow:none;background:transparent;">
-
-            <p>
-                You will be able to access delivery
-                orders after the seller approves
-                your application.
-            </p>
-
-        </div>
-
-    `;
+        <p>You will be able to access delivery orders after the seller approves your application.</p>`;
 }
 
-
-/* =========================================
-   REJECTED APPLICATION
-========================================= */
-
-function showRejectedApplication(){
-
+function showRejectedApplication() {
     applicationContent.innerHTML = `
-
         <div class="status-box status-rejected">
-
-            <h3>
-                APPLICATION REJECTED
-            </h3>
-
-            <p>
-                Your previous store application
-                was rejected.
-            </p>
-
-            <p>
-                You may apply to another store
-                using a different Store Number.
-            </p>
-
+            <h3>APPLICATION REJECTED</h3>
+            <p>Your previous store application was rejected.</p>
+            <p>You may apply to another store using a different Store Number.</p>
         </div>
-
-        <button
-            class="primary-btn"
-            onclick="resetApplication()">
-
-            Apply to Another Store
-
-        </button>
-
-    `;
+        <button class="primary-btn" onclick="resetApplication()">Apply to Another Store</button>`;
 }
 
-
-/* =========================================
-   RESET APPLICATION
-========================================= */
-
-window.resetApplication =
-async function(){
-
-    try{
-
+window.resetApplication = async function() {
+    try {
         showLoading();
 
-        await update(
-            ref(
-                db,
-                "users/" +
-                currentUser.uid
-            ),
-            {
+        await update(ref(db, "users/" + currentUser.uid), {
+            requestedStoreNumber: "",
+            storeApplicationStatus: "",
+            storeApplicationAt: "",
+            storeApplicationSellerUid: "",
+            storeApplicationSellerName: "",
+            updatedAt: Date.now()
+        });
 
-                requestedStoreNumber:"",
-                storeApplicationStatus:"",
-                storeApplicationAt:"",
-                storeApplicationSellerUid:"",
-                storeApplicationSellerName:"",
-                updatedAt:Date.now()
-
-            }
-        );
-
-
-        currentUser.requestedStoreNumber =
-            "";
-
-        currentUser.storeApplicationStatus =
-            "";
-
+        currentUser.requestedStoreNumber = "";
+        currentUser.storeApplicationStatus = "";
 
         hideLoading();
-
         showApplicationForm();
-
-    }catch(error){
-
+    } catch (error) {
         console.error(error);
-
         hideLoading();
-
-        toast(
-            "Unable to reset application."
-        );
+        toast("Unable to reset application.");
     }
 };
 
+/* LOAD ORDERS */
+async function loadOrders() {
+    if (!currentUser) return;
 
-/* =========================================
-   LOAD ORDERS
-========================================= */
+    const storeNumber = String(
+        currentUser.assignedStoreNumber || currentUser.storeNumber || ""
+    );
 
-async function loadOrders(){
+    if (!storeNumber) return;
 
-    if(!currentUser){
-        return;
-    }
-
-
-    const storeNumber =
-        String(
-            currentUser.assignedStoreNumber ||
-            currentUser.storeNumber ||
-            ""
-        );
-
-
-    if(!storeNumber){
-        return;
-    }
-
-
-    try{
-
-        const snapshot =
-            await get(
-                ref(db,"orders")
-            );
-
-
+    try {
+        const snapshot = await get(ref(db, "orders"));
         allOrders = [];
 
+        if (snapshot.exists()) {
+            const orders = snapshot.val();
 
-        if(snapshot.exists()){
+            Object.keys(orders).forEach(key => {
+                const order = { orderId: key, ...orders[key] };
 
-            const orders =
-                snapshot.val();
+                const orderStoreNumber = String(
+                    order.storeNumber ||
+                    order.sellerStoreNumber ||
+                    order.assignedStoreNumber ||
+                    ""
+                );
 
-
-            Object.keys(orders).forEach(key=>{
-
-                const order =
-                    {
-                        orderId:key,
-                        ...orders[key]
-                    };
-
-
-                const orderStoreNumber =
-                    String(
-                        order.storeNumber ||
-                        order.sellerStoreNumber ||
-                        order.assignedStoreNumber ||
-                        ""
-                    );
-
-
-                if(
-                    orderStoreNumber ===
-                    storeNumber
-                ){
-
+                if (orderStoreNumber === storeNumber) {
                     allOrders.push(order);
                 }
-
             });
-
         }
 
-
-        allOrders.sort(
-            (a,b)=>
-                Number(
-                    b.createdAt || 0
-                ) -
-                Number(
-                    a.createdAt || 0
-                )
+        allOrders.sort((a, b) =>
+            Number(b.createdAt || 0) - Number(a.createdAt || 0)
         );
-
 
         renderOrders();
-
-
-    }catch(error){
-
+    } catch (error) {
         console.error(error);
-
-        packedOrders.innerHTML =
-            `
-            <div class="empty">
-                Unable to load orders.
-            </div>
-            `;
-
-        myDeliveries.innerHTML =
-            `
-            <div class="empty">
-                Unable to load deliveries.
-            </div>
-            `;
+        packedOrders.innerHTML = '<div class="empty">Unable to load orders.</div>';
+        currentDeliveries.innerHTML = '<div class="empty">Unable to load deliveries.</div>';
+        myDeliveries.innerHTML = '<div class="empty">Unable to load delivery history.</div>';
     }
 }
 
-
-/* =========================================
-   RENDER ORDERS
-========================================= */
-
-function renderOrders(){
-
-    const ready =
-        allOrders.filter(
-            order =>
-                String(order.status || "")
-                    .toLowerCase() ===
-                "packed"
-        );
-
-
-    const myDelivery =
-        allOrders.filter(
-            order => {
-
-                const status =
-                    String(
-                        order.status || ""
-                    ).toLowerCase();
-
-                return (
-                    status ===
-                    "out_for_delivery"
-                    &&
-                    (
-                        order.deliveryBy ===
-                            currentUser.uid
-                        ||
-                        order.deliveryUid ===
-                            currentUser.uid
-                        ||
-                        order.deliveryStaffUid ===
-                            currentUser.uid
-                    )
-                );
-            }
-        );
-
-
-    const delivered =
-        allOrders.filter(
-            order => {
-
-                const status =
-                    String(
-                        order.status || ""
-                    ).toLowerCase();
-
-                return (
-                    status === "delivered" &&
-                    (
-                        order.deliveryBy ===
-                            currentUser.uid
-                        ||
-                        order.deliveryUid ===
-                            currentUser.uid
-                        ||
-                        order.deliveryStaffUid ===
-                            currentUser.uid
-                    )
-                );
-            }
-        );
-
-
-    const myAll =
-        [
-            ...myDelivery,
-            ...delivered
-        ].sort(
-            (a,b)=>
-                Number(
-                    b.updatedAt ||
-                    b.createdAt ||
-                    0
-                ) -
-                Number(
-                    a.updatedAt ||
-                    a.createdAt ||
-                    0
-                )
-        );
-
-
-    packedCount.textContent =
-        ready.length;
-
-    deliveryCount.textContent =
-        myAll.length;
-
-
-    renderPackedOrders(
-        ready
+/* RENDER ORDERS */
+function renderOrders() {
+    const ready = allOrders.filter(order =>
+        String(order.status || "").toLowerCase() === "packed"
     );
 
-    renderMyDeliveries(
-        myAll
+    const myDelivery = allOrders.filter(order =>
+        String(order.status || "").toLowerCase() === "out_for_delivery" &&
+        isAssignedToCurrentUser(order)
     );
+
+    const delivered = allOrders.filter(order =>
+        String(order.status || "").toLowerCase() === "delivered" &&
+        isAssignedToCurrentUser(order)
+    );
+
+    packedCount.textContent = ready.length;
+    deliveryCount.textContent = myDelivery.length + delivered.length;
+
+    renderPackedOrders(ready);
+    renderMyDeliveries(myDelivery);
+
+    if (deliveryHistoryOpen) renderDeliveryHistory();
 }
 
-
-/* =========================================
-   PACKED ORDERS
-========================================= */
-
-function renderPackedOrders(orders){
-
-    if(orders.length === 0){
-
+function renderPackedOrders(orders) {
+    if (!orders.length) {
         packedOrders.innerHTML = `
-
             <div class="empty">
-
-                <div class="empty-icon">
-                    📦
-                </div>
-
-                <div>
-                    No packed orders are waiting
-                    for delivery.
-                </div>
-
-            </div>
-
-        `;
-
+                <div class="empty-icon">📦</div>
+                <div>No packed orders are waiting for delivery.</div>
+            </div>`;
         return;
     }
 
-
-    packedOrders.innerHTML =
-        orders.map(
-            order =>
-                createOrderCard(
-                    order,
-                    "packed"
-                )
-        ).join("");
+    packedOrders.innerHTML = orders
+        .map(order => createOrderCard(order, "packed")).join("");
 }
 
-
-/* =========================================
-   MY DELIVERIES
-========================================= */
-
-function renderMyDeliveries(orders){
-
-    if(orders.length === 0){
-
-        myDeliveries.innerHTML = `
-
+function renderMyDeliveries(orders) {
+    if (!orders.length) {
+        currentDeliveries.innerHTML = `
             <div class="empty">
-
-                <div class="empty-icon">
-                    🚚
-                </div>
-
-                <div>
-                    No delivery assigned yet.
-                </div>
-
-            </div>
-
-        `;
-
+                <div class="empty-icon">🚚</div>
+                <div>No delivery assigned yet.</div>
+            </div>`;
         return;
     }
 
-
-    myDeliveries.innerHTML =
-        orders.map(
-            order =>
-                createOrderCard(
-                    order,
-                    String(
-                        order.status || ""
-                    ).toLowerCase()
-                )
-        ).join("");
+    currentDeliveries.innerHTML = orders
+        .map(order => createOrderCard(order, order.status)).join("");
 }
 
+/* ORDER CARD */
+function createOrderCard(order, viewStatus) {
+    const status = String(order.status || "").toLowerCase();
 
-/* =========================================
-   ORDER CARD
-========================================= */
+    let statusClass = "status-pending";
+    let statusText = status.toUpperCase();
 
-function createOrderCard(
-    order,
-    viewStatus
-){
-
-    const status =
-        String(
-            order.status || ""
-        ).toLowerCase();
-
-
-    let statusClass =
-        "status-pending";
-
-    let statusText =
-        status;
-
-
-    if(status === "packed"){
-
-        statusClass =
-            "status-packed";
-
-        statusText =
-            "PACKED";
-
-    }else if(
-        status === "out_for_delivery"
-    ){
-
-        statusClass =
-            "status-delivery";
-
-        statusText =
-            "OUT FOR DELIVERY";
-
-    }else if(
-        status === "delivered"
-    ){
-
-        statusClass =
-            "status-delivered";
-
-        statusText =
-            "DELIVERED";
+    if (status === "packed") {
+        statusClass = "status-packed";
+        statusText = "PACKED";
+    } else if (status === "out_for_delivery") {
+        statusClass = "status-delivery";
+        statusText = "OUT FOR DELIVERY";
+    } else if (status === "delivered") {
+        statusClass = "status-delivered";
+        statusText = "DELIVERED";
     }
 
+    const orderNumber = order.orderNumber || order.orderId || "ORDER";
+    const customerName = order.retailerName || order.customerName || "Customer";
+    const mobile = order.customerMobile || order.retailerMobile || order.mobile || "";
+    const address = order.deliveryAddress || order.address || "No delivery address";
+    const items = Array.isArray(order.items) ? order.items : [];
 
-    const orderNumber =
-        order.orderNumber ||
-        order.orderId ||
-        "ORDER";
+    const itemsHtml = items.length ? items.map(item => {
+        const quantity = Number(item.quantity || 1);
+        const price = Number(item.price || 0);
+        const subtotal = Number(item.subtotal || price * quantity);
 
-
-    const customerName =
-        order.retailerName ||
-        order.customerName ||
-        "Customer";
-
-
-    const mobile =
-        order.customerMobile ||
-        order.retailerMobile ||
-        order.mobile ||
-        "";
-
-
-    const address =
-        order.deliveryAddress ||
-        order.address ||
-        "No delivery address";
-
-
-    const items =
-        Array.isArray(order.items)
-            ? order.items
-            : [];
-
-
-    const itemsHtml =
-        items.length
-            ? items.map(
-                item => `
-
-                    <div class="item-row">
-
-                        <div class="item-name">
-
-                            ${escapeHtml(
-                                item.name ||
-                                "Product"
-                            )}
-
-                            ×
-                            ${Number(
-                                item.quantity || 1
-                            )}
-
-                        </div>
-
-                        <div class="item-price">
-
-                            ₱${formatMoney(
-                                Number(
-                                    item.subtotal ||
-                                    (
-                                        Number(
-                                            item.price || 0
-                                        ) *
-                                        Number(
-                                            item.quantity || 1
-                                        )
-                                    )
-                                )
-                            )}
-
-                        </div>
-
-                    </div>
-
-                `
-            ).join("")
-            :
-            `
-                <div class="item-row">
-                    No item details available.
+        return `
+            <div class="item-row">
+                <div class="item-name">
+                    ${escapeHtml(item.name || "Product")} × ${quantity}
                 </div>
-            `;
-
+                <div class="item-price">₱${formatMoney(subtotal)}</div>
+            </div>`;
+    }).join("") : '<div class="item-row">No item details available.</div>';
 
     let buttonHtml = "";
 
-
-    if(status === "packed"){
-
+    if (status === "packed") {
         buttonHtml = `
-
-            <button
-                class="delivery-btn"
+            <button class="delivery-btn"
                 onclick="acceptDelivery('${escapeAttr(order.orderId)}')">
-
                 Accept for Delivery
-
-            </button>
-
-        `;
-
-    }else if(
-        status === "out_for_delivery" &&
-        (
-            order.deliveryBy === currentUser.uid ||
-            order.deliveryUid === currentUser.uid ||
-            order.deliveryStaffUid === currentUser.uid
-        )
-    ){
-
+            </button>`;
+    } else if (status === "out_for_delivery" && isAssignedToCurrentUser(order)) {
         buttonHtml = `
-
-            <button
-                class="delivery-btn orange"
+            <button class="delivery-btn orange"
                 onclick="markDelivered('${escapeAttr(order.orderId)}')">
-
                 Mark Delivered
-
-            </button>
-
-        `;
-
-    }else if(status === "delivered"){
-
-        buttonHtml = `
-
-            <span
-                class="status status-delivered">
-
-                DELIVERED
-
-            </span>
-
-        `;
+            </button>`;
+    } else if (status === "delivered") {
+        buttonHtml = '<span class="status status-delivered">DELIVERED</span>';
     }
-
 
     return `
-
-        <div class="order-card">
-
+        <div class="order-card" data-order-id="${escapeAttr(order.orderId)}">
             <div class="order-top">
-
                 <div>
-
-                    <div class="order-number">
-
-                        ${escapeHtml(
-                            orderNumber
-                        )}
-
-                    </div>
-
-                    <div class="order-date">
-
-                        ${formatDate(
-                            order.createdAt
-                        )}
-
-                    </div>
-
+                    <div class="order-number">${escapeHtml(orderNumber)}</div>
+                    <div class="order-date">${formatDate(order.createdAt)}</div>
                 </div>
-
-                <div
-                    class="status ${statusClass}">
-
-                    ${statusText}
-
-                </div>
-
+                <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
             </div>
-
 
             <div class="customer-box">
-
-                <strong>
-                    ${escapeHtml(
-                        customerName
-                    )}
-                </strong>
-
-                <div>
-                    📍
-                    ${escapeHtml(
-                        address
-                    )}
-                </div>
-
-                ${
-                    mobile
-                        ? `
-                        <div>
-                            📱
-                            ${escapeHtml(
-                                mobile
-                            )}
-                        </div>
-                        `
-                        : ""
-                }
-
+                <strong>${escapeHtml(customerName)}</strong>
+                <div>📍 ${escapeHtml(address)}</div>
+                ${mobile ? `<div>📱 ${escapeHtml(mobile)}</div>` : ""}
             </div>
 
-
-            <div class="items">
-
-                ${itemsHtml}
-
-            </div>
-
+            <div class="items">${itemsHtml}</div>
 
             <div class="order-bottom">
-
-                <div class="total">
-
-                    Total:
-                    ₱${formatMoney(
-                        Number(
-                            order.totalAmount ||
-                            order.total ||
-                            0
-                        )
-                    )}
-
-                </div>
-
-                <div>
-                    ${buttonHtml}
-                </div>
-
+                <div class="total">Total: ₱${formatMoney(Number(order.totalAmount || order.total || 0))}</div>
+                <div>${buttonHtml}</div>
             </div>
-
-        </div>
-
-    `;
+        </div>`;
 }
 
-
-/* =========================================
-   ACCEPT DELIVERY
-========================================= */
-
-window.acceptDelivery =
-async function(orderId){
-
-    const order =
-        allOrders.find(
-            item =>
-                String(
-                    item.orderId
-                ) ===
-                String(orderId)
-        );
-
-
-    if(!order){
-
-        toast(
-            "Order not found."
-        );
-
+/* BARCODE SCANNER */
+window.openOrderScanner = async function() {
+    if (!currentUser) {
+        toast("Please log in first.");
         return;
     }
 
-
-    if(
-        String(
-            order.status || ""
-        ).toLowerCase() !==
-        "packed"
-    ){
-
-        toast(
-            "This order is no longer available."
-        );
-
+    if (typeof Html5Qrcode === "undefined") {
+        toast("Scanner library failed to load. Check your internet connection.");
         return;
     }
 
+    $("scannerMessage").textContent = "";
+    $("scannerModal").classList.add("show");
+    scannerProcessing = false;
 
-    showLoading();
+    try {
+        if (!orderScanner) {
+            orderScanner = new Html5Qrcode("orderScanner");
+        }
 
+        if (orderScanner.isScanning) return;
 
-    try{
-
-        const now =
-            Date.now();
-
-
-        await update(
-            ref(
-                db,
-                "orders/" +
-                orderId
-            ),
+        await orderScanner.start(
+            { facingMode: "environment" },
             {
+                fps: 10,
+                qrbox: { width: 280, height: 120 },
+                aspectRatio: 1.5,
+                formatsToSupport: [
+                    Html5QrcodeSupportedFormats.CODE_128,
+                    Html5QrcodeSupportedFormats.CODE_39,
+                    Html5QrcodeSupportedFormats.EAN_13,
+                    Html5QrcodeSupportedFormats.EAN_8,
+                    Html5QrcodeSupportedFormats.UPC_A,
+                    Html5QrcodeSupportedFormats.UPC_E,
+                    Html5QrcodeSupportedFormats.ITF,
+                    Html5QrcodeSupportedFormats.QR_CODE
+                ]
+            },
+            async decodedText => {
+                if (scannerProcessing) return;
 
-                status:
-                    "out_for_delivery",
+                const scanned = String(decodedText || "").trim();
 
-                deliveryBy:
-                    currentUser.uid,
+                // Ignore repeated invalid scans to avoid repeated messages.
+                if (!/^ORD-.+$/i.test(scanned)) {
+                    const now = Date.now();
 
-                deliveryUid:
-                    currentUser.uid,
-
-                deliveryStaffUid:
-                    currentUser.uid,
-
-                deliveryByName:
-                    currentUser.name || "",
-
-                deliveryStartedAt:
-                    now,
-
-                updatedAt:
-                    now
-            }
-        );
-
-
-        /*
-            NOTIFY RETAILER
-        */
-
-        const retailerUid =
-            order.retailerUid ||
-            order.customerUid;
-
-
-        if(retailerUid){
-
-            const notificationRef =
-                push(
-                    ref(
-                        db,
-                        "notifications/" +
-                        retailerUid
-                    )
-                );
-
-
-            await set(
-                notificationRef,
-                {
-
-                    title:
-                        "Order Out for Delivery",
-
-                    message:
-                        `Your order ${order.orderNumber || order.orderId} is now out for delivery.`,
-
-                    type:
-                        "order_out_for_delivery",
-
-                    orderId:
-                        orderId,
-
-                    orderNumber:
-                        order.orderNumber || "",
-
-                    deliveryUid:
-                        currentUser.uid,
-
-                    deliveryName:
-                        currentUser.name || "",
-
-                    read:
-                        false,
-
-                    createdAt:
-                        now
+                    if (scanned !== lastInvalidBarcode ||
+                        now - lastInvalidBarcodeAt > 2500) {
+                        lastInvalidBarcode = scanned;
+                        lastInvalidBarcodeAt = now;
+                        $("scannerMessage").textContent =
+                            "Invalid barcode. Expected ORD-#.";
+                    }
+                    return;
                 }
-            );
-        }
 
+                scannerProcessing = true;
+                await stopScanner();
+                $("scannerModal").classList.remove("show");
 
-        /*
-            NOTIFY SELLER
-        */
-
-        if(order.sellerUid){
-
-            const sellerNotificationRef =
-                push(
-                    ref(
-                        db,
-                        "notifications/" +
-                        order.sellerUid
-                    )
-                );
-
-
-            await set(
-                sellerNotificationRef,
-                {
-
-                    title:
-                        "Order Out for Delivery",
-
-                    message:
-                        `Order ${order.orderNumber || order.orderId} was accepted for delivery by ${currentUser.name || "delivery staff"}.`,
-
-                    type:
-                        "order_out_for_delivery",
-
-                    orderId:
-                        orderId,
-
-                    orderNumber:
-                        order.orderNumber || "",
-
-                    deliveryUid:
-                        currentUser.uid,
-
-                    deliveryName:
-                        currentUser.name || "",
-
-                    read:
-                        false,
-
-                    createdAt:
-                        now
-                }
-            );
-        }
-
-
-        hideLoading();
-
-        toast(
-            "Order accepted for delivery."
+                await findOrderByBarcode(scanned);
+            },
+            () => {}
         );
-
-        await loadOrders();
-
-
-    }catch(error){
-
+    } catch (error) {
         console.error(error);
-
-        hideLoading();
-
-        toast(
-            "Unable to accept this order."
-        );
+        $("scannerModal").classList.remove("show");
+        toast("Unable to open camera. Allow camera access and use HTTPS.");
     }
 };
 
+async function stopScanner() {
+    if (!orderScanner) return;
 
-/* =========================================
-   MARK DELIVERED
-========================================= */
-
-window.markDelivered =
-async function(orderId){
-
-    const order =
-        allOrders.find(
-            item =>
-                String(
-                    item.orderId
-                ) ===
-                String(orderId)
-        );
-
-
-    if(!order){
-
-        toast(
-            "Order not found."
-        );
-
-        return;
-    }
-
-
-    const status =
-        String(
-            order.status || ""
-        ).toLowerCase();
-
-
-    if(status !== "out_for_delivery"){
-
-        toast(
-            "This order is not currently out for delivery."
-        );
-
-        return;
-    }
-
-
-    const isMine =
-        order.deliveryBy ===
-            currentUser.uid
-        ||
-        order.deliveryUid ===
-            currentUser.uid
-        ||
-        order.deliveryStaffUid ===
-            currentUser.uid;
-
-
-    if(!isMine){
-
-        toast(
-            "This delivery is assigned to another delivery staff."
-        );
-
-        return;
-    }
-
-
-    showLoading();
-
-
-    try{
-
-        const now =
-            Date.now();
-
-
-        await update(
-            ref(
-                db,
-                "orders/" +
-                orderId
-            ),
-            {
-
-                status:
-                    "delivered",
-
-                deliveredBy:
-                    currentUser.uid,
-
-                deliveredByName:
-                    currentUser.name || "",
-
-                deliveredAt:
-                    now,
-
-                updatedAt:
-                    now
-            }
-        );
-
-
-        /*
-            NOTIFY RETAILER
-        */
-
-        const retailerUid =
-            order.retailerUid ||
-            order.customerUid;
-
-
-        if(retailerUid){
-
-            const notificationRef =
-                push(
-                    ref(
-                        db,
-                        "notifications/" +
-                        retailerUid
-                    )
-                );
-
-
-            await set(
-                notificationRef,
-                {
-
-                    title:
-                        "Order Delivered",
-
-                    message:
-                        `Your order ${order.orderNumber || order.orderId} has been delivered.`,
-
-                    type:
-                        "order_delivered",
-
-                    orderId:
-                        orderId,
-
-                    orderNumber:
-                        order.orderNumber || "",
-
-                    deliveryUid:
-                        currentUser.uid,
-
-                    deliveryName:
-                        currentUser.name || "",
-
-                    read:
-                        false,
-
-                    createdAt:
-                        now
-                }
-            );
+    try {
+        if (orderScanner.isScanning) {
+            await orderScanner.stop();
         }
-
-
-        /*
-            NOTIFY SELLER
-        */
-
-        if(order.sellerUid){
-
-            const sellerNotificationRef =
-                push(
-                    ref(
-                        db,
-                        "notifications/" +
-                        order.sellerUid
-                    )
-                );
-
-
-            await set(
-                sellerNotificationRef,
-                {
-
-                    title:
-                        "Order Delivered",
-
-                    message:
-                        `Order ${order.orderNumber || order.orderId} has been delivered by ${currentUser.name || "delivery staff"}.`,
-
-                    type:
-                        "order_delivered",
-
-                    orderId:
-                        orderId,
-
-                    orderNumber:
-                        order.orderNumber || "",
-
-                    deliveryUid:
-                        currentUser.uid,
-
-                    deliveryName:
-                        currentUser.name || "",
-
-                    read:
-                        false,
-
-                    createdAt:
-                        now
-                }
-            );
-        }
-
-
-        hideLoading();
-
-        toast(
-            "Order marked as delivered."
-        );
-
-        await loadOrders();
-
-
-    }catch(error){
-
-        console.error(error);
-
-        hideLoading();
-
-        toast(
-            "Unable to update delivery."
-        );
+    } catch (error) {
+        console.warn("Scanner stop:", error);
     }
+
+    try {
+        orderScanner.clear();
+    } catch (error) {
+        // The scanner may already have been cleared.
+    }
+}
+
+window.closeOrderScanner = async function() {
+    $("scannerModal").classList.remove("show");
+    await stopScanner();
+    scannerProcessing = false;
 };
 
+/* FIND SCANNED ORDER */
+async function findOrderByBarcode(barcode) {
+    const scannedOrderNumber = String(barcode).trim().toUpperCase();
 
-/* =========================================
-   HELPERS
-========================================= */
-
-function escapeHtml(value){
-
-    return String(
-        value ?? ""
-    )
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-
-function escapeAttr(value){
-
-    return String(
-        value ?? ""
-    )
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'");
-}
-
-
-function formatMoney(value){
-
-    return Number(
-        value || 0
-    ).toLocaleString(
-        "en-PH",
-        {
-            minimumFractionDigits:2,
-            maximumFractionDigits:2
-        }
+    // Match the printed barcode to the order number in Firebase.
+    const order = allOrders.find(item =>
+        String(item.orderNumber || "").trim().toUpperCase() === scannedOrderNumber
     );
-}
 
-
-function formatDate(timestamp){
-
-    if(!timestamp){
-        return "";
+    if (!order) {
+        scannerProcessing = false;
+        toast("Order " + scannedOrderNumber + " was not found in your assigned store.");
+        return;
     }
 
-    try{
+    // If an order number was not explicitly stored, also allow its Firebase key
+    // only when the scanned number matches that key exactly.
+    const matchedOrder = order;
 
-        return new Date(
-            Number(timestamp)
-        ).toLocaleString(
-            "en-PH",
-            {
-                dateStyle:"medium",
-                timeStyle:"short"
-            }
+    renderOrders();
+
+    // Show the appropriate section even if the order is already delivered.
+    const status = String(matchedOrder.status || "").toLowerCase();
+    let targetContainer;
+
+    if (status === "packed") {
+        targetContainer = packedOrders;
+    } else if (status === "out_for_delivery") {
+        if (!isAssignedToCurrentUser(matchedOrder)) {
+            scannerProcessing = false;
+            toast("This order is assigned to another delivery staff.");
+            return;
+        }
+        targetContainer = currentDeliveries;
+    } else if (status === "delivered") {
+        if (!isAssignedToCurrentUser(matchedOrder)) {
+            scannerProcessing = false;
+            toast("This delivered order is not assigned to your account.");
+            return;
+        }
+
+        deliveryHistoryOpen = true;
+        $("deliveryHistoryPanel").classList.remove("hidden");
+        $("historyArrow").textContent = "▲";
+
+        // Display the scanned delivered order even if it belongs to
+        // an earlier history period.
+        myDeliveries.innerHTML = createOrderCard(matchedOrder, "delivered");
+        targetContainer = myDeliveries;
+    } else {
+        scannerProcessing = false;
+        toast("Order found, but its status is: " + (status || "unknown"));
+        return;
+    }
+
+    // Find the matching card by its Firebase order ID.
+    let card = document.querySelector(
+        `.order-card[data-order-id="${CSS.escape(String(matchedOrder.orderId))}"]`
+    );
+
+    // If history filtering or rendering hides the order, display its card.
+    if (!card && status === "delivered") {
+        myDeliveries.innerHTML = createOrderCard(matchedOrder, "delivered");
+        card = myDeliveries.querySelector(".order-card");
+    }
+
+    if (!card && targetContainer) {
+        targetContainer.insertAdjacentHTML(
+            "afterbegin",
+            createOrderCard(matchedOrder, status)
         );
 
-    }catch(error){
+        card = targetContainer.querySelector(
+            `.order-card[data-order-id="${CSS.escape(String(matchedOrder.orderId))}"]`
+        );
+    }
 
+    if (card) {
+        card.classList.add("scan-highlight");
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        setTimeout(() => {
+            card.classList.remove("scan-highlight");
+        }, 6000);
+
+        toast("Order found: " + scannedOrderNumber);
+    } else {
+        toast("Order found, but unable to display its card.");
+    }
+
+    scannerProcessing = false;
+}
+
+/* ACCEPT DELIVERY */
+window.acceptDelivery = async function(orderId) {
+    const order = allOrders.find(item =>
+        String(item.orderId) === String(orderId)
+    );
+
+    if (!order) {
+        toast("Order not found.");
+        return;
+    }
+
+    if (String(order.status || "").toLowerCase() !== "packed") {
+        toast("This order is no longer available.");
+        return;
+    }
+
+    showLoading();
+
+    try {
+        const now = Date.now();
+
+        await update(ref(db, "orders/" + orderId), {
+            status: "out_for_delivery",
+            deliveryBy: currentUser.uid,
+            deliveryUid: currentUser.uid,
+            deliveryStaffUid: currentUser.uid,
+            deliveryByName: currentUser.name || "",
+            deliveryStartedAt: now,
+            updatedAt: now
+        });
+
+        const retailerUid = order.retailerUid || order.customerUid;
+
+        if (retailerUid) {
+            const notificationRef = push(ref(db, "notifications/" + retailerUid));
+
+            await set(notificationRef, {
+                title: "Order Out for Delivery",
+                message: `Your order ${order.orderNumber || order.orderId} is now out for delivery.`,
+                type: "order_out_for_delivery",
+                orderId,
+                orderNumber: order.orderNumber || "",
+                deliveryUid: currentUser.uid,
+                deliveryName: currentUser.name || "",
+                read: false,
+                createdAt: now
+            });
+        }
+
+        if (order.sellerUid) {
+            const sellerNotificationRef = push(ref(db, "notifications/" + order.sellerUid));
+
+            await set(sellerNotificationRef, {
+                title: "Order Out for Delivery",
+                message: `Order ${order.orderNumber || order.orderId} was accepted for delivery by ${currentUser.name || "delivery staff"}.`,
+                type: "order_out_for_delivery",
+                orderId,
+                orderNumber: order.orderNumber || "",
+                deliveryUid: currentUser.uid,
+                deliveryName: currentUser.name || "",
+                read: false,
+                createdAt: now
+            });
+        }
+
+        hideLoading();
+        toast("Order accepted for delivery.");
+        await loadOrders();
+    } catch (error) {
+        console.error(error);
+        hideLoading();
+        toast("Unable to accept this order.");
+    }
+};
+
+/* MARK DELIVERED */
+window.markDelivered = async function(orderId) {
+    const order = allOrders.find(item =>
+        String(item.orderId) === String(orderId)
+    );
+
+    if (!order) {
+        toast("Order not found.");
+        return;
+    }
+
+    if (String(order.status || "").toLowerCase() !== "out_for_delivery") {
+        toast("This order is not currently out for delivery.");
+        return;
+    }
+
+    if (!isAssignedToCurrentUser(order)) {
+        toast("This delivery is assigned to another delivery staff.");
+        return;
+    }
+
+    showLoading();
+
+    try {
+        const now = Date.now();
+
+        await update(ref(db, "orders/" + orderId), {
+            status: "delivered",
+            deliveredBy: currentUser.uid,
+            deliveredByName: currentUser.name || "",
+            deliveredAt: now,
+            updatedAt: now
+        });
+
+        const retailerUid = order.retailerUid || order.customerUid;
+
+        if (retailerUid) {
+            const notificationRef = push(ref(db, "notifications/" + retailerUid));
+
+            await set(notificationRef, {
+                title: "Order Delivered",
+                message: `Your order ${order.orderNumber || order.orderId} has been delivered.`,
+                type: "order_delivered",
+                orderId,
+                orderNumber: order.orderNumber || "",
+                deliveryUid: currentUser.uid,
+                deliveryName: currentUser.name || "",
+                read: false,
+                createdAt: now
+            });
+        }
+
+        if (order.sellerUid) {
+            const sellerNotificationRef = push(ref(db, "notifications/" + order.sellerUid));
+
+            await set(sellerNotificationRef, {
+                title: "Order Delivered",
+                message: `Order ${order.orderNumber || order.orderId} has been delivered by ${currentUser.name || "delivery staff"}.`,
+                type: "order_delivered",
+                orderId,
+                orderNumber: order.orderNumber || "",
+                deliveryUid: currentUser.uid,
+                deliveryName: currentUser.name || "",
+                read: false,
+                createdAt: now
+            });
+        }
+
+        hideLoading();
+        toast("Order marked as delivered.");
+        await loadOrders();
+    } catch (error) {
+        console.error(error);
+        hideLoading();
+        toast("Unable to update delivery.");
+    }
+};
+
+/* HELPERS */
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function escapeAttr(value) {
+    return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+}
+
+function formatMoney(value) {
+    return Number(value || 0).toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatDate(timestamp) {
+    if (!timestamp) return "";
+
+    try {
+        return new Date(Number(timestamp)).toLocaleString("en-PH", {
+            dateStyle: "medium",
+            timeStyle: "short"
+        });
+    } catch (error) {
         return "";
     }
 }
 
-
-/* =========================================
-   START
-========================================= */
-
+/* START */
 init();
-
 </script>
-
 </body>
 </html>
-

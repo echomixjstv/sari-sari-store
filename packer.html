@@ -579,6 +579,51 @@ button{
 
 }
 
+
+
+/* MOBILE BURGER MENU */
+.mobile-menu-wrap{display:none;position:relative;flex-shrink:0}
+.burger-btn{width:44px;height:44px;border:1px solid #374151;border-radius:10px;background:#1f2937;color:#fff;font-size:25px;line-height:1;font-weight:700;display:flex;align-items:center;justify-content:center}
+.mobile-menu{display:none;position:absolute;top:calc(100% + 10px);left:0;width:min(290px,85vw);padding:10px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;box-shadow:0 18px 45px rgba(0,0,0,.25);z-index:500;flex-direction:column;gap:8px}
+.mobile-menu.show{display:flex}
+.mobile-menu button{width:100%;border:0;border-radius:10px;padding:14px 12px;text-align:left;background:#f3f4f6;color:#111827;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mobile-menu button:active{transform:scale(.99)}
+.mobile-menu .menu-accepted{border-left:5px solid #2563eb}
+.mobile-menu .menu-special{border-left:5px solid #ea580c}
+.mobile-menu .menu-packed{border-left:5px solid #16a34a}
+.mobile-menu .menu-count{background:#e5e7eb;border-radius:999px;padding:3px 9px;font-size:12px}
+
+/* FULL-SCREEN ORDERS POPUP */
+.orders-popup{display:none;position:fixed;inset:0;z-index:900;background:rgba(17,24,39,.78);padding:12px;align-items:center;justify-content:center}
+.orders-popup.show{display:flex}
+.orders-popup-panel{width:min(900px,100%);height:min(92vh,900px);background:#f3f4f6;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 25px 80px rgba(0,0,0,.35)}
+.orders-popup-header{background:#111827;color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.orders-popup-heading{min-width:0}
+.orders-popup-heading h2{font-size:19px;margin:0}
+.orders-popup-heading p{font-size:12px;color:#d1d5db;margin-top:4px}
+.orders-popup-actions{display:flex;gap:8px;align-items:center}
+.orders-popup-refresh,.orders-popup-close{border:0;border-radius:9px;padding:10px 12px;font-weight:800}
+.orders-popup-refresh{background:#374151;color:#fff}
+.orders-popup-close{background:#dc2626;color:#fff;font-size:18px;min-width:42px}
+.orders-popup-list{padding:14px;overflow:auto;overscroll-behavior:contain;flex:1}
+.orders-popup-list .order{margin-bottom:12px}
+.orders-popup-list .empty{background:#fff;border-radius:14px}
+@media(max-width:700px){
+  .header{justify-content:flex-start;gap:10px}
+  .mobile-menu-wrap{display:block}
+  .brand{min-width:0;flex:1;gap:8px}
+  .brand-icon{width:38px;height:38px;font-size:20px;flex-shrink:0}
+  .brand h1{font-size:14px;white-space:nowrap}
+  .brand p{font-size:10px}
+  .header-right{margin-left:auto}
+  .logout-btn{padding:9px 10px;font-size:11px}
+  .orders-popup{padding:0;align-items:stretch}
+  .orders-popup-panel{height:100dvh;width:100%;max-height:none;border-radius:0}
+  .orders-popup-header{padding:13px 12px}
+  .orders-popup-heading h2{font-size:17px}
+  .orders-popup-list{padding:10px}
+}
+
 </style>
 
 </head>
@@ -587,6 +632,14 @@ button{
 
 <header class="header">
 
+<div class="mobile-menu-wrap">
+    <button id="burgerButton" class="burger-btn" type="button" aria-label="Open order menu" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
+    <div id="mobileMenu" class="mobile-menu">
+        <button class="menu-accepted" type="button" onclick="openOrdersPopup('accepted')">📥 Accepted Orders <span class="menu-count" id="mobileAcceptedCount">0</span></button>
+        <button class="menu-special" type="button" onclick="openOrdersPopup('special')">⭐ Special Orders <span class="menu-count" id="mobileSpecialCount">0</span></button>
+        <button class="menu-packed" type="button" onclick="openOrdersPopup('packed')">✅ Packed Orders <span class="menu-count" id="mobilePackedCount">0</span></button>
+    </div>
+</div>
 
 <div class="brand">
 
@@ -836,6 +889,25 @@ button{
 
 </main>
 
+<!-- MOBILE ORDERS POPUP: selected category appears on top of the page -->
+<div id="ordersPopup" class="orders-popup" role="dialog" aria-modal="true" aria-labelledby="ordersPopupTitle">
+    <section class="orders-popup-panel">
+        <header class="orders-popup-header">
+            <div class="orders-popup-heading">
+                <h2 id="ordersPopupTitle">Accepted Orders</h2>
+                <p id="ordersPopupSubtitle">Live orders from Firebase</p>
+            </div>
+            <div class="orders-popup-actions">
+                <button class="orders-popup-refresh" type="button" onclick="refreshPopupOrders()">↻ Refresh</button>
+                <button class="orders-popup-close" type="button" aria-label="Close orders" onclick="closeOrdersPopup()">✕</button>
+            </div>
+        </header>
+        <div id="ordersPopupList" class="orders-popup-list">
+            <div class="empty"><div class="empty-icon">📦</div>Choose an order category.</div>
+        </div>
+    </section>
+</div>
+
 <!-- LOADING -->
 
 <div
@@ -869,7 +941,8 @@ import {
     get,
     set,
     push,
-    update
+    update,
+    onValue
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 
@@ -915,6 +988,9 @@ const db =
 let currentUser = null;
 let currentStoreNumber = "";
 let currentSeller = null;
+let allPackerOrders = [];
+let ordersListenerStarted = false;
+let activePopupCategory = "accepted";
 
 
 /* START */
@@ -1102,6 +1178,7 @@ async function checkStoreApplication(){
         showAssignedStore();
 
         await loadOrders();
+        startRealtimeOrdersListener();
 
         return;
     }
@@ -1725,160 +1802,57 @@ async function applyToStore(){
 }
 
 
-/* LOAD ORDERS */
-
+/* LOAD ORDERS - initial/manual refresh */
 async function loadOrders(){
+    if(!currentStoreNumber) return;
 
-    if(
-        !currentStoreNumber
-    ){
-        return;
+    const orderList = document.getElementById("orderList");
+    if(orderList){
+        orderList.innerHTML = `<div class="empty"><div class="empty-icon">⏳</div>Loading orders...</div>`;
     }
-
-
-    const orderList =
-        document.getElementById(
-            "orderList"
-        );
-
-
-    orderList.innerHTML = `
-        <div class="empty">
-            <div class="empty-icon">⏳</div>
-            Loading orders...
-        </div>
-    `;
-
 
     try{
-
-        const ordersSnapshot =
-            await get(
-                ref(db,"orders")
-            );
-
-
-        if(!ordersSnapshot.exists()){
-
-            renderEmptyOrders();
-
-            updateStats([]);
-
-            return;
-        }
-
-
-        const orders =
-            ordersSnapshot.val();
-
-
-        const list = [];
-
-
-        Object.entries(orders)
-            .forEach(
-                ([id,order]) => {
-
-                    if(!order){
-                        return;
-                    }
-
-
-                    /*
-                        Accept several possible
-                        Store Number field names.
-                    */
-
-                    const orderStoreNumber =
-                        String(
-                            order.storeNumber ||
-                            order.sellerStoreNumber ||
-                            order.assignedStoreNumber ||
-                            ""
-                        ).trim();
-
-
-                    if(
-                        orderStoreNumber !==
-                        currentStoreNumber
-                    ){
-                        return;
-                    }
-
-
-                    const status =
-                        String(
-                            order.status ||
-                            ""
-                        ).toLowerCase();
-
-
-                    /*
-                        Packer only needs orders
-                        accepted / packing / packed.
-                    */
-
-                    if(
-                        status !== "accepted" &&
-                        status !== "packing" &&
-                        status !== "packed"
-                    ){
-                        return;
-                    }
-
-
-                    list.push({
-
-                        id:id,
-
-                        ...order
-
-                    });
-
-                }
-            );
-
-
-        list.sort(
-            (a,b) =>
-                Number(
-                    b.updatedAt ||
-                    b.createdAt ||
-                    0
-                ) -
-                Number(
-                    a.updatedAt ||
-                    a.createdAt ||
-                    0
-                )
-        );
-
-
-        updateStats(list);
-
-
-        renderOrders(list);
-
-
+        const snapshot = await get(ref(db,"orders"));
+        processOrdersData(snapshot.exists() ? snapshot.val() : {});
     }catch(error){
-
-        console.error(
-            "LOAD ORDERS ERROR:",
-            error
-        );
-
-
-        orderList.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">⚠️</div>
-                Unable to load orders.
-            </div>
-        `;
-
+        console.error("LOAD ORDERS ERROR:",error);
+        if(orderList){
+            orderList.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div>Unable to load orders.</div>`;
+        }
     }
-
 }
 
+/* REALTIME FIREBASE ORDERS */
+function startRealtimeOrdersListener(){
+    if(ordersListenerStarted || !currentStoreNumber) return;
+    ordersListenerStarted = true;
+    onValue(ref(db,"orders"),(snapshot)=>{
+        processOrdersData(snapshot.exists() ? snapshot.val() : {});
+    },(error)=>{
+        console.error("REALTIME ORDERS ERROR:",error);
+    });
+}
+
+function processOrdersData(orders){
+    const list = [];
+    Object.entries(orders || {}).forEach(([id,order])=>{
+        if(!order) return;
+        const orderStoreNumber = String(order.storeNumber || order.sellerStoreNumber || order.assignedStoreNumber || "").trim();
+        if(orderStoreNumber !== currentStoreNumber) return;
+        const status = String(order.status || "").toLowerCase();
+        if(status !== "accepted" && status !== "packing" && status !== "packed") return;
+        list.push({id,...order});
+    });
+
+    list.sort((a,b)=>Number(b.updatedAt || b.createdAt || 0)-Number(a.updatedAt || a.createdAt || 0));
+    allPackerOrders = list;
+    updateStats(list);
+    renderOrders(list);
+    updateMobileMenuCounts(list);
+    if(document.getElementById("ordersPopup").classList.contains("show")){
+        renderPopupOrders(activePopupCategory);
+    }
+}
 
 /* STATS */
 
@@ -1931,6 +1905,13 @@ function updateStats(
         "packedCount"
     ).textContent =
         packed;
+
+    const mobileAccepted = document.getElementById("mobileAcceptedCount");
+    const mobilePacked = document.getElementById("mobilePackedCount");
+    if(mobileAccepted) mobileAccepted.textContent = accepted + packing;
+    if(mobilePacked) mobilePacked.textContent = packed;
+    const mobileSpecial = document.getElementById("mobileSpecialCount");
+    if(mobileSpecial) mobileSpecial.textContent = orders.filter(isSpecialOrder).length;
 
 }
 
@@ -2540,6 +2521,11 @@ async function printWarehouseReceipt(orderId){
             order.orderId ||
             orderId;
 
+        // Barcode value always uses the ORD-# format.
+        const barcodeValue = String(orderNumber).toUpperCase().startsWith("ORD-")
+            ? String(orderNumber).toUpperCase()
+            : "ORD-" + String(orderNumber).replace(/^ORD[- ]?/i, "");
+
         const customerName =
             order.customerName ||
             order.buyerName ||
@@ -2755,6 +2741,38 @@ body{
     margin:12px 0 18px;
 }
 
+.barcode-area{
+    border:1px dashed #9ca3af;
+    border-radius:8px;
+    padding:12px 10px 9px;
+    margin:0 auto 18px;
+    max-width:420px;
+    text-align:center;
+    page-break-inside:avoid;
+}
+
+.barcode-area .label{
+    font-size:10px;
+    letter-spacing:1.5px;
+    margin-bottom:6px;
+}
+
+#orderBarcode{
+    display:block;
+    width:100%;
+    max-width:360px;
+    height:90px;
+    margin:0 auto;
+}
+
+.barcode-value{
+    margin-top:3px;
+    font-family:monospace;
+    font-weight:900;
+    font-size:17px;
+    letter-spacing:2px;
+}
+
 .info{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -2881,6 +2899,12 @@ td{
         WAREHOUSE RECEIPT / PACKING SLIP
     </div>
 
+    <div class="barcode-area">
+        <div class="label">SCAN ORDER BARCODE</div>
+        <svg id="orderBarcode" aria-label="Order barcode"></svg>
+        <div class="barcode-value">${escapeHtml(barcodeValue)}</div>
+    </div>
+
     <div class="info">
 
         <div class="info-box">
@@ -2986,9 +3010,29 @@ td{
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script>
 <script>
 
 window.onload = function(){
+
+    try{
+        if(window.JsBarcode){
+            JsBarcode("#orderBarcode", ${JSON.stringify(barcodeValue)}, {
+                format: "CODE128",
+                lineColor: "#000000",
+                background: "#ffffff",
+                width: 2,
+                height: 65,
+                displayValue: false,
+                margin: 4
+            });
+        }else{
+            document.getElementById("orderBarcode").outerHTML =
+                '<div style="padding:18px 0;font-size:12px">Barcode library unavailable. Order: ${escapeHtml(barcodeValue)}</div>';
+        }
+    }catch(error){
+        console.error("Barcode generation failed:", error);
+    }
 
     setTimeout(function(){
 
@@ -2998,7 +3042,7 @@ window.onload = function(){
             window.close();
         }, 500);
 
-    }, 300);
+    }, 500);
 
 };
 
@@ -3028,6 +3072,68 @@ window.onload = function(){
 
 }
 
+
+
+/* MOBILE BURGER MENU AND CATEGORY POPUP */
+function toggleMobileMenu(){
+    const menu = document.getElementById("mobileMenu");
+    const button = document.getElementById("burgerButton");
+    const open = menu.classList.toggle("show");
+    button.setAttribute("aria-expanded",String(open));
+}
+function closeMobileMenu(){
+    document.getElementById("mobileMenu").classList.remove("show");
+    document.getElementById("burgerButton").setAttribute("aria-expanded","false");
+}
+function isSpecialOrder(order){
+    const values = [order.orderType,order.type,order.priority,order.deliveryType,order.category,order.specialOrder,order.isSpecial,order.isRush,order.rushOrder,order.urgent];
+    return values.some(value=>{
+        if(value === true) return true;
+        const v = String(value ?? "").trim().toLowerCase();
+        return ["special","rush","urgent","priority","true","yes"].includes(v);
+    });
+}
+function openOrdersPopup(category){
+    activePopupCategory = category;
+    closeMobileMenu();
+    const titles = {accepted:"Accepted Orders",special:"Special Orders",packed:"Packed Orders"};
+    document.getElementById("ordersPopupTitle").textContent = titles[category] || "Orders";
+    document.getElementById("ordersPopupSubtitle").textContent = "Live orders from Firebase";
+    document.getElementById("ordersPopup").classList.add("show");
+    document.body.style.overflow = "hidden";
+    renderPopupOrders(category);
+}
+function closeOrdersPopup(){
+    document.getElementById("ordersPopup").classList.remove("show");
+    document.body.style.overflow = "";
+}
+function renderPopupOrders(category){
+    const target = document.getElementById("ordersPopupList");
+    let filtered = allPackerOrders;
+    if(category === "accepted") filtered = allPackerOrders.filter(o=>["accepted","packing"].includes(String(o.status || "").toLowerCase()));
+    else if(category === "special") filtered = allPackerOrders.filter(o=>isSpecialOrder(o) && String(o.status || "").toLowerCase() !== "packed");
+    else if(category === "packed") filtered = allPackerOrders.filter(o=>String(o.status || "").toLowerCase() === "packed");
+
+    if(!filtered.length){
+        const message = category === "special" ? "No special orders right now." : category === "packed" ? "No packed orders yet." : "No accepted orders yet.";
+        target.innerHTML = `<div class="empty"><div class="empty-icon">📦</div>${message}</div>`;
+        return;
+    }
+    target.innerHTML = "";
+    filtered.forEach(order=>target.appendChild(createOrderElement(order)));
+}
+function updateMobileMenuCounts(orders){
+    const accepted = orders.filter(o=>["accepted","packing"].includes(String(o.status || "").toLowerCase())).length;
+    const packed = orders.filter(o=>String(o.status || "").toLowerCase()==="packed").length;
+    const special = orders.filter(o=>isSpecialOrder(o) && String(o.status || "").toLowerCase()!=="packed").length;
+    document.getElementById("mobileAcceptedCount").textContent = accepted;
+    document.getElementById("mobileSpecialCount").textContent = special;
+    document.getElementById("mobilePackedCount").textContent = packed;
+}
+async function refreshPopupOrders(){
+    await loadOrders();
+    renderPopupOrders(activePopupCategory);
+}
 
 /* LOGOUT */
 
@@ -3226,6 +3332,11 @@ window.applyToStore =
 
 window.loadOrders =
     loadOrders;
+
+window.toggleMobileMenu = toggleMobileMenu;
+window.openOrdersPopup = openOrdersPopup;
+window.closeOrdersPopup = closeOrdersPopup;
+window.refreshPopupOrders = refreshPopupOrders;
 
 window.startPacking =
     startPacking;
