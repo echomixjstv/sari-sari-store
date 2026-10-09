@@ -1387,6 +1387,7 @@ td{
 
                         <tr>
 
+                            <th>VIEW</th>
                             <th>ORDER</th>
                             <th>CUSTOMER</th>
                             <th>ITEMS</th>
@@ -1959,6 +1960,7 @@ let orders = {};
 let users = {};
 let notifications = {};
 let productsRealtimeStarted = false;
+let ordersRealtimeStarted = false;
 
 let currentOrderId = "";
 
@@ -2158,6 +2160,7 @@ async function init(){
         await loadAll();
 
         startRealtimeProductUpdates();
+        startRealtimeOrderUpdates();
 
         hideLoading();
 
@@ -2878,6 +2881,38 @@ async function loadOrders(){
 }
 
 
+/* REAL-TIME ORDER UPDATES */
+function startRealtimeOrderUpdates(){
+
+    if(ordersRealtimeStarted){
+        return;
+    }
+
+    ordersRealtimeStarted = true;
+
+    onValue(
+        ref(db,"orders"),
+        snapshot => {
+            orders = snapshot.exists() ? snapshot.val() : {};
+
+            // Refresh order list, dashboard counts and sales as soon as Firebase changes.
+            renderOrders();
+            renderDashboard();
+
+            // Keep the open order details in sync if that order changes.
+            if(currentOrderId && orders[currentOrderId] &&
+               document.getElementById("orderModal").classList.contains("show")){
+                viewOrder(currentOrderId);
+            }
+        },
+        error => {
+            console.error("Realtime order update failed:", error);
+            toast("Unable to receive live order updates. Check your connection.");
+        }
+    );
+}
+
+
 function orderBelongsToSeller(order){
 
     if(!order){
@@ -3335,6 +3370,14 @@ function renderOrders(){
                     <tr>
 
                         <td>
+                            <button
+                                class="btn btn-secondary"
+                                onclick="viewOrder('${id}')">
+                                VIEW
+                            </button>
+                        </td>
+
+                        <td>
                             <strong>
                                 ${escapeHTML(
                                     order.orderNumber ||
@@ -3370,12 +3413,6 @@ function renderOrders(){
                         <td>
 
                             <div class="actions">
-
-                                <button
-                                    class="btn btn-secondary"
-                                    onclick="viewOrder('${id}')">
-                                    VIEW
-                                </button>
 
                                 ${
                                     status === "pending"
@@ -3499,6 +3536,7 @@ function renderDashboard(){
                 <thead>
 
                     <tr>
+                        <th>VIEW</th>
                         <th>ORDER</th>
                         <th>CUSTOMER</th>
                         <th>TOTAL</th>
@@ -3517,6 +3555,14 @@ function renderDashboard(){
                                 return `
 
                                     <tr>
+
+                                        <td>
+                                            <button
+                                                class="btn btn-secondary"
+                                                onclick="viewOrder('${id}')">
+                                                VIEW
+                                            </button>
+                                        </td>
 
                                         <td>
                                             ${
@@ -3550,16 +3596,6 @@ function renderDashboard(){
                                                     "pending"
                                                 ).toLowerCase()
                                             )}
-                                        </td>
-
-                                        <td>
-
-                                            <button
-                                                class="btn btn-secondary"
-                                                onclick="viewOrder('${id}')">
-                                                VIEW
-                                            </button>
-
                                         </td>
 
                                     </tr>

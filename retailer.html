@@ -1217,7 +1217,9 @@ import {
     ref,
     get,
     set,
-    push
+    push,
+    onValue,
+    runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 
@@ -1474,6 +1476,8 @@ async function initialize(){
 
         await loadOrders();
 
+        startRealtimeListeners();
+
         setupSearchEvents();
 
         hideLoading();
@@ -1488,6 +1492,48 @@ async function initialize(){
 
         logout();
     }
+}
+
+
+/* =========================================
+   REALTIME FIREBASE LISTENERS
+========================================= */
+let realtimeListenersStarted = false;
+let lastRealtimeOrdersSignature = "";
+let productRefreshTimer = null;
+
+function startRealtimeListeners(){
+    if(realtimeListenersStarted) return;
+    realtimeListenersStarted = true;
+
+    // Stores: update immediately when a seller/store profile changes.
+    onValue(ref(db, "users"), () => {
+        loadStores();
+    }, (error) => {
+        console.error("Realtime stores listener error:", error);
+    });
+
+    // Products: refresh the currently selected store when products/stock change.
+    onValue(ref(db, "products"), () => {
+        if(!selectedStore) return;
+        if(productRefreshTimer) clearTimeout(productRefreshTimer);
+        productRefreshTimer = setTimeout(() => {
+            if(selectedStore) loadProductsForStore(selectedStore);
+        }, 120);
+    }, (error) => {
+        console.error("Realtime products listener error:", error);
+    });
+
+    // Orders: listen continuously; refresh only when the data changes.
+    onValue(ref(db, "orders"), (snap) => {
+        const raw = snap.exists() ? JSON.stringify(snap.val()) : "{}";
+        if(raw === lastRealtimeOrdersSignature) return;
+        lastRealtimeOrdersSignature = raw;
+        loadOrders();
+    }, (error) => {
+        console.error("Realtime orders listener error:", error);
+        toast("Hindi makakonekta sa live order updates. Tingnan ang internet at Firebase rules.");
+    });
 }
 
 
@@ -2950,6 +2996,51 @@ window.placeOrder = async function(){
             }
         );
 
+        /*
+         * DECREASE STOCK ATOMICALLY BEFORE ORDER CREATION.
+         * Firebase transaction prevents two retailers from buying
+         * the same remaining stock at the same time.
+         */
+        const requiredByProduct = {};
+        cart.forEach(item => {
+            const id = String(item.productId || "");
+            if (!id) throw new Error("A cart item has no product ID.");
+            requiredByProduct[id] = (requiredByProduct[id] || 0) + Number(item.quantity || 1);
+        });
+
+        const productsRef = ref(db, "products");
+        const stockTransaction = await runTransaction(productsRef, currentProducts => {
+            if (!currentProducts) return; // abort if products node is missing
+
+            const updatedProducts = { ...currentProducts };
+            for (const [productId, requiredQty] of Object.entries(requiredByProduct)) {
+                const product = updatedProducts[productId];
+                if (!product) return; // abort if product was removed
+
+                const stockField = product.stock !== undefined ? "stock" :
+                                   product.quantity !== undefined ? "quantity" : null;
+                if (!stockField) return;
+
+                const currentStock = Number(product[stockField]);
+                if (!Number.isFinite(currentStock) || currentStock < requiredQty) return;
+
+                updatedProducts[productId] = {
+                    ...product,
+                    [stockField]: currentStock - requiredQty,
+                    updatedAt: Date.now()
+                };
+            }
+            return updatedProducts;
+        }, { applyLocally: false });
+
+        if (!stockTransaction.committed) {
+            hideLoading();
+            toast("Hindi sapat ang stock ng isa o higit pang produkto. Na-refresh ang stock; pakisuri ang cart.");
+            if (selectedStore) await loadProductsForStore(selectedStore);
+            return;
+        }
+
+        let stockReserved = true;
         const createdOrders = [];
 
         /*
@@ -3201,6 +3292,9 @@ window.placeOrder = async function(){
 
         await loadOrders();
 
+        // Refresh product stock immediately after the order is saved.
+        if (selectedStore) await loadProductsForStore(selectedStore);
+
         hideLoading();
 
         /*
@@ -3233,7 +3327,7 @@ window.placeOrder = async function(){
         hideLoading();
 
         toast(
-            "Unable to place order. Please try again."
+            "Hindi natapos ang order. Pakisuri ang My Orders at stock bago subukang muli."
         );
     }
 };
