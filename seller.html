@@ -140,25 +140,6 @@ button{
     font-weight:bold;
 }
 
-/* MOBILE SIDEBAR CONTROLS */
-.mobile-menu-toggle{
-    display:none;
-    border:0;
-    background:#9c174c;
-    color:#fff;
-    width:40px;
-    height:40px;
-    border-radius:10px;
-    font-size:23px;
-    line-height:1;
-    align-items:center;
-    justify-content:center;
-    flex-shrink:0;
-}
-.mobile-sidebar-overlay{
-    display:none;
-}
-
 /* MAIN */
 
 .main{
@@ -568,85 +549,6 @@ td{
     box-shadow:0 0 0 3px rgba(233,30,99,.08);
 }
 
-
-/* PRODUCT IMAGE LIBRARY */
-.image-library-note{
-    color:#666;
-    font-size:12px;
-    line-height:1.45;
-    margin:0 0 10px;
-}
-.product-image-suggestions{
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:9px;
-    margin-top:10px;
-    max-height:260px;
-    overflow:auto;
-    padding:2px;
-}
-.product-image-option{
-    min-width:0;
-    border:2px solid #e4e4e7;
-    border-radius:9px;
-    background:#fff;
-    padding:5px;
-    text-align:center;
-    color:#444;
-    font-size:10px;
-    overflow:hidden;
-}
-.product-image-option.selected{
-    border-color:#e91e63;
-    box-shadow:0 0 0 2px rgba(233,30,99,.12);
-}
-.product-image-option img{
-    display:block;
-    width:100%;
-    height:68px;
-    object-fit:contain;
-    border-radius:5px;
-    background:#f7f7f9;
-    margin-bottom:5px;
-}
-.product-image-option span{
-    display:block;
-    overflow-wrap:anywhere;
-}
-.selected-image-preview{
-    min-height:115px;
-    border:1px dashed #ccc;
-    border-radius:10px;
-    background:#fafafa;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:10px;
-    color:#777;
-    font-size:12px;
-    text-align:center;
-}
-.selected-image-preview img{
-    display:block;
-    max-width:100%;
-    width:auto;
-    height:auto;
-    max-height:145px;
-    object-fit:contain;
-    border-radius:7px;
-}
-.image-library-empty{
-    grid-column:1/-1;
-    color:#777;
-    font-size:12px;
-    padding:12px;
-    text-align:center;
-}
-@media(max-width:600px){
-    .product-image-suggestions{grid-template-columns:repeat(3,minmax(0,1fr));max-height:220px;}
-    .product-image-option img{height:58px;}
-}
-
 /* PROFILE */
 
 .profile-grid{
@@ -892,42 +794,9 @@ td{
 
 @media(max-width:600px){
 
-    .mobile-menu-toggle{
-        display:inline-flex;
-    }
-
     .sidebar{
-        display:flex;
-        width:min(285px,86vw);
-        min-height:100vh;
-        transform:translateX(-105%);
-        transition:transform .25s ease;
-        z-index:5001;
-        box-shadow:8px 0 28px rgba(0,0,0,.18);
-        overflow-y:auto;
+        display:none;
     }
-
-    body.mobile-menu-open .sidebar{
-        transform:translateX(0);
-    }
-
-    .mobile-sidebar-overlay{
-        display:block;
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,.45);
-        opacity:0;
-        visibility:hidden;
-        transition:opacity .25s ease,visibility .25s ease;
-        z-index:5000;
-    }
-
-    body.mobile-menu-open .mobile-sidebar-overlay{
-        opacity:1;
-        visibility:visible;
-    }
-
-    .nav{overflow-y:auto;}
 
     .main{
         margin-left:0;
@@ -942,12 +811,7 @@ td{
 
     .topbar h1{
         font-size:18px;
-        flex:1;
-        margin-left:10px;
     }
-
-    .top-user{gap:6px;font-size:11px;}
-    .user-circle{width:32px;height:32px;}
 
     .content{
         padding:15px;
@@ -1107,6 +971,13 @@ td{
     </button>
 
     <button
+        id="navRemittances"
+        onclick="showSection('remittances')">
+        💵 Delivery Remittance
+        <span id="remittancePendingBadge" style="display:none;margin-left:6px;background:#dc2626;color:#fff;border-radius:999px;padding:2px 7px;font-size:11px;">0</span>
+    </button>
+
+    <button
         id="navNotifications"
         onclick="showSection('notifications')">
         🔔 Notifications
@@ -1133,16 +1004,12 @@ td{
 
 </aside>
 
-<div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="closeMobileMenu()"></div>
-
 <!-- MAIN -->
 
 <main class="main">
 
 
 <header class="topbar">
-
-    <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
 
     <h1 id="pageTitle">
         Seller Dashboard
@@ -1527,7 +1394,6 @@ td{
 
                         <tr>
 
-                            <th>VIEW</th>
                             <th>ORDER</th>
                             <th>CUSTOMER</th>
                             <th>ITEMS</th>
@@ -1668,6 +1534,61 @@ td{
 
                 No delivery applications.
 
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- DELIVERY REMITTANCES -->
+
+    <section
+        id="sectionRemittances"
+        class="section">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Delivery Remittance</h2>
+                    <p>Review remittance submissions from delivery partners assigned to your store.</p>
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="loadRemittancesOnce()">↻ REFRESH</button>
+
+            </div>
+
+            <div class="toolbar">
+                <input type="text" id="remittanceSearch" placeholder="Search delivery name, order number..." oninput="renderRemittances()">
+                <select id="remittanceFilter" onchange="renderRemittances()">
+                    <option value="all">All Remittances</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DELIVERY PARTNER</th>
+                            <th>ORDER NUMBERS</th>
+                            <th>AMOUNT</th>
+                            <th>PAYMENT</th>
+                            <th>DATE</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="remittancesTable"></tbody>
+                </table>
+            </div>
+
+            <div id="remittancesEmpty" class="empty" style="display:none;">
+                <div class="empty-icon">💵</div>
+                No delivery remittances found.
             </div>
 
         </div>
@@ -1849,10 +1770,7 @@ td{
             <input
                 type="text"
                 id="productName"
-                placeholder="Example: Lucky Me Pancit Canton"
-                autocomplete="off"
-                oninput="filterProductImages()"
-                onkeydown="if(event.key==='Enter'){event.preventDefault();filterProductImages();}">
+                placeholder="Example: Lucky Me Pancit Canton">
 
         </div>
 
@@ -1941,24 +1859,13 @@ td{
         <div class="form-group">
 
             <label>
-                Product Picture
+                Product Image URL
             </label>
 
-            <div class="image-library-note" id="productImageStatus">
-                Type the product name above. Matching pictures will appear here automatically. If the picture is not available, take a photo.
-            </div>
-
-            <input type="hidden" id="productImage" value="">
-
-            <div class="selected-image-preview" id="selectedProductImagePreview">
-                <span>No picture selected</span>
-            </div>
-
-            <div class="product-image-suggestions" id="productImageSuggestions" style="display:none;"></div>
-
-            <button type="button" class="btn btn-primary" onclick="openProductCamera()" style="width:100%;margin-top:12px;">
-                📷 TAKE A PHOTO OF THIS PRODUCT
-            </button>
+            <input
+                type="text"
+                id="productImage"
+                placeholder="Optional image URL">
 
         </div>
 
@@ -2045,28 +1952,6 @@ td{
 
 </div>
 
-<div class="modal" id="productCameraModal" style="z-index:7000;">
-    <div class="modal-box" style="max-width:620px;">
-        <div class="modal-header">
-            <h2>Take Product Photo</h2>
-            <button class="close" type="button" onclick="closeProductCamera()">×</button>
-        </div>
-        <div class="modal-body">
-            <div id="productCameraStatus" class="image-library-note">Allow camera access to take a picture of this product.</div>
-            <video id="productCameraVideo" autoplay playsinline muted style="display:block;width:100%;max-height:55vh;object-fit:contain;background:#111;border-radius:12px;"></video>
-            <canvas id="productCameraCanvas" style="display:none;"></canvas>
-            <img id="productCameraPreview" alt="Captured product preview" style="display:none;width:100%;max-height:55vh;object-fit:contain;background:#f7f7f7;border-radius:12px;">
-            <input id="productCameraFallback" type="file" accept="image/*" capture="environment" style="display:none;">
-            <div class="modal-actions" style="flex-wrap:wrap;">
-                <button id="captureProductPhotoButton" type="button" class="btn btn-primary" onclick="captureProductPhoto()">CAPTURE PHOTO</button>
-                <button id="retakeProductPhotoButton" type="button" class="btn btn-secondary" onclick="retakeProductPhoto()" style="display:none;">RETAKE</button>
-                <button id="uploadProductPhotoButton" type="button" class="btn btn-primary" onclick="uploadCapturedProductPhoto()" style="display:none;">SAVE PHOTO</button>
-                <button type="button" class="btn btn-secondary" onclick="closeProductCamera()">CANCEL</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div
     class="toast"
     id="toast">
@@ -2087,6 +1972,7 @@ import {
     remove,
     onValue
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
 
 /* FIREBASE */
 
@@ -2124,6 +2010,7 @@ const app =
 const db =
     getDatabase(app);
 
+
 /* GLOBAL DATA */
 
 let session = null;
@@ -2133,37 +2020,23 @@ let products = {};
 let orders = {};
 let users = {};
 let notifications = {};
+let remittances = {};
+let remittancesRealtimeStarted = false;
 let productsRealtimeStarted = false;
-let ordersRealtimeStarted = false;
 
 let currentOrderId = "";
-
-// Product image files loaded from the public GitHub repository.
-let productImageLibrary = [];
-let productImageLibraryLoaded = false;
-let productImageLibraryLoading = false;
 
 
 /* EXPOSE FUNCTIONS */
 
 window.showSection = showSection;
 window.logout = logout;
-window.toggleMobileMenu = toggleMobileMenu;
-window.closeMobileMenu = closeMobileMenu;
 
 window.openProductModal = openProductModal;
 window.closeModal = closeModal;
 window.saveProduct = saveProduct;
 window.editProduct = editProduct;
 window.deleteProduct = deleteProduct;
-window.filterProductImages = filterProductImages;
-window.searchProductImages = searchProductImages;
-window.selectProductImage = selectProductImage;
-window.openProductCamera = openProductCamera;
-window.closeProductCamera = closeProductCamera;
-window.captureProductPhoto = captureProductPhoto;
-window.retakeProductPhoto = retakeProductPhoto;
-window.uploadCapturedProductPhoto = uploadCapturedProductPhoto;
 
 window.viewOrder = viewOrder;
 window.acceptOrder = acceptOrder;
@@ -2171,6 +2044,10 @@ window.rejectOrder = rejectOrder;
 
 window.approveWorker = approveWorker;
 window.rejectWorker = rejectWorker;
+window.renderRemittances = renderRemittances;
+window.loadRemittancesOnce = loadRemittancesOnce;
+window.approveRemittance = approveRemittance;
+window.rejectRemittance = rejectRemittance;
 
 window.renderProducts = renderProducts;
 window.renderOrders = renderOrders;
@@ -2349,7 +2226,7 @@ async function init(){
         await loadAll();
 
         startRealtimeProductUpdates();
-        startRealtimeOrderUpdates();
+        startRemittancesRealtimeListener();
 
         hideLoading();
 
@@ -2717,244 +2594,6 @@ function renderProducts(){
 }
 
 
-const PRODUCT_IMAGE_API = "https://api.github.com/repos/echomixjstv/sari-sari-store/contents/productimages";
-const PRODUCT_IMAGE_BASE = "https://echomixjstv.github.io/sari-sari-store/productimages/";
-// Deploy github-photo-upload-worker.js to Cloudflare Workers, then replace this URL.
-const GITHUB_PHOTO_UPLOAD_ENDPOINT = "https://YOUR-CLOUDFLARE-WORKER.workers.dev/upload-product-photo";
-let productCameraStream = null;
-let capturedProductBlob = null;
-let capturedProductFile = null;
-
-async function loadProductImageLibrary(force=false){
-    const status = document.getElementById("productImageStatus");
-    const grid = document.getElementById("productImageSuggestions");
-    if(productImageLibraryLoading) return;
-    if(productImageLibraryLoaded && !force){ filterProductImages(); return; }
-    productImageLibraryLoading = true;
-    try{
-        const response = await fetch(PRODUCT_IMAGE_API, {
-            headers:{"Accept":"application/vnd.github+json"},
-            cache: force ? "no-store" : "default"
-        });
-        if(!response.ok) throw new Error(response.status === 404 ? "The productimages folder was not found." : "GitHub returned HTTP " + response.status + ".");
-        const files = await response.json();
-        if(!Array.isArray(files)) throw new Error("The productimages path did not return a file list.");
-        const allowed = /\.(png|jpe?g|webp|gif|bmp|avif)$/i;
-        productImageLibrary = files.filter(f => f && f.type === "file" && allowed.test(f.name || ""))
-            .map(f => ({name:f.name, url:PRODUCT_IMAGE_BASE + f.name.split("/").map(encodeURIComponent).join("/")}))
-            .sort((a,b)=>a.name.localeCompare(b.name, undefined, {numeric:true, sensitivity:"base"}));
-        productImageLibraryLoaded = true;
-        filterProductImages();
-    }catch(error){
-        console.error("Unable to load product image library:", error);
-        if(status) status.textContent = "Could not load pictures from productimages. You can still take a photo of this product.";
-        if(grid && String(document.getElementById("productName")?.value || "").trim()){
-            grid.innerHTML = '<div class="image-library-empty">Could not load productimages. You can take a photo instead.</div>';
-            grid.style.display = "grid";
-        }
-    }finally{ productImageLibraryLoading = false; }
-}
-
-function filterProductImages(){
-    const grid = document.getElementById("productImageSuggestions");
-    const productNameInput = document.getElementById("productName");
-    const status = document.getElementById("productImageStatus");
-    if(!grid) return;
-    const query = String(productNameInput?.value || "").trim().toLowerCase();
-    if(!query){
-        grid.innerHTML = "";
-        grid.style.display = "none";
-        if(status) status.textContent = "Type the product name above. Matching pictures will appear here automatically. If the picture is not available, take a photo.";
-        return;
-    }
-    if(!productImageLibraryLoaded){
-        grid.innerHTML = '<div class="image-library-empty">Loading matching product pictures...</div>';
-        grid.style.display = "grid";
-        loadProductImageLibrary();
-        return;
-    }
-    const normalize = value => String(value || "").toLowerCase().replace(/\.[^.]+$/, "").replace(/[^a-z0-9]+/g, " ").trim();
-    const q = normalize(query);
-    const terms = q.split(/\s+/).filter(Boolean);
-    const scored = productImageLibrary.map(item=>{
-        const name = normalize(item.name);
-        let score = name === q ? 100 : name.includes(q) ? 50 : 0;
-        for(const term of terms){ if(term.length > 1 && name.includes(term)) score += 10; }
-        return {item,score};
-    }).filter(x=>x.score > 0).sort((a,b)=>b.score-a.score || a.item.name.localeCompare(b.item.name));
-    const matches = scored.map(x=>x.item);
-    const selected = document.getElementById("productImage")?.value || "";
-    grid.style.display = "grid";
-    if(!matches.length){
-        grid.innerHTML = '<div class="image-library-empty">No matching picture found for this product. Use TAKE A PHOTO OF THIS PRODUCT below.</div>';
-        if(status) status.textContent = 'No matching picture for “' + query + '”. You can take a photo of the product below.';
-        return;
-    }
-    if(status) status.textContent = matches.length + ' matching picture(s) for “' + query + '”. Choose a picture below or take a new photo.';
-    grid.innerHTML = matches.map(item=>{
-        const isSelected = item.url === selected;
-        return `<button type="button" class="product-image-option ${isSelected ? "selected" : ""}" onclick="selectProductImage('${item.url.replace(/'/g,"&#39;")}')" title="${escapeHTML(item.name)}">
-            <img src="${escapeHTML(item.url)}" alt="${escapeHTML(item.name)}" loading="lazy" onerror="this.style.opacity='.25'">
-            <span>${escapeHTML(item.name)}</span>
-        </button>`;
-    }).join("");
-}
-
-function searchProductImages(){ filterProductImages(); }
-
-function selectProductImage(url){
-    const input = document.getElementById("productImage");
-    const preview = document.getElementById("selectedProductImagePreview");
-    if(!input || !preview) return;
-    input.value = url || "";
-    const item = productImageLibrary.find(image=>image.url === url);
-    preview.innerHTML = url
-        ? `<img src="${escapeHTML(url)}" alt="Selected product picture"><span style="margin-left:10px;overflow-wrap:anywhere">${escapeHTML(item ? item.name : (url.split("/").pop() || "Captured product photo"))}</span>`
-        : "<span>No picture selected</span>";
-    filterProductImages();
-}
-
-async function openProductCamera(){
-    const name = document.getElementById("productName")?.value.trim();
-    if(!name){ toast("Enter the product name first."); document.getElementById("productName")?.focus(); return; }
-    const modal = document.getElementById("productCameraModal");
-    const video = document.getElementById("productCameraVideo");
-    const preview = document.getElementById("productCameraPreview");
-    const status = document.getElementById("productCameraStatus");
-    capturedProductBlob = null; capturedProductFile = null;
-    preview.style.display = "none"; video.style.display = "block";
-    document.getElementById("captureProductPhotoButton").style.display = "inline-block";
-    document.getElementById("retakeProductPhotoButton").style.display = "none";
-    document.getElementById("uploadProductPhotoButton").style.display = "none";
-    modal.classList.add("show");
-    try{
-        if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error("Camera access is not available in this browser.");
-        productCameraStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
-        video.srcObject = productCameraStream;
-        await video.play();
-        status.textContent = "Point the camera at the product and press CAPTURE PHOTO.";
-    }catch(error){
-        console.error("Camera access failed:", error);
-        status.textContent = "Could not open the camera. Check camera permission and use HTTPS. On supported phones, you can choose to take a photo from the device instead.";
-        const fallback = document.getElementById("productCameraFallback");
-        fallback.onchange = async function(){
-            const file = fallback.files && fallback.files[0];
-            if(!file) return;
-            capturedProductFile = file;
-            capturedProductBlob = file;
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = "block"; video.style.display = "none";
-            document.getElementById("captureProductPhotoButton").style.display = "none";
-            document.getElementById("retakeProductPhotoButton").style.display = "inline-block";
-            document.getElementById("uploadProductPhotoButton").style.display = "inline-block";
-            status.textContent = "Photo selected. Press SAVE PHOTO to upload it to the GitHub productimages folder.";
-        };
-        const pick = document.createElement("button");
-        pick.type = "button"; pick.className = "btn btn-secondary"; pick.textContent = "TAKE PHOTO / CHOOSE CAMERA";
-        pick.onclick = ()=>fallback.click();
-        status.appendChild(document.createElement("br")); status.appendChild(pick);
-    }
-}
-
-function stopProductCamera(){
-    if(productCameraStream){ productCameraStream.getTracks().forEach(track=>track.stop()); productCameraStream = null; }
-    const video = document.getElementById("productCameraVideo");
-    if(video) video.srcObject = null;
-}
-
-function closeProductCamera(){
-    stopProductCamera();
-    document.getElementById("productCameraModal")?.classList.remove("show");
-}
-
-function captureProductPhoto(){
-    const video = document.getElementById("productCameraVideo");
-    const canvas = document.getElementById("productCameraCanvas");
-    const preview = document.getElementById("productCameraPreview");
-    const status = document.getElementById("productCameraStatus");
-    if(!video || !video.videoWidth){ if(status) status.textContent = "Camera is not ready yet. Please wait a moment and try again."; return; }
-    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-    const context = canvas.getContext("2d");
-    context.drawImage(video,0,0,canvas.width,canvas.height);
-    canvas.toBlob(blob=>{
-        if(!blob){ if(status) status.textContent = "Could not capture the picture. Please try again."; return; }
-        capturedProductBlob = blob; capturedProductFile = null;
-        preview.src = URL.createObjectURL(blob); preview.style.display = "block"; video.style.display = "none";
-        document.getElementById("captureProductPhotoButton").style.display = "none";
-        document.getElementById("retakeProductPhotoButton").style.display = "inline-block";
-        document.getElementById("uploadProductPhotoButton").style.display = "inline-block";
-        if(status) status.textContent = "...";
-        stopProductCamera();
-    },"image/jpeg",0.88);
-}
-
-async function retakeProductPhoto(){
-    const preview = document.getElementById("productCameraPreview");
-    if(preview.src && preview.src.startsWith("blob:")) URL.revokeObjectURL(preview.src);
-    capturedProductBlob = null; capturedProductFile = null;
-    preview.style.display = "none";
-    document.getElementById("productCameraVideo").style.display = "block";
-    document.getElementById("captureProductPhotoButton").style.display = "inline-block";
-    document.getElementById("retakeProductPhotoButton").style.display = "none";
-    document.getElementById("uploadProductPhotoButton").style.display = "none";
-    await openProductCamera();
-}
-
-async function uploadCapturedProductPhoto(){
-    if(!capturedProductBlob){ toast("Take a photo first."); return; }
-    const productName = document.getElementById("productName")?.value.trim();
-    if(!productName){ toast("Enter the product name first."); return; }
-    if(GITHUB_PHOTO_UPLOAD_ENDPOINT.includes("YOUR-CLOUDFLARE-WORKER")){
-        const message = "uploading";
-        const status = document.getElementById("productCameraStatus");
-        if(status) status.textContent = message;
-        toast("Configure the secure GitHub upload Worker first.");
-        return;
-    }
-    const button = document.getElementById("uploadProductPhotoButton");
-    const status = document.getElementById("productCameraStatus");
-    button.disabled = true; button.textContent = "UPLOADING...";
-    try{
-        const blob = capturedProductFile || capturedProductBlob;
-        if(blob.size > 8 * 1024 * 1024) throw new Error("Photo is too large. Please use a picture under 8 MB.");
-        const dataUrl = await new Promise((resolve,reject)=>{
-            const reader = new FileReader();
-            reader.onload = ()=>resolve(String(reader.result || ""));
-            reader.onerror = ()=>reject(new Error("Could not read the captured photo."));
-            reader.readAsDataURL(blob);
-        });
-        const base64 = dataUrl.includes(",") ? dataUrl.split(",",2)[1] : "";
-        if(!base64) throw new Error("Could not prepare the photo for upload.");
-        const response = await fetch(GITHUB_PHOTO_UPLOAD_ENDPOINT,{
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({productName, imageBase64:base64, contentType:blob.type || "image/jpeg"})
-        });
-        let result = {};
-        try{ result = await response.json(); }catch(_){ }
-        if(!response.ok || !result.success || !result.url){
-            throw new Error(result.error || ("Upload server returned HTTP " + response.status + "."));
-        }
-        const url = result.url;
-        const uploadedName = result.filename || url.split("/").pop() || "product-photo.jpg";
-        const item = {name:uploadedName,url};
-        if(!productImageLibrary.some(x=>x.url===url)) productImageLibrary.unshift(item);
-        productImageLibraryLoaded = true;
-        selectProductImage(url);
-        const grid = document.getElementById("productImageSuggestions");
-        if(grid) grid.style.display = "grid";
-        if(status) status.textContent = "Photo uploaded to GitHub productimages and selected. Press SAVE PRODUCT to finish.";
-        toast("Photo saved to GitHub productimages.");
-        closeProductCamera();
-    }catch(error){
-        console.error("GitHub product photo upload failed:",error);
-        if(status) status.textContent = "Upload failed. Check that the Cloudflare Worker is deployed, its GITHUB_TOKEN secret is configured, and its allowed website origin is correct. " + (error?.message || "");
-        toast("Photo upload failed. Check the upload Worker setup.");
-    }finally{
-        button.disabled = false; button.textContent = "SAVE PHOTO";
-    }
-}
-
 function openProductModal(id=""){
 
     document.getElementById(
@@ -2967,11 +2606,6 @@ function openProductModal(id=""){
         id
             ? "Edit Product"
             : "Add Product";
-
-    const imageGrid = document.getElementById("productImageSuggestions");
-    if(imageGrid){ imageGrid.innerHTML = ""; imageGrid.style.display = "none"; }
-    const imageStatus = document.getElementById("productImageStatus");
-    if(imageStatus) imageStatus.textContent = "Type the product name above. Matching pictures will appear here automatically. If the picture is not available, take a photo.";
 
     if(id){
 
@@ -3016,11 +2650,6 @@ function openProductModal(id=""){
             p.imageUrl ||
             "";
 
-        const existingImage = p.image || p.imageUrl || "";
-        document.getElementById("selectedProductImagePreview").innerHTML = existingImage
-            ? `<img src="${escapeHTML(existingImage)}" alt="Selected product picture"><span style="margin-left:10px;overflow-wrap:anywhere">Current product picture</span>`
-            : "<span>No picture selected</span>";
-
     }else{
 
         document.getElementById(
@@ -3047,16 +2676,11 @@ function openProductModal(id=""){
             "productImage"
         ).value = "";
 
-        document.getElementById("selectedProductImagePreview").innerHTML = "<span>No picture selected</span>";
-
     }
 
     document.getElementById(
         "productModal"
     ).classList.add("show");
-
-    filterProductImages();
-    loadProductImageLibrary();
 
 }
 
@@ -3320,38 +2944,6 @@ async function loadOrders(){
             ? snapshot.val()
             : {};
 
-}
-
-
-/* REAL-TIME ORDER UPDATES */
-function startRealtimeOrderUpdates(){
-
-    if(ordersRealtimeStarted){
-        return;
-    }
-
-    ordersRealtimeStarted = true;
-
-    onValue(
-        ref(db,"orders"),
-        snapshot => {
-            orders = snapshot.exists() ? snapshot.val() : {};
-
-            // Refresh order list, dashboard counts and sales as soon as Firebase changes.
-            renderOrders();
-            renderDashboard();
-
-            // Keep the open order details in sync if that order changes.
-            if(currentOrderId && orders[currentOrderId] &&
-               document.getElementById("orderModal").classList.contains("show")){
-                viewOrder(currentOrderId);
-            }
-        },
-        error => {
-            console.error("Realtime order update failed:", error);
-            toast("Unable to receive live order updates. Check your connection.");
-        }
-    );
 }
 
 
@@ -3812,14 +3404,6 @@ function renderOrders(){
                     <tr>
 
                         <td>
-                            <button
-                                class="btn btn-secondary"
-                                onclick="viewOrder('${id}')">
-                                VIEW
-                            </button>
-                        </td>
-
-                        <td>
                             <strong>
                                 ${escapeHTML(
                                     order.orderNumber ||
@@ -3855,6 +3439,12 @@ function renderOrders(){
                         <td>
 
                             <div class="actions">
+
+                                <button
+                                    class="btn btn-secondary"
+                                    onclick="viewOrder('${id}')">
+                                    VIEW
+                                </button>
 
                                 ${
                                     status === "pending"
@@ -3978,7 +3568,6 @@ function renderDashboard(){
                 <thead>
 
                     <tr>
-                        <th>VIEW</th>
                         <th>ORDER</th>
                         <th>CUSTOMER</th>
                         <th>TOTAL</th>
@@ -3997,14 +3586,6 @@ function renderDashboard(){
                                 return `
 
                                     <tr>
-
-                                        <td>
-                                            <button
-                                                class="btn btn-secondary"
-                                                onclick="viewOrder('${id}')">
-                                                VIEW
-                                            </button>
-                                        </td>
 
                                         <td>
                                             ${
@@ -4038,6 +3619,16 @@ function renderDashboard(){
                                                     "pending"
                                                 ).toLowerCase()
                                             )}
+                                        </td>
+
+                                        <td>
+
+                                            <button
+                                                class="btn btn-secondary"
+                                                onclick="viewOrder('${id}')">
+                                                VIEW
+                                            </button>
+
                                         </td>
 
                                     </tr>
@@ -6116,32 +5707,138 @@ async function createNotification(
 }
 
 
-/* MOBILE BURGER MENU */
-function toggleMobileMenu(){
-    const open = !document.body.classList.contains("mobile-menu-open");
-    document.body.classList.toggle("mobile-menu-open",open);
-    const button = document.getElementById("mobileMenuToggle");
-    if(button){
-        button.setAttribute("aria-expanded",open ? "true" : "false");
-        button.setAttribute("aria-label",open ? "Close navigation menu" : "Open navigation menu");
-        button.textContent = open ? "×" : "☰";
+/* DELIVERY REMITTANCE REALTIME LISTENER */
+
+function startRemittancesRealtimeListener(){
+
+    if(remittancesRealtimeStarted){
+        return;
+    }
+
+    remittancesRealtimeStarted = true;
+
+    onValue(
+        ref(db,"remittances"),
+        snapshot => {
+            remittances = snapshot.exists() ? snapshot.val() : {};
+            renderRemittances();
+        },
+        error => {
+            console.error("Remittance realtime listener failed:", error);
+            toast("Unable to load delivery remittances.");
+        }
+    );
+}
+
+async function loadRemittancesOnce(){
+    try{
+        const snapshot = await get(ref(db,"remittances"));
+        remittances = snapshot.exists() ? snapshot.val() : {};
+        renderRemittances();
+        toast("Remittances refreshed.");
+    }catch(error){
+        console.error(error);
+        toast("Unable to refresh remittances.");
     }
 }
 
-function closeMobileMenu(){
-    document.body.classList.remove("mobile-menu-open");
-    const button = document.getElementById("mobileMenuToggle");
-    if(button){
-        button.setAttribute("aria-expanded","false");
-        button.setAttribute("aria-label","Open navigation menu");
-        button.textContent = "☰";
-    }
+function sellerOwnsRemittance(item){
+    if(!item || !seller){ return false; }
+    const sellerUid = String(seller.uid || session?.uid || "");
+    const storeNumber = String(seller.storeNumber || session?.storeNumber || "");
+    const remittanceSellerUid = String(item.sellerUid || "");
+    const remittanceStoreNumber = String(item.sellerStoreNumber || item.storeNumber || "");
+    return (remittanceSellerUid && remittanceSellerUid === sellerUid) ||
+           (remittanceStoreNumber && remittanceStoreNumber === storeNumber);
+}
+
+function renderRemittances(){
+    const tbody = document.getElementById("remittancesTable");
+    const empty = document.getElementById("remittancesEmpty");
+    if(!tbody || !empty){ return; }
+
+    const search = (document.getElementById("remittanceSearch")?.value || "").trim().toLowerCase();
+    const filter = document.getElementById("remittanceFilter")?.value || "all";
+
+    const list = Object.entries(remittances || {})
+        .filter(([id,item]) => sellerOwnsRemittance(item))
+        .map(([id,item]) => ({id,...item}))
+        .filter(item => {
+            const status = String(item.status || "pending").toLowerCase();
+            const orderNumbers = Array.isArray(item.orderNumbers) ? item.orderNumbers.join(", ") : (item.orderNumbers || item.orderIds || "");
+            const searchable = [item.deliveryName,item.deliveryUsername,item.deliveryUid,orderNumbers,item.notes,item.paymentMethod].join(" ").toLowerCase();
+            return (filter === "all" || status === filter) && (!search || searchable.includes(search));
+        })
+        .sort((a,b) => Number(b.createdAt || b.submittedAt || 0) - Number(a.createdAt || a.submittedAt || 0));
+
+    const pendingCount = Object.entries(remittances || {})
+        .filter(([id,item]) => sellerOwnsRemittance(item) && String(item.status || "pending").toLowerCase() === "pending").length;
+    const badge = document.getElementById("remittancePendingBadge");
+    if(badge){ badge.textContent = String(pendingCount); badge.style.display = pendingCount ? "inline-block" : "none"; }
+
+    empty.style.display = list.length ? "none" : "block";
+    tbody.innerHTML = list.map(item => {
+        const status = String(item.status || "pending").toLowerCase();
+        const ordersText = Array.isArray(item.orderNumbers) ? item.orderNumbers.join(", ") : (Array.isArray(item.orderIds) ? item.orderIds.join(", ") : String(item.orderNumbers || item.orderIds || "—"));
+        const date = item.createdAt || item.submittedAt || item.timestamp || 0;
+        const dateText = date ? formatDate(Number(date)) : "—";
+        const amount = Number(item.amount || 0).toLocaleString("en-PH",{style:"currency",currency:"PHP"});
+        const statusLabel = status.toUpperCase();
+        const action = status === "pending"
+            ? `<div style="display:flex;gap:7px;flex-wrap:wrap;min-width:190px"><button type="button" style="background:#16a34a;color:#fff;border:0;border-radius:7px;padding:9px 11px;font-weight:bold;cursor:pointer;touch-action:manipulation" onclick="approveRemittance('${item.id}')">✓ APPROVE</button><button type="button" style="background:#dc2626;color:#fff;border:0;border-radius:7px;padding:9px 11px;font-weight:bold;cursor:pointer;touch-action:manipulation" onclick="rejectRemittance('${item.id}')">✕ REJECT</button></div>`
+            : (status === "rejected" ? `<span style="font-size:12px;color:#b91c1c">${escapeHTML(item.rejectionReason || "Rejected")}</span>` : `<span style="color:#15803d;font-weight:bold">✓ APPROVED</span>`);
+        return `<tr><td><strong>${escapeHTML(item.deliveryName || item.deliveryUsername || "Delivery Partner")}</strong><div style="font-size:12px;color:#6b7280;margin-top:4px">${escapeHTML(item.deliveryUid || "")}</div></td><td>${escapeHTML(String(ordersText))}</td><td><strong>${amount}</strong></td><td>${escapeHTML(item.paymentMethod || "—")}</td><td>${escapeHTML(dateText)}</td><td><span class="status status-${status}">${escapeHTML(statusLabel)}</span></td><td>${action}</td></tr>`;
+    }).join("");
+}
+
+async function approveRemittance(id){
+    const item = remittances?.[id];
+    if(!item || !sellerOwnsRemittance(item)){ toast("Remittance not found for this store."); return; }
+    if(String(item.status || "pending").toLowerCase() !== "pending"){ toast("This remittance has already been processed."); return; }
+    if(!confirm("Approve this delivery remittance?")){ return; }
+    try{
+        const now = Date.now();
+        await update(ref(db,"remittances/"+id),{
+            status:"approved",
+            approvedAt:now,
+            approvedBy:seller.uid || session.uid,
+            approvedByName:seller.storeName || seller.name || "Seller",
+            updatedAt:now
+        });
+        if(item.deliveryUid){
+            await createNotification(item.deliveryUid,"Delivery Remittance Approved","Your remittance for order(s) " + (Array.isArray(item.orderNumbers) ? item.orderNumbers.join(", ") : (item.orderNumbers || "")) + " has been approved.","remittance_approved");
+        }
+        toast("Delivery remittance approved.");
+    }catch(error){ console.error(error); toast("Unable to approve remittance."); }
+}
+
+async function rejectRemittance(id){
+    const item = remittances?.[id];
+    if(!item || !sellerOwnsRemittance(item)){ toast("Remittance not found for this store."); return; }
+    if(String(item.status || "pending").toLowerCase() !== "pending"){ toast("This remittance has already been processed."); return; }
+    const reason = prompt("Reason for rejecting this delivery remittance:");
+    if(reason === null){ return; }
+    if(!reason.trim()){ alert("Please enter a rejection reason."); return; }
+    try{
+        const now = Date.now();
+        await update(ref(db,"remittances/"+id),{
+            status:"rejected",
+            rejectionReason:reason.trim(),
+            rejectedAt:now,
+            rejectedBy:seller.uid || session.uid,
+            rejectedByName:seller.storeName || seller.name || "Seller",
+            updatedAt:now
+        });
+        if(item.deliveryUid){
+            await createNotification(item.deliveryUid,"Delivery Remittance Rejected","Your remittance was rejected. Reason: " + reason.trim(),"remittance_rejected");
+        }
+        toast("Delivery remittance rejected.");
+    }catch(error){ console.error(error); toast("Unable to reject remittance."); }
 }
 
 /* SECTION */
 
 function showSection(section){
-    closeMobileMenu();
 
     const sections =
         [
@@ -6149,6 +5846,7 @@ function showSection(section){
             "products",
             "orders",
             "workers",
+            "remittances",
             "notifications",
             "account"
         ];

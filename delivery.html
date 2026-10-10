@@ -105,6 +105,17 @@ button{cursor:pointer}
 .view-order-btn{flex-shrink:0;border:0;border-radius:8px;background:#2563eb;color:#fff;padding:10px 14px;font-weight:bold}
 .view-order-btn:hover{background:#1d4ed8}
 .packed-list{display:flex;flex-direction:column;gap:9px}
+.remittance-order{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid #e5e7eb;border-radius:9px;background:#f9fafb;margin-bottom:8px}
+.remittance-order input{width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:#16a34a}
+.remittance-order-main{flex:1;min-width:0}
+.remittance-status{display:inline-block;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:bold}
+.remittance-record{border:1px solid #e5e7eb;border-left:5px solid #f59e0b;border-radius:10px;padding:14px;margin-bottom:10px;background:#fff;overflow-wrap:anywhere}
+.remittance-record.approved{border-left-color:#16a34a}
+.remittance-record.rejected{border-left-color:#ef4444}
+.remittance-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.remittance-form-grid input,.remittance-form-grid select,.remittance-notes{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:8px;font:inherit;background:#fff}
+.remittance-notes{min-height:80px;resize:vertical}
+@media(max-width:500px){.remittance-form-grid{grid-template-columns:1fr}}
 .order-detail-modal{position:fixed;inset:0;background:#0009;z-index:1600;display:none;align-items:center;justify-content:center;padding:14px}
 .order-detail-modal.show{display:flex}
 .order-detail-box{background:#f4f6f8;width:100%;max-width:620px;max-height:90vh;overflow:auto;border-radius:14px;padding:16px}
@@ -222,6 +233,25 @@ button{cursor:pointer}
             </div>
 
         </div>
+
+        <!-- DELIVERY REMITTANCE -->
+        <section class="card" style="margin-top:18px">
+            <div class="section-title">
+                <h2>💵 Delivery Remittance</h2>
+                <span id="remittancePendingCount" class="count-badge">0</span>
+            </div>
+            <p style="color:#6b7280;line-height:1.5;margin-top:0">Piliin ang mga order na na-deliver mo at i-submit ang perang isasauli sa seller. Ang remittance ay magiging pending hanggang aprubahan ng seller.</p>
+            <div id="remittanceEligibleOrders"><div class="empty">Loading delivered orders...</div></div>
+            <div class="remittance-form-grid" style="margin-top:14px">
+                <div><label for="remittanceAmount" style="display:block;font-weight:bold;margin-bottom:7px">Remittance Amount (₱)</label><input id="remittanceAmount" type="number" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal"></div>
+                <div><label for="remittanceMethod" style="display:block;font-weight:bold;margin-bottom:7px">Payment Method</label><select id="remittanceMethod"><option value="Cash">Cash</option><option value="GCash">GCash</option><option value="Bank Transfer">Bank Transfer</option><option value="Other">Other</option></select></div>
+            </div>
+            <label for="remittanceNotes" style="display:block;font-weight:bold;margin:12px 0 7px">Notes (optional)</label>
+            <textarea id="remittanceNotes" class="remittance-notes" placeholder="Hal. oras ng turnover o ibang detalye"></textarea>
+            <button id="submitRemittanceBtn" class="primary-btn" onclick="submitDeliveryRemittance()">SUBMIT REMITTANCE TO SELLER</button>
+            <h3 style="margin:24px 0 12px">📋 My Remittance History</h3>
+            <div id="myRemittanceHistory"><div class="empty">Loading remittance history...</div></div>
+        </section>
     </section>
 </main>
 
@@ -300,6 +330,9 @@ let currentStore = null;
 let allOrders = [];
 let ordersListenerAttached = false;
 let stopOrdersListener = null;
+let allRemittances = [];
+let remittanceListenerAttached = false;
+let stopRemittanceListener = null;
 
 let selectedHistoryPeriod = "today";
 let deliveryHistoryOpen = false;
@@ -498,6 +531,7 @@ async function refreshPage() {
         storeNumberDisplay.textContent = assignedStoreNumber;
         await loadStore(assignedStoreNumber);
         startOrdersRealtimeListener();
+        startRemittanceRealtimeListener();
         return;
     }
 
@@ -782,6 +816,7 @@ function renderOrders() {
 
     renderPackedOrders(ready);
     renderMyDeliveries(myDelivery);
+    renderEligibleRemittanceOrders();
 
     if (deliveryHistoryOpen) renderDeliveryHistory();
 }
@@ -1152,6 +1187,170 @@ async function findOrderByBarcode(barcode) {
     scannerProcessing = false;
 }
 
+/* DELIVERY REMITTANCE: REALTIME HISTORY AND SUBMISSION */
+function startRemittanceRealtimeListener() {
+    if (!currentUser || remittanceListenerAttached) return;
+    remittanceListenerAttached = true;
+    stopRemittanceListener = onValue(ref(db, "remittances"), snapshot => {
+        const data = snapshot.exists() ? snapshot.val() : {};
+        allRemittances = Object.keys(data).map(id => ({ remittanceId: id, ...data[id] }))
+            .filter(item => String(item.deliveryUid || "") === String(currentUser.uid))
+            .sort((a, b) => Number(b.submittedAt || b.createdAt || 0) - Number(a.submittedAt || a.createdAt || 0));
+        renderEligibleRemittanceOrders();
+        renderMyRemittanceHistory();
+        const pendingCount = allRemittances.filter(item => String(item.status || "pending").toLowerCase() === "pending").length;
+        $("remittancePendingCount").textContent = String(pendingCount);
+    }, error => {
+        console.error("Realtime remittance listener:", error);
+        $("myRemittanceHistory").innerHTML = '<div class="empty">Unable to load remittance history. Check Firebase access and connection.</div>';
+    });
+}
+
+function remittanceOrderNumber(order) {
+    return canonicalOrderNumber(order);
+}
+
+function getRemittedOrderIds() {
+    const ids = new Set();
+    allRemittances.forEach(item => {
+        const status = String(item.status || "pending").toLowerCase();
+        // Rejected submissions may be resubmitted after correcting the amount/details.
+        if (status === "rejected") return;
+        const values = Array.isArray(item.orderIds) ? item.orderIds :
+            Array.isArray(item.orderNumbers) ? item.orderNumbers :
+            (item.orderId || item.orderNumber || item.orderNumbers ? [item.orderId || item.orderNumber || item.orderNumbers] : []);
+        values.forEach(value => ids.add(String(value)));
+    });
+    return ids;
+}
+
+function renderEligibleRemittanceOrders() {
+    const target = $("remittanceEligibleOrders");
+    if (!target || !currentUser) return;
+    const alreadySubmitted = getRemittedOrderIds();
+    const delivered = allOrders.filter(order =>
+        String(order.status || "").toLowerCase() === "delivered" &&
+        isAssignedToCurrentUser(order) &&
+        !alreadySubmitted.has(String(order.orderId)) &&
+        !alreadySubmitted.has(String(order.orderNumber || "")) &&
+        !alreadySubmitted.has(String(remittanceOrderNumber(order)))
+    );
+    if (!delivered.length) {
+        target.innerHTML = '<div class="empty"><div class="empty-icon">🧾</div><div>Walang bagong delivered order na kailangang i-remit. Lalabas dito ang mga order kapag na-deliver na at hindi pa naisusumite sa seller.</div></div>';
+        $("remittanceAmount").value = "";
+        return;
+    }
+    target.innerHTML = '<div style="font-weight:bold;margin-bottom:9px">Piliin ang order(s) na kasama sa remittance:</div>' + delivered.map(order => {
+        const amount = Number(order.totalAmount || order.total || 0);
+        const orderId = String(order.orderId);
+        return `<label class="remittance-order"><input type="checkbox" class="remittance-order-check" value="${escapeHtml(orderId)}" data-amount="${amount}" onchange="updateRemittanceAmount()"><span class="remittance-order-main"><strong>${escapeHtml(remittanceOrderNumber(order))}</strong><br><span style="color:#6b7280;font-size:13px">${escapeHtml(order.retailerName || order.customerName || "Customer")} · Delivered ${escapeHtml(formatDate(order.deliveredAt || order.updatedAt || order.createdAt))}</span></span><strong style="white-space:nowrap;color:#15803d">₱${formatMoney(amount)}</strong></label>`;
+    }).join("");
+    updateRemittanceAmount();
+}
+
+window.updateRemittanceAmount = function() {
+    const checks = Array.from(document.querySelectorAll(".remittance-order-check:checked"));
+    const total = checks.reduce((sum, check) => sum + Number(check.dataset.amount || 0), 0);
+    const amountInput = $("remittanceAmount");
+    if (amountInput) amountInput.value = total > 0 ? total.toFixed(2) : "";
+};
+
+window.submitDeliveryRemittance = async function() {
+    if (!currentUser || !currentStore || !currentStore.uid) {
+        toast("Hindi mahanap ang seller ng assigned store. Pakisubukang muli.");
+        return;
+    }
+    const checks = Array.from(document.querySelectorAll(".remittance-order-check:checked"));
+    if (!checks.length) {
+        toast("Pumili muna ng delivered order na isasama sa remittance.");
+        return;
+    }
+    const amount = Number($("remittanceAmount").value || 0);
+    if (!Number.isFinite(amount) || amount <= 0) {
+        toast("Maglagay ng tamang remittance amount.");
+        $("remittanceAmount").focus();
+        return;
+    }
+    const selectedIds = checks.map(check => String(check.value));
+    const selectedOrders = selectedIds.map(id => allOrders.find(order => String(order.orderId) === id)).filter(Boolean);
+    if (selectedOrders.length !== selectedIds.length || selectedOrders.some(order =>
+        String(order.status || "").toLowerCase() !== "delivered" || !isAssignedToCurrentUser(order))) {
+        toast("May order na hindi na valid para sa remittance. I-refresh ang page.");
+        return;
+    }
+    const alreadySubmitted = getRemittedOrderIds();
+    if (selectedOrders.some(order => alreadySubmitted.has(String(order.orderId)) || alreadySubmitted.has(String(order.orderNumber || "")) || alreadySubmitted.has(String(remittanceOrderNumber(order))))) {
+        toast("May napiling order na naisumite na sa remittance. Paki-refresh ang list.");
+        return;
+    }
+    const sellerUid = String(currentStore.uid);
+    const now = Date.now();
+    const orderNumbers = selectedOrders.map(order => remittanceOrderNumber(order));
+    const record = {
+        sellerUid,
+        sellerStoreNumber: String(currentStore.storeNumber || currentUser.assignedStoreNumber || currentUser.storeNumber || ""),
+        deliveryUid: currentUser.uid,
+        deliveryName: currentUser.name || session.name || "Delivery staff",
+        amount,
+        orderIds: selectedOrders.map(order => String(order.orderId)),
+        orderNumbers,
+        paymentMethod: $("remittanceMethod").value || "Cash",
+        notes: String($("remittanceNotes").value || "").trim(),
+        status: "pending",
+        submittedAt: now,
+        createdAt: now,
+        updatedAt: now
+    };
+    const submitButton = $("submitRemittanceBtn");
+    submitButton.disabled = true;
+    showLoading();
+    try {
+        const remittanceRef = push(ref(db, "remittances"));
+        await set(remittanceRef, record);
+        // Notify seller that a remittance needs review.
+        const notificationRef = push(ref(db, "notifications/" + sellerUid));
+        await set(notificationRef, {
+            title: "Delivery Remittance Submitted",
+            message: `${record.deliveryName} submitted ₱${formatMoney(amount)} for ${orderNumbers.join(", ")}. Please review and approve/reject the remittance.`,
+            type: "delivery_remittance",
+            remittanceId: remittanceRef.key,
+            deliveryUid: currentUser.uid,
+            deliveryName: record.deliveryName,
+            amount,
+            orderNumbers,
+            read: false,
+            createdAt: now
+        });
+        $("remittanceNotes").value = "";
+        $("remittanceAmount").value = "";
+        toast("Na-submit ang remittance sa seller. Hintayin ang approval.");
+    } catch (error) {
+        console.error("Submit remittance:", error);
+        toast("Hindi na-submit ang remittance. Tingnan ang internet connection/Firebase rules.");
+    } finally {
+        hideLoading();
+        submitButton.disabled = false;
+    }
+};
+
+function renderMyRemittanceHistory() {
+    const target = $("myRemittanceHistory");
+    if (!target) return;
+    if (!allRemittances.length) {
+        target.innerHTML = '<div class="empty">Wala ka pang na-submit na remittance.</div>';
+        return;
+    }
+    target.innerHTML = allRemittances.map(item => {
+        const status = String(item.status || "pending").toLowerCase();
+        const cls = status === "approved" ? "approved" : status === "rejected" ? "rejected" : "";
+        const color = status === "approved" ? "#166534" : status === "rejected" ? "#991b1b" : "#92400e";
+        const bg = status === "approved" ? "#dcfce7" : status === "rejected" ? "#fee2e2" : "#fef3c7";
+        const orders = Array.isArray(item.orderNumbers) ? item.orderNumbers.join(", ") : String(item.orderNumbers || item.orderNumber || "Not specified");
+        const reason = item.rejectionReason ? `<p style="margin:8px 0 0;color:#991b1b"><strong>Seller's reason:</strong> ${escapeHtml(item.rejectionReason)}</p>` : "";
+        return `<div class="remittance-record ${cls}"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><strong>₱${formatMoney(item.amount)}</strong><span class="remittance-status" style="background:${bg};color:${color}">${escapeHtml(status.toUpperCase())}</span></div><p style="margin:8px 0"><strong>Orders:</strong> ${escapeHtml(orders)}</p><div style="font-size:12px;color:#6b7280">Submitted: ${escapeHtml(formatDate(item.submittedAt || item.createdAt))}${item.reviewedAt ? " · Reviewed: " + escapeHtml(formatDate(item.reviewedAt)) : ""}</div>${item.paymentMethod ? `<p style="margin:7px 0 0"><strong>Method:</strong> ${escapeHtml(item.paymentMethod)}</p>` : ""}${item.notes ? `<p style="margin:7px 0 0"><strong>Notes:</strong> ${escapeHtml(item.notes)}</p>` : ""}${reason}</div>`;
+    }).join("");
+}
+
 /* ACCEPT DELIVERY */
 window.acceptDelivery = async function(orderId) {
     const order = allOrders.find(item =>
@@ -1219,7 +1418,7 @@ window.acceptDelivery = async function(orderId) {
 
         hideLoading();
         toast("Order accepted for delivery.");
-        await loadOrders();
+        // The realtime Firebase listener refreshes the order list automatically.
     } catch (error) {
         console.error(error);
         hideLoading();
@@ -1297,7 +1496,7 @@ window.markDelivered = async function(orderId) {
 
         hideLoading();
         toast("Order marked as delivered.");
-        await loadOrders();
+        // The realtime Firebase listener refreshes the order list automatically.
     } catch (error) {
         console.error(error);
         hideLoading();

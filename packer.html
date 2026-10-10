@@ -895,7 +895,7 @@ button{
         <header class="orders-popup-header">
             <div class="orders-popup-heading">
                 <h2 id="ordersPopupTitle">Accepted Orders</h2>
-                <p id="ordersPopupSubtitle">Live orders from Firebase</p>
+                <p id="ordersPopupSubtitle">Live orders</p>
             </div>
             <div class="orders-popup-actions">
                 <button class="orders-popup-refresh" type="button" onclick="refreshPopupOrders()">↻ Refresh</button>
@@ -3104,7 +3104,7 @@ function openOrdersPopup(category){
     closeMobileMenu();
     const titles = {accepted:"Accepted Orders",special:"Special Orders",packed:"Packed Orders"};
     document.getElementById("ordersPopupTitle").textContent = titles[category] || "Orders";
-    document.getElementById("ordersPopupSubtitle").textContent = "Live orders from Firebase";
+    document.getElementById("ordersPopupSubtitle").textContent = "Live orders";
     document.getElementById("ordersPopup").classList.add("show");
     document.body.style.overflow = "hidden";
     renderPopupOrders(category);
